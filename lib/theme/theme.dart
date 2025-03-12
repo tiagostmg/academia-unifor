@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart'; // Importando a classe de cores
+import 'app_colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -41,7 +41,7 @@ class AppTheme {
   }
 
   static const AppBarTheme _appBarTheme = AppBarTheme(
-    backgroundColor: AppColors.primary,
+    backgroundColor: AppColors.appBarBackground,
     foregroundColor: Colors.black,
     elevation: 1,
   );

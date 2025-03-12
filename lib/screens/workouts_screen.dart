@@ -1,6 +1,6 @@
-import 'package:academia_unifor/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/theme/app_colors.dart';
 
 class WorkoutsScreen extends StatelessWidget {
   const WorkoutsScreen({super.key});
