@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart'; // Importando a classe de cores
 
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.light(
-        primary: Colors.lime.shade600,
+        primary: AppColors.primary,
         onPrimary: Colors.white,
-        secondary: Colors.lime.shade400,
+        secondary: AppColors.secondary,
         surface: Colors.white,
         onSurface: Colors.black,
       ),
@@ -24,9 +25,9 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.dark(
-        primary: Colors.lime.shade300,
+        primary: AppColors.primary,
         onPrimary: Colors.black,
-        secondary: Colors.lime.shade200,
+        secondary: AppColors.secondary,
         surface: const Color(0xFF1C1C1E),
         onSurface: Colors.white,
       ),
@@ -40,7 +41,7 @@ class AppTheme {
   }
 
   static const AppBarTheme _appBarTheme = AppBarTheme(
-    backgroundColor: Colors.lime,
+    backgroundColor: AppColors.primary,
     foregroundColor: Colors.black,
     elevation: 1,
   );

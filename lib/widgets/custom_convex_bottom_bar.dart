@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:academia_unifor/theme/app_colors.dart';
 
 class CustomConvexBottomBar extends StatelessWidget {
   final int currentIndex;
@@ -19,7 +20,7 @@ class CustomConvexBottomBar extends StatelessWidget {
       bottomNavigationBar: ConvexAppBar(
         height: 60,
         style: TabStyle.react,
-        backgroundColor: Colors.lime,
+        backgroundColor: AppColors.primary,
         activeColor: Colors.black,
         color: Colors.black45,
         elevation: 0,
