@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class WorkoutsScreen extends StatelessWidget {
   const WorkoutsScreen({super.key});
@@ -24,14 +25,36 @@ class WorkoutsScreen extends StatelessWidget {
   }
 }
 
-class WorkoutsBody extends StatelessWidget {
+class WorkoutsBody extends StatefulWidget {
   const WorkoutsBody({super.key});
 
   @override
+  WorkoutsBodyState createState() => WorkoutsBodyState();
+}
+
+class WorkoutsBodyState extends State<WorkoutsBody> {
+  final List<String> _videoUrls = [
+    'https://www.youtube.com/watch?v=XtdZtMfRQ6A&list=PLVfDJ3j76CinxIhBRpQgx93em_P9nWzmc&index=29',
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16, top: 16),
-      child: Align(alignment: Alignment.topLeft, child: Text('Treinos')),
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _videoUrls.length,
+      itemBuilder: (context, index) {
+        final videoId = YoutubePlayer.convertUrlToId(_videoUrls[index])!;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: YoutubePlayer(
+            controller: YoutubePlayerController(
+              initialVideoId: videoId,
+              flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+            ),
+            showVideoProgressIndicator: true,
+          ),
+        );
+      },
     );
   }
 }
