@@ -67,14 +67,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: SvgPicture.string(
               uniforLogoSVG,
               fit: BoxFit.contain,
-              colorFilter: ColorFilter.mode(Colors.pink, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                theme.colorScheme.onPrimary,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const SizedBox(width: 10),
           Text(
             "Academia",
             style: TextStyle(
-              color: Colors.pink,
+              color: theme.colorScheme.onPrimary,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),

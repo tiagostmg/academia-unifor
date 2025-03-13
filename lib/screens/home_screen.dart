@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
-import 'package:academia_unifor/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,8 +8,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      color: AppColors.primary,
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 0, // Índice correspondente ao botão "Início"

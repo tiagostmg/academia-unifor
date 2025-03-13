@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
-import 'package:academia_unifor/theme/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,8 +8,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      color: AppColors.primary,
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 2, // Índice correspondente ao botão "Perfil"
