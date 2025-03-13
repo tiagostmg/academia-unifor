@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -29,9 +30,162 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16, top: 16),
-      child: Align(alignment: Alignment.topLeft, child: Text('Perfil')),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          const ProfileAvatar(),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const ProfileInfo(),
+          ),
+          const SizedBox(height: 60),
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileAvatar extends StatelessWidget {
+  const ProfileAvatar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            width: 4,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(0, 0, 0, 0.2),
+              blurRadius: 8,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: const CircleAvatar(
+          radius: 60,
+          // backgroundImage: NetworkImage(
+          //   "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
+          // ),
+          backgroundImage: AssetImage("assets/user.png"),
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileInfo extends StatelessWidget {
+  const ProfileInfo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ProfileItem(title: "Nome:", value: "Narak Oliveira"),
+        ProfileItem(title: "E-mail:", value: ""),
+        ProfileItem(title: "Telefone:", value: ""),
+        ProfileItem(title: "Localização:", value: "Fortaleza, CE"),
+        ProfileItem(title: "Data de Nascimento:", value: ""),
+        ListTile(
+          leading: Icon(
+            Icons.settings,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          title: const Text("Configurações"),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
+          title: const Text("Compartilhar App"),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          onTap: () async {
+            final Uri url = Uri.parse(
+              "https://github.com/carlosxfelipe/academia-unifor",
+            );
+            if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Não foi possível abrir o link.")),
+              );
+            }
+          },
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              elevation: 3,
+            ),
+            onPressed: () {},
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Sair da Conta",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                Icon(Icons.logout, size: 22, color: colorScheme.onPrimary),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ProfileItem extends StatelessWidget {
+  final String title;
+  final String value;
+  const ProfileItem({super.key, required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        Divider(thickness: 1, color: Theme.of(context).dividerColor),
+      ],
     );
   }
 }
