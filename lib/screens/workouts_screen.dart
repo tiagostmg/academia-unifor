@@ -16,7 +16,7 @@ class WorkoutsScreen extends StatelessWidget {
           currentIndex: 1, // Índice correspondente ao botão "Treinos"
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: CustomAppBar(),
+            appBar: SearchAppBar(),
             body: const WorkoutsBody(),
           ),
         ),
@@ -46,12 +46,20 @@ class WorkoutsBodyState extends State<WorkoutsBody> {
         final videoId = YoutubePlayer.convertUrlToId(_videoUrls[index])!;
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: YoutubePlayer(
-            controller: YoutubePlayerController(
-              initialVideoId: videoId,
-              flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(
+              8,
+            ), // Adiciona bordas arredondadas
+            child: YoutubePlayer(
+              controller: YoutubePlayerController(
+                initialVideoId: videoId,
+                flags: const YoutubePlayerFlags(
+                  autoPlay: false, // Desativa autoplay
+                  mute: false,
+                ),
+              ),
+              showVideoProgressIndicator: true,
             ),
-            showVideoProgressIndicator: true,
           ),
         );
       },
