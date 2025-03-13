@@ -4,6 +4,42 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class InfoWidget extends StatelessWidget {
   const InfoWidget({super.key});
 
+  String getAcademiaStatus() {
+    final now = DateTime.now();
+    final day = now.weekday;
+    final time = now.hour * 60 + now.minute;
+
+    final int openingWeek = 5 * 60 + 30; // 5:30 AM
+    final int closingWeek = 22 * 60 + 30; // 10:30 PM
+    final int openingSat = 8 * 60; // 8:00 AM
+    final int closingSat = 12 * 60; // 12:00 PM
+
+    if (day >= 1 && day <= 5) {
+      // Segunda a sexta
+      if (time < openingWeek) {
+        return 'Fechada - Abre às 5h30';
+      } else if (time < closingWeek) {
+        final int minutesLeft = closingWeek - time;
+        return 'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
+      } else {
+        return 'Fechada - Abre amanhã às 5h30';
+      }
+    } else if (day == 6) {
+      // Sábado
+      if (time < openingSat) {
+        return 'Fechada - Abre às 8h';
+      } else if (time < closingSat) {
+        final int minutesLeft = closingSat - time;
+        return 'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
+      } else {
+        return 'Fechada - Abre segunda às 5h30';
+      }
+    } else {
+      // Domingo
+      return 'Fechada - Abre segunda às 5h30';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,6 +70,11 @@ class InfoWidget extends StatelessWidget {
               SizedBox(width: 8),
               Text('Sábado: 8h - 12h'),
             ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            getAcademiaStatus(),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 16),
           const Text(
