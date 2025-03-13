@@ -15,7 +15,6 @@ class InfoWidget extends StatelessWidget {
     final int closingSat = 12 * 60; // 12:00 PM
 
     if (day >= 1 && day <= 5) {
-      // Segunda a sexta
       if (time < openingWeek) {
         return 'Fechada - Abre às 5h30';
       } else if (time < closingWeek) {
@@ -25,7 +24,6 @@ class InfoWidget extends StatelessWidget {
         return 'Fechada - Abre amanhã às 5h30';
       }
     } else if (day == 6) {
-      // Sábado
       if (time < openingSat) {
         return 'Fechada - Abre às 8h';
       } else if (time < closingSat) {
@@ -35,7 +33,6 @@ class InfoWidget extends StatelessWidget {
         return 'Fechada - Abre segunda às 5h30';
       }
     } else {
-      // Domingo
       return 'Fechada - Abre segunda às 5h30';
     }
   }
@@ -54,7 +51,7 @@ class InfoWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
-            elevation: 3,
+            elevation: 0,
             color: cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -135,7 +132,7 @@ class InfoWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Card(
-            elevation: 3,
+            elevation: 0,
             color: cardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -155,36 +152,58 @@ class InfoWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Icon(Icons.phone, size: 18, color: Colors.blue),
-                      const SizedBox(width: 8),
-                      Text(
-                        '(85) 3477-3616',
-                        style: TextStyle(color: textColor),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.phone,
+                            size: 24,
+                            color: Colors.blue,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        FontAwesomeIcons.whatsapp,
-                        size: 18,
-                        color: Colors.green,
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Icon(
+                            FontAwesomeIcons.whatsapp,
+                            size: 24,
+                            color: Colors.green,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        '(85) 99162-5291',
-                        style: TextStyle(color: textColor),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.email,
+                            size: 24,
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.email, size: 18, color: Colors.red),
-                      const SizedBox(width: 8),
-                      Text('dad@unifor.br', style: TextStyle(color: textColor)),
                     ],
                   ),
                 ],
