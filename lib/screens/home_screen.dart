@@ -29,15 +29,19 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        const WelcomeWidget(),
-        const SizedBox(height: 10),
-        const CarouselWidget(),
-        const SizedBox(height: 10),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          const WelcomeWidget(),
+          const SizedBox(height: 10),
+          const CarouselWidget(),
+          const SizedBox(height: 10),
+          const InfoWidget(),
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }
