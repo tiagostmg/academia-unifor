@@ -29,9 +29,16 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16, top: 16),
-      child: Align(alignment: Alignment.topLeft, child: Text('Hello World!')),
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Hello World!'),
+          const SizedBox(height: 16),
+          const CarouselWidget(),
+        ],
+      ),
     );
   }
 }
