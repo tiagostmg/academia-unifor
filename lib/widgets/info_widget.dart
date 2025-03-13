@@ -42,72 +42,154 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String status = getAcademiaStatus();
+    final bool isOpen = status.startsWith('Aberta');
+    final theme = Theme.of(context);
+    final cardColor = theme.colorScheme.primary;
+    final textColor = theme.colorScheme.onPrimary;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Horários',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.blue,
+          Card(
+            elevation: 3,
+            color: cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: const [
-              Icon(Icons.access_time, size: 16, color: Colors.green),
-              SizedBox(width: 8),
-              Text('Seg-Sex: 5h30 - 22h30'),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: const [
-              Icon(Icons.access_time, size: 16, color: Colors.orange),
-              SizedBox(width: 8),
-              Text('Sábado: 8h - 12h'),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            getAcademiaStatus(),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Horários',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18,
+                        color: Colors.green,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Seg-Sex: 5h30 - 22h30',
+                        style: TextStyle(color: textColor),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18,
+                        color: Colors.orange,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Sábado: 8h - 12h',
+                        style: TextStyle(color: textColor),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color:
+                          isOpen ? Colors.green.shade100 : Colors.red.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isOpen ? Icons.check_circle : Icons.cancel,
+                          color: isOpen ? Colors.green : Colors.red,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          status,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: isOpen ? Colors.green[900] : Colors.red[900],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Contato',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.blue,
+          Card(
+            elevation: 3,
+            color: cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: const [
-              Icon(Icons.phone, size: 16, color: Colors.blue),
-              SizedBox(width: 8),
-              Text('(85) 3477-3616'),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: const [
-              Icon(FontAwesomeIcons.whatsapp, size: 16, color: Colors.green),
-              SizedBox(width: 8),
-              Text('(85) 99162-5291'),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: const [
-              Icon(Icons.email, size: 16, color: Colors.red),
-              SizedBox(width: 8),
-              Text('dad@unifor.br'),
-            ],
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Contato',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.phone, size: 18, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Text(
+                        '(85) 3477-3616',
+                        style: TextStyle(color: textColor),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(
+                        FontAwesomeIcons.whatsapp,
+                        size: 18,
+                        color: Colors.green,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '(85) 99162-5291',
+                        style: TextStyle(color: textColor),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.email, size: 18, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Text('dad@unifor.br', style: TextStyle(color: textColor)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
