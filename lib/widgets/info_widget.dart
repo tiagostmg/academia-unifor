@@ -13,12 +13,16 @@ class InfoWidget extends StatelessWidget {
         children: [
           const Text(
             'Horários',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.blue,
+            ),
           ),
           const SizedBox(height: 4),
           Row(
             children: const [
-              Icon(Icons.access_time, size: 16),
+              Icon(Icons.access_time, size: 16, color: Colors.green),
               SizedBox(width: 8),
               Text('Seg-Sex: 5h30 - 22h30'),
             ],
@@ -26,7 +30,7 @@ class InfoWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: const [
-              Icon(Icons.access_time, size: 16),
+              Icon(Icons.access_time, size: 16, color: Colors.orange),
               SizedBox(width: 8),
               Text('Sábado: 8h - 12h'),
             ],
@@ -34,12 +38,16 @@ class InfoWidget extends StatelessWidget {
           const SizedBox(height: 16),
           const Text(
             'Contato',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.blue,
+            ),
           ),
           const SizedBox(height: 4),
           Row(
             children: const [
-              Icon(Icons.phone, size: 16),
+              Icon(Icons.phone, size: 16, color: Colors.blue),
               SizedBox(width: 8),
               Text('(85) 3477-3616'),
             ],
@@ -47,7 +55,7 @@ class InfoWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: const [
-              Icon(FontAwesomeIcons.whatsapp, size: 16),
+              Icon(FontAwesomeIcons.whatsapp, size: 16, color: Colors.green),
               SizedBox(width: 8),
               Text('(85) 99162-5291'),
             ],
@@ -55,7 +63,7 @@ class InfoWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: const [
-              Icon(Icons.email, size: 16),
+              Icon(Icons.email, size: 16, color: Colors.red),
               SizedBox(width: 8),
               Text('dad@unifor.br'),
             ],
