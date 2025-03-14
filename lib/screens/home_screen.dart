@@ -39,7 +39,7 @@ class HomeBody extends StatelessWidget {
           const CarouselWidget(),
           const SizedBox(height: 10),
           const InfoWidget(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 60),
         ],
       ),
     );
