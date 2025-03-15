@@ -81,20 +81,20 @@ class _InfoWidgetState extends State<InfoWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HorariosWidget(status: status, isOpen: isOpen),
+          ScheduleWidget(status: status, isOpen: isOpen),
           const SizedBox(height: 16),
-          const ContatoWidget(),
+          const ContactWidget(),
         ],
       ),
     );
   }
 }
 
-class HorariosWidget extends StatelessWidget {
+class ScheduleWidget extends StatelessWidget {
   final String status;
   final bool isOpen;
 
-  const HorariosWidget({super.key, required this.status, required this.isOpen});
+  const ScheduleWidget({super.key, required this.status, required this.isOpen});
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +171,8 @@ class HorariosWidget extends StatelessWidget {
   }
 }
 
-class ContatoWidget extends StatelessWidget {
-  const ContatoWidget({super.key});
+class ContactWidget extends StatelessWidget {
+  const ContactWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
