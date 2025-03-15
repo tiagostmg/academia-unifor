@@ -132,28 +132,12 @@ class ProfileInfo extends StatelessWidget {
         const SizedBox(height: 10),
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              elevation: 3,
-            ),
-            onPressed: () {},
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Sair da Conta",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 10),
-                Icon(Icons.logout, size: 22, color: colorScheme.onPrimary),
-              ],
-            ),
+          child: CustomButton(
+            text: "Sair da Conta",
+            icon: Icons.logout,
+            onPressed: () {
+              // Adicione aqui a lógica para sair da conta
+            },
           ),
         ),
       ],

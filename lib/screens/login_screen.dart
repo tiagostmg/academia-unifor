@@ -1,3 +1,4 @@
+import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,8 +43,8 @@ class LoginScreenState extends State<LoginScreen> {
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
               fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
-              border: OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(
+              border: const OutlineInputBorder(),
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),
               ),
               focusedBorder: OutlineInputBorder(
@@ -71,7 +72,14 @@ class LoginScreenState extends State<LoginScreen> {
                 decoration: const InputDecoration(labelText: 'Senha'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(onPressed: _login, child: const Text('Entrar')),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: "Entrar",
+                  icon: Icons.login,
+                  onPressed: _login,
+                ),
+              ),
             ],
           ),
         ),
