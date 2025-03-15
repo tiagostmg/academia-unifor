@@ -1,10 +1,33 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class InfoWidget extends StatelessWidget {
+class InfoWidget extends StatefulWidget {
   const InfoWidget({super.key});
 
-  String getAcademiaStatus() {
+  @override
+  State<InfoWidget> createState() => _InfoWidgetState();
+}
+
+class _InfoWidgetState extends State<InfoWidget> {
+  late String status;
+  late bool isOpen;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateStatus();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      _updateStatus();
+    });
+  }
+
+  void _updateStatus() {
     final now = DateTime.now();
     final day = now.weekday;
     final time = now.hour * 60 + now.minute;
@@ -14,33 +37,45 @@ class InfoWidget extends StatelessWidget {
     final int openingSat = 8 * 60; // 8:00 AM
     final int closingSat = 12 * 60; // 12:00 PM
 
+    String newStatus;
     if (day >= 1 && day <= 5) {
       if (time < openingWeek) {
-        return 'Fechada - Abre às 5h30';
+        newStatus = 'Fechada - Abre às 5h30';
       } else if (time < closingWeek) {
         final int minutesLeft = closingWeek - time;
-        return 'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
+        newStatus =
+            'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
       } else {
-        return 'Fechada - Abre amanhã às 5h30';
+        newStatus = 'Fechada - Abre amanhã às 5h30';
       }
     } else if (day == 6) {
       if (time < openingSat) {
-        return 'Fechada - Abre às 8h';
+        newStatus = 'Fechada - Abre às 8h';
       } else if (time < closingSat) {
         final int minutesLeft = closingSat - time;
-        return 'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
+        newStatus =
+            'Aberta - Fecha em ${minutesLeft ~/ 60}h${minutesLeft % 60}min';
       } else {
-        return 'Fechada - Abre segunda às 5h30';
+        newStatus = 'Fechada - Abre segunda às 5h30';
       }
     } else {
-      return 'Fechada - Abre segunda às 5h30';
+      newStatus = 'Fechada - Abre segunda às 5h30';
     }
+
+    setState(() {
+      status = newStatus;
+      isOpen = status.startsWith('Aberta');
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final String status = getAcademiaStatus();
-    final bool isOpen = status.startsWith('Aberta');
     final theme = Theme.of(context);
     final cardColor = theme.colorScheme.primary;
     final textColor = theme.colorScheme.onPrimary;
