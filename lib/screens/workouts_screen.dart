@@ -25,14 +25,23 @@ class WorkoutsScreen extends StatelessWidget {
   }
 }
 
-class WorkoutsBody extends StatefulWidget {
+class WorkoutsBody extends StatelessWidget {
   const WorkoutsBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const YoutubeVideoPlayer();
+  }
+}
+
+class YoutubeVideoPlayer extends StatefulWidget {
+  const YoutubeVideoPlayer({super.key});
 
   @override
   WorkoutsBodyState createState() => WorkoutsBodyState();
 }
 
-class WorkoutsBodyState extends State<WorkoutsBody> {
+class WorkoutsBodyState extends State<YoutubeVideoPlayer> {
   final List<String> _videoUrls = [
     'https://www.youtube.com/watch?v=XtdZtMfRQ6A&list=PLVfDJ3j76CinxIhBRpQgx93em_P9nWzmc&index=29',
   ];
