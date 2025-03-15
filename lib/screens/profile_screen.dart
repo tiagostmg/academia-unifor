@@ -71,10 +71,9 @@ class ProfileAvatar extends StatelessWidget {
         ),
         child: const CircleAvatar(
           radius: 60,
-          // backgroundImage: NetworkImage(
-          //   "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
-          // ),
-          backgroundImage: AssetImage("assets/user.png"),
+          backgroundImage: NetworkImage(
+            "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
+          ),
         ),
       ),
     );
@@ -86,16 +85,14 @@ class ProfileInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileItem(title: "Nome:", value: "Narak Oliveira"),
-        ProfileItem(title: "E-mail:", value: ""),
-        ProfileItem(title: "Telefone:", value: ""),
+        ProfileItem(title: "Nome:", value: "Carlos Felipe Araújo"),
+        ProfileItem(title: "E-mail:", value: "carlosxfelipe@gmail.com"),
+        ProfileItem(title: "Telefone:", value: "(85) 99950-2195"),
         ProfileItem(title: "Localização:", value: "Fortaleza, CE"),
-        ProfileItem(title: "Data de Nascimento:", value: ""),
+        ProfileItem(title: "Data de Nascimento:", value: "03/10/1987"),
         ListTile(
           leading: Icon(
             Icons.settings,
