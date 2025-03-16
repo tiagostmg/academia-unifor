@@ -76,8 +76,6 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -101,19 +99,12 @@ class LoginScreenState extends State<LoginScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 10,
-                      sigmaY: 10,
-                    ), // Efeito de blur
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(
-                          100,
-                        ), // Fundo semi-transparente (mais legível)
+                        color: Colors.black.withAlpha(100),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withAlpha(60),
-                        ), // Bordas suaves
+                        border: Border.all(color: Colors.white.withAlpha(60)),
                       ),
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
@@ -140,14 +131,13 @@ class LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               labelText: 'Usuário',
+                              labelStyle: TextStyle(color: Colors.white),
                               prefixIcon: const Icon(
                                 Icons.person,
                                 color: Colors.white,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(
-                                50,
-                              ), // Mais opaco para melhor leitura
+                              fillColor: Colors.white.withAlpha(50),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -162,14 +152,13 @@ class LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               labelText: 'Senha',
+                              labelStyle: TextStyle(color: Colors.white),
                               prefixIcon: const Icon(
                                 Icons.lock,
                                 color: Colors.white,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(
-                                50,
-                              ), // Mais visível
+                              fillColor: Colors.white.withAlpha(50),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
