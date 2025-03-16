@@ -76,6 +76,9 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -102,14 +105,23 @@ class LoginScreenState extends State<LoginScreen> {
                     filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(
-                          90,
-                        ), // Fundo mais escuro, estilo macOS Dark
+                        color:
+                            isDarkMode
+                                ? Colors.black.withAlpha(90)
+                                : Colors.white.withAlpha(180),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withAlpha(50)),
+                        border: Border.all(
+                          color:
+                              isDarkMode
+                                  ? Colors.white.withAlpha(50)
+                                  : Colors.black.withAlpha(50),
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withAlpha(100),
+                            color:
+                                isDarkMode
+                                    ? Colors.black.withAlpha(100)
+                                    : Colors.grey.withAlpha(50),
                             blurRadius: 12,
                             spreadRadius: 2,
                           ),
@@ -120,18 +132,21 @@ class LoginScreenState extends State<LoginScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Bem-vindo!",
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: isDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
                           const SizedBox(height: 10),
-                          const Text(
+                          Text(
                             "Faça login para continuar",
-                            style: TextStyle(color: Colors.white70),
+                            style: TextStyle(
+                              color:
+                                  isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
@@ -140,19 +155,26 @@ class LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               labelText: 'Usuário',
-                              labelStyle: TextStyle(color: Colors.white),
-                              prefixIcon: const Icon(
+                              labelStyle: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              prefixIcon: Icon(
                                 Icons.person,
-                                color: Colors.white,
+                                color: isDarkMode ? Colors.white : Colors.black,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(30),
+                              fillColor:
+                                  isDarkMode
+                                      ? Colors.white.withAlpha(30)
+                                      : Colors.black.withAlpha(20),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                           ),
                           const SizedBox(height: 15),
                           TextField(
@@ -161,13 +183,18 @@ class LoginScreenState extends State<LoginScreen> {
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               labelText: 'Senha',
-                              labelStyle: TextStyle(color: Colors.white),
-                              prefixIcon: const Icon(
+                              labelStyle: TextStyle(
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              prefixIcon: Icon(
                                 Icons.lock,
-                                color: Colors.white,
+                                color: isDarkMode ? Colors.white : Colors.black,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(30),
+                              fillColor:
+                                  isDarkMode
+                                      ? Colors.white.withAlpha(30)
+                                      : Colors.black.withAlpha(20),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -177,7 +204,8 @@ class LoginScreenState extends State<LoginScreen> {
                                   _isPasswordVisible
                                       ? Icons.visibility
                                       : Icons.visibility_off,
-                                  color: Colors.white,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -186,7 +214,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.red),
                           ),
                           const SizedBox(height: 20),
                           ElasticIn(
@@ -205,7 +233,7 @@ class LoginScreenState extends State<LoginScreen> {
                               onPressed: () {},
                               child: const Text(
                                 "Não tem uma conta? Dirija-se à recepção.",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.red),
                               ),
                             ),
                           ),
