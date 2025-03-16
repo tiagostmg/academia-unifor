@@ -52,7 +52,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Card(
-                elevation: 10,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -69,10 +69,7 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        "Por favor, faça login na sua conta.",
-                        style: TextStyle(color: Colors.black54),
-                      ),
+                      const Text("Por favor, faça login na sua conta."),
                       const SizedBox(height: 20),
                       TextField(
                         controller: _userController,
@@ -80,7 +77,7 @@ class LoginScreenState extends State<LoginScreen> {
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: 'Usuário',
-                          prefixIcon: const Icon(Icons.badge),
+                          prefixIcon: const Icon(Icons.person),
                           border: const OutlineInputBorder(),
                         ),
                       ),
@@ -114,7 +111,7 @@ class LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () {},
                         child: const Text(
-                          "Não tem uma conta? Cadastre-se",
+                          "Não tem uma conta? Dirija-se à recepção.",
                           style: TextStyle(color: Colors.blue),
                         ),
                       ),
