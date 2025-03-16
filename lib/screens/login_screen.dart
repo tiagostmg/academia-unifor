@@ -27,9 +27,7 @@ class LoginScreenState extends State<LoginScreen> {
         SnackBar(
           content: const Text('Usuário ou senha incorretos'),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Theme.of(
-            context,
-          ).colorScheme.onPrimary.withAlpha(50),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
         ),
       );
     }
@@ -38,7 +36,6 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Container(
@@ -64,53 +61,41 @@ class LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      BounceInDown(
-                        child: Icon(
-                          Icons.lock,
-                          size: 60,
-                          color: colorScheme.onPrimary.withAlpha(50),
+                      const Text(
+                        "Entrar",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Por favor, faça login na sua conta.",
+                        style: TextStyle(color: Colors.black54),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: _userController,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: 'Usuário',
-                          labelStyle: TextStyle(
-                            color: colorScheme.onPrimary.withAlpha(100),
-                          ),
-                          prefixIcon: const Icon(Icons.person),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: colorScheme.onPrimary.withAlpha(100),
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: colorScheme.onPrimary,
-                            ),
-                          ),
+                          prefixIcon: const Icon(Icons.badge),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
+                        textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
                           labelText: 'Senha',
-                          labelStyle: TextStyle(
-                            color: colorScheme.onPrimary.withAlpha(100),
-                          ),
                           prefixIcon: const Icon(Icons.lock),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: colorScheme.onPrimary.withAlpha(100),
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: colorScheme.onPrimary,
-                            ),
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.visibility_off),
+                            onPressed: () {},
                           ),
                         ),
                       ),
@@ -123,6 +108,14 @@ class LoginScreenState extends State<LoginScreen> {
                             icon: Icons.login,
                             onPressed: _login,
                           ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          "Não tem uma conta? Cadastre-se",
+                          style: TextStyle(color: Colors.blue),
                         ),
                       ),
                     ],
