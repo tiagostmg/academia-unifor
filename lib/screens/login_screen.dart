@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -97,98 +98,121 @@ class LoginScreenState extends State<LoginScreen> {
               duration: const Duration(milliseconds: 800),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Bem-vindo!",
-                          style: TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text("Faça login para continuar"),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _userController,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            labelText: 'Usuário',
-                            prefixIcon: const Icon(Icons.person),
-                            filled: true,
-                            fillColor:
-                                isDarkMode
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 10,
+                      sigmaY: 10,
+                    ), // Efeito de blur
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withAlpha(
+                          100,
+                        ), // Fundo semi-transparente (mais legível)
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withAlpha(60),
+                        ), // Bordas suaves
+                      ),
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Bem-vindo!",
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: !_isPasswordVisible,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            prefixIcon: const Icon(Icons.lock),
-                            filled: true,
-                            fillColor:
-                                isDarkMode
-                                    ? Colors.grey[800]
-                                    : Colors.grey[200],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Faça login para continuar",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: _userController,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: 'Usuário',
+                              prefixIcon: const Icon(
+                                Icons.person,
+                                color: Colors.white,
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
+                              filled: true,
+                              fillColor: Colors.white.withAlpha(
+                                50,
+                              ), // Mais opaco para melhor leitura
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          const SizedBox(height: 15),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
+                            textInputAction: TextInputAction.done,
+                            decoration: InputDecoration(
+                              labelText: 'Senha',
+                              prefixIcon: const Icon(
+                                Icons.lock,
+                                color: Colors.white,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white.withAlpha(
+                                50,
+                              ), // Mais visível
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          const SizedBox(height: 20),
+                          ElasticIn(
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: CustomButton(
+                                text: "Entrar",
+                                icon: Icons.login,
+                                onPressed: _login,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElasticIn(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: CustomButton(
-                              text: "Entrar",
-                              icon: Icons.login,
-                              onPressed: _login,
+                          const SizedBox(height: 15),
+                          Center(
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Text(
+                                "Não tem uma conta? Dirija-se à recepção.",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        Center(
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              "Não tem uma conta? Dirija-se à recepção.",
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
