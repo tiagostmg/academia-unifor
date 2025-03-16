@@ -98,6 +98,20 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+          // Camada de filtro gradiente por cima das imagens
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.blue.withAlpha(100),
+                  Colors.purple.withAlpha(100),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          // Conteúdo do login
           Center(
             child: FadeInUp(
               duration: const Duration(milliseconds: 800),
@@ -155,7 +169,6 @@ class LoginScreenState extends State<LoginScreen> {
                               color: isDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
-
                           const SizedBox(height: 10),
                           Text(
                             "Faça login para continuar",
