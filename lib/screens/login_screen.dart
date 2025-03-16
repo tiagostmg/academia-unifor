@@ -3,7 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
+// botão
 import 'package:academia_unifor/widgets.dart';
+// logo
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:academia_unifor/assets/unifor_logo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -132,6 +136,17 @@ class LoginScreenState extends State<LoginScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Center(
+                            child: SvgPicture.string(
+                              uniforLogoSVG,
+                              fit: BoxFit.contain,
+                              colorFilter: ColorFilter.mode(
+                                theme.colorScheme.onPrimary,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
                           Text(
                             "Bem-vindo!",
                             style: TextStyle(
@@ -140,6 +155,7 @@ class LoginScreenState extends State<LoginScreen> {
                               color: isDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
+
                           const SizedBox(height: 10),
                           Text(
                             "Faça login para continuar",
