@@ -33,14 +33,10 @@ class HomeBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
-          const WelcomeWidget(),
-          const SizedBox(height: 10),
-          const CarouselWidget(),
           const SizedBox(height: 20),
+          const CarouselWidget(),
+          const SizedBox(height: 15),
           const ScheduleWidget(),
-          const SizedBox(height: 10),
-          const InfoWidget(),
           const SizedBox(height: 10),
           const ContactWidget(),
           const SizedBox(height: 100),
