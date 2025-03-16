@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 class InfoWidget extends StatelessWidget {
   const InfoWidget({super.key});
 
+  final Map<String, Color> bgColors = const {
+    "Máquinas para treinamento de força": Colors.blue,
+    "Aparelhos ergométricos (cárdio)": Colors.green,
+    "Esteiras": Colors.amber,
+    "Bikes para atividades de spinning": Colors.red,
+  };
+
+  final Map<String, Color> textColors = const {
+    "Máquinas para treinamento de força": Colors.blueAccent,
+    "Aparelhos ergométricos (cárdio)": Colors.greenAccent,
+    "Esteiras": Colors.amberAccent,
+    "Bikes para atividades de spinning": Colors.redAccent,
+  };
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
