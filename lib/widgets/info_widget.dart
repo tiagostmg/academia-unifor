@@ -30,22 +30,106 @@ class InfoWidget extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Column(
-                children: const [
-                  InfoRow(
-                    number: '40',
-                    label: 'Máquinas para treinamento de força',
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '40 ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Máquinas para treinamento de força',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  InfoRow(
-                    number: '24',
-                    label: 'Aparelhos ergométricos (cárdio)',
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '24 ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Aparelhos ergométricos (cárdio)',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  InfoRow(number: '12', label: 'Esteiras'),
-                  SizedBox(height: 8),
-                  InfoRow(
-                    number: '11',
-                    label: 'Bikes para atividades de spinning',
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '12 ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text('Esteiras', style: TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const [
+                        Text(
+                          '11 ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Bikes para atividades de spinning',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -53,38 +137,6 @@ class InfoWidget extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class InfoRow extends StatelessWidget {
-  final String number;
-  final String label;
-
-  const InfoRow({required this.number, required this.label, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textColor = theme.colorScheme.onPrimary;
-    final isDarkMode = theme.brightness == Brightness.dark;
-    final circleColor =
-        isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300;
-
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: circleColor,
-          child: Text(
-            number,
-            style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(label, style: TextStyle(fontSize: 14, color: textColor)),
-        ),
-      ],
     );
   }
 }
