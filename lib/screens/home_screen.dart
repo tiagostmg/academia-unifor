@@ -40,6 +40,8 @@ class HomeBody extends StatelessWidget {
           const SizedBox(height: 20),
           const ScheduleWidget(),
           const SizedBox(height: 10),
+          const InfoWidget(),
+          const SizedBox(height: 10),
           const ContactWidget(),
           const SizedBox(height: 100),
         ],
