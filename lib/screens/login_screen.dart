@@ -214,7 +214,9 @@ class LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           ElasticIn(
@@ -231,9 +233,12 @@ class LoginScreenState extends State<LoginScreen> {
                           Center(
                             child: TextButton(
                               onPressed: () {},
-                              child: const Text(
+                              child: Text(
                                 "Não tem uma conta? Dirija-se à recepção.",
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black,
+                                ),
                               ),
                             ),
                           ),
