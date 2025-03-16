@@ -1,6 +1,7 @@
 import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:animate_do/animate_do.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,7 +24,11 @@ class LoginScreenState extends State<LoginScreen> {
       context.go('/admin');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuário ou senha incorretos')),
+        const SnackBar(
+          content: Text('Usuário ou senha incorretos'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.redAccent,
+        ),
       );
     }
   }
@@ -34,64 +39,69 @@ class LoginScreenState extends State<LoginScreen> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colorScheme.primary,
-        elevation: 1,
-        title: Text(
-          "Login",
-          style: TextStyle(
-            color: colorScheme.onPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [colorScheme.primary, colorScheme.secondary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-      ),
-      body: Container(
-        color: colorScheme.primary,
-        padding: const EdgeInsets.all(16.0),
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            inputDecorationTheme: InputDecorationTheme(
-              filled: true,
-              fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
-              border: const OutlineInputBorder(),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: colorScheme.secondary),
-              ),
-              labelStyle: TextStyle(
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-              hintStyle: TextStyle(
-                color: isDarkMode ? Colors.white70 : Colors.black54,
-              ),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: _userController,
-                decoration: const InputDecoration(labelText: 'Usuário'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Senha'),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: CustomButton(
-                  text: "Entrar",
-                  icon: Icons.login,
-                  onPressed: _login,
+        child: Center(
+          child: FadeInUp(
+            duration: const Duration(milliseconds: 800),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BounceInDown(
+                        child: Icon(
+                          Icons.lock,
+                          size: 60,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _userController,
+                        decoration: const InputDecoration(
+                          labelText: 'Usuário',
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Senha',
+                          prefixIcon: Icon(Icons.lock),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ElasticIn(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: CustomButton(
+                            text: "Entrar",
+                            icon: Icons.login,
+                            onPressed: _login,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
