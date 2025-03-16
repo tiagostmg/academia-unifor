@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-class InfoWidget extends StatefulWidget {
-  const InfoWidget({super.key});
+class ScheduleWidget extends StatefulWidget {
+  const ScheduleWidget({super.key});
 
   @override
-  State<InfoWidget> createState() => _InfoWidgetState();
+  State<ScheduleWidget> createState() => _ScheduleWidgetState();
 }
 
-class _InfoWidgetState extends State<InfoWidget> {
+class _ScheduleWidgetState extends State<ScheduleWidget> {
   late String status;
   late bool isOpen;
   Timer? _timer;
@@ -79,17 +79,21 @@ class _InfoWidgetState extends State<InfoWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [ScheduleWidget(status: status, isOpen: isOpen)],
+        children: [OpeningStatusWidget(status: status, isOpen: isOpen)],
       ),
     );
   }
 }
 
-class ScheduleWidget extends StatelessWidget {
+class OpeningStatusWidget extends StatelessWidget {
   final String status;
   final bool isOpen;
 
-  const ScheduleWidget({super.key, required this.status, required this.isOpen});
+  const OpeningStatusWidget({
+    super.key,
+    required this.status,
+    required this.isOpen,
+  });
 
   @override
   Widget build(BuildContext context) {
