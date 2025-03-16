@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   final List<String> imagePaths = [
     'assets/001.jpg',
@@ -95,24 +96,25 @@ class LoginScreenState extends State<LoginScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Card(
-                  elevation: 0,
+                  elevation: 4,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(24.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Entrar",
+                          "Bem-vindo!",
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Text("Por favor, faça login na sua conta."),
+                        const Text("Faça login para continuar"),
                         const SizedBox(height: 20),
                         TextField(
                           controller: _userController,
@@ -121,21 +123,39 @@ class LoginScreenState extends State<LoginScreen> {
                           decoration: InputDecoration(
                             labelText: 'Usuário',
                             prefixIcon: const Icon(Icons.person),
-                            border: const OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         TextField(
                           controller: _passwordController,
-                          obscureText: true,
+                          obscureText: !_isPasswordVisible,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
                             labelText: 'Senha',
                             prefixIcon: const Icon(Icons.lock),
-                            border: const OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
                             suffixIcon: IconButton(
-                              icon: const Icon(Icons.visibility_off),
-                              onPressed: () {},
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -150,12 +170,14 @@ class LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "Não tem uma conta? Dirija-se à recepção.",
-                            style: TextStyle(color: Colors.blue),
+                        const SizedBox(height: 15),
+                        Center(
+                          child: TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              "Não tem uma conta? Dirija-se à recepção.",
+                              style: TextStyle(color: Colors.blue),
+                            ),
                           ),
                         ),
                       ],
