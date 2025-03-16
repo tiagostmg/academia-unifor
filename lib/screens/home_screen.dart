@@ -37,7 +37,7 @@ class HomeBody extends StatelessWidget {
           const WelcomeWidget(),
           const SizedBox(height: 10),
           const CarouselWidget(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           const ScheduleWidget(),
           const SizedBox(height: 10),
           const ContactWidget(),

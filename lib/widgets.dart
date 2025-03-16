@@ -6,3 +6,4 @@ export 'package:academia_unifor/widgets/welcome_widget.dart';
 export 'package:academia_unifor/widgets/carousel_widget.dart';
 export 'package:academia_unifor/widgets/schedule_widget.dart';
 export 'package:academia_unifor/widgets/contact_widget.dart';
+export 'package:academia_unifor/widgets/youtube_video_player_widget.dart';
