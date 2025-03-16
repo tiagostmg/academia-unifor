@@ -29,6 +29,15 @@ class WorkoutsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const YoutubeVideoPlayer();
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          'A Academia Unifor oferece modalidades como circuito funcional, lutas, pilates, avaliação nutricional e física.',
+          textAlign: TextAlign.justify,
+        ),
+      ),
+    );
   }
 }
