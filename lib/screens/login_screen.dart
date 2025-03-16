@@ -24,10 +24,12 @@ class LoginScreenState extends State<LoginScreen> {
       context.go('/admin');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Usuário ou senha incorretos'),
+        SnackBar(
+          content: const Text('Usuário ou senha incorretos'),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Theme.of(
+            context,
+          ).colorScheme.onPrimary.withAlpha(50),
         ),
       );
     }
@@ -66,24 +68,50 @@ class LoginScreenState extends State<LoginScreen> {
                         child: Icon(
                           Icons.lock,
                           size: 60,
-                          color: colorScheme.primary,
+                          color: colorScheme.onPrimary.withAlpha(50),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextField(
                         controller: _userController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Usuário',
-                          prefixIcon: Icon(Icons.person),
+                          labelStyle: TextStyle(
+                            color: colorScheme.onPrimary.withAlpha(100),
+                          ),
+                          prefixIcon: const Icon(Icons.person),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: colorScheme.onPrimary.withAlpha(100),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: colorScheme.onPrimary,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Senha',
-                          prefixIcon: Icon(Icons.lock),
+                          labelStyle: TextStyle(
+                            color: colorScheme.onPrimary.withAlpha(100),
+                          ),
+                          prefixIcon: const Icon(Icons.lock),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: colorScheme.onPrimary.withAlpha(100),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: colorScheme.onPrimary,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
