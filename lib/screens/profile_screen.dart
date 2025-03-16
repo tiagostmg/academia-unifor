@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -138,7 +139,7 @@ class ProfileInfo extends StatelessWidget {
             text: "Sair da Conta",
             icon: Icons.logout,
             onPressed: () {
-              // Adicione aqui a lógica para sair da conta
+              context.go('/');
             },
           ),
         ),
