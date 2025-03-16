@@ -52,6 +52,8 @@ class ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Center(
       child: Container(
         padding: const EdgeInsets.all(5),
@@ -63,7 +65,10 @@ class ProfileAvatar extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color.fromRGBO(0, 0, 0, 0.2),
+              color:
+                  isDarkMode
+                      ? Colors.white70
+                      : const Color.fromRGBO(0, 0, 0, 0.2),
               blurRadius: 8,
               spreadRadius: 2,
             ),
