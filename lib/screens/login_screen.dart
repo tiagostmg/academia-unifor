@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:go_router/go_router.dart';
+import 'package:academia_unifor/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -99,12 +99,21 @@ class LoginScreenState extends State<LoginScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(100),
+                        color: Colors.black.withAlpha(
+                          90,
+                        ), // Fundo mais escuro, estilo macOS Dark
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withAlpha(60)),
+                        border: Border.all(color: Colors.white.withAlpha(50)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(100),
+                            blurRadius: 12,
+                            spreadRadius: 2,
+                          ),
+                        ],
                       ),
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
@@ -137,7 +146,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(50),
+                              fillColor: Colors.white.withAlpha(30),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
@@ -158,7 +167,7 @@ class LoginScreenState extends State<LoginScreen> {
                                 color: Colors.white,
                               ),
                               filled: true,
-                              fillColor: Colors.white.withAlpha(50),
+                              fillColor: Colors.white.withAlpha(30),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide.none,
