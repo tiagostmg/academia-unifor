@@ -75,6 +75,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -124,7 +126,10 @@ class LoginScreenState extends State<LoginScreen> {
                             labelText: 'Usuário',
                             prefixIcon: const Icon(Icons.person),
                             filled: true,
-                            fillColor: Colors.grey[200],
+                            fillColor:
+                                isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
@@ -140,7 +145,10 @@ class LoginScreenState extends State<LoginScreen> {
                             labelText: 'Senha',
                             prefixIcon: const Icon(Icons.lock),
                             filled: true,
-                            fillColor: Colors.grey[200],
+                            fillColor:
+                                isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
