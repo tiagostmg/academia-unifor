@@ -34,7 +34,18 @@ class LoginScreenState extends State<LoginScreen> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(
+        backgroundColor: colorScheme.primary,
+        elevation: 1,
+        title: Text(
+          "Login",
+          style: TextStyle(
+            color: colorScheme.onPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Container(
         color: colorScheme.primary,
         padding: const EdgeInsets.all(16.0),
