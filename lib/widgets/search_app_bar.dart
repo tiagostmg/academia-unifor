@@ -1,3 +1,4 @@
+import 'package:academia_unifor/screens.dart';
 import 'package:flutter/material.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -40,8 +41,13 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       actions: [
         IconButton(
-          icon: Icon(Icons.notifications, color: theme.colorScheme.onPrimary),
-          onPressed: () {},
+          icon: Icon(Icons.chat, color: theme.colorScheme.onPrimary),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChatScreen()),
+            );
+          },
         ),
       ],
     );
