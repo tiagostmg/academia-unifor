@@ -162,24 +162,32 @@ class LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 30),
-                          Text(
-                            "Bem-vindo!",
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                          SizedBox(height: isKeyboardOpen ? 20 : 30),
+                          Visibility(
+                            visible: !isKeyboardOpen,
+                            child: Text(
+                              "Bem-vindo!",
+                              style: TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode ? Colors.white : Colors.black,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "Faça login para continuar",
-                            style: TextStyle(
-                              color:
-                                  isDarkMode ? Colors.white70 : Colors.black87,
+                          SizedBox(height: isKeyboardOpen ? 0 : 10),
+                          Visibility(
+                            visible: !isKeyboardOpen,
+                            child: Text(
+                              "Faça login para continuar",
+                              style: TextStyle(
+                                color:
+                                    isDarkMode
+                                        ? Colors.white70
+                                        : Colors.black87,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: isKeyboardOpen ? 0 : 20),
                           TextField(
                             controller: _userController,
                             keyboardType: TextInputType.text,
