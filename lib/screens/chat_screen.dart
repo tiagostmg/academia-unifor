@@ -36,6 +36,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -60,12 +61,22 @@ class ChatScreenState extends State<ChatScreen> {
                       margin: const EdgeInsets.symmetric(vertical: 5),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isUser ? Colors.blue[200] : Colors.grey[300],
+                        color:
+                            isDarkMode
+                                ? (isUser
+                                    ? Colors.blueGrey[700]
+                                    : Colors.grey[800])
+                                : (isUser
+                                    ? Colors.blue[200]
+                                    : Colors.grey[300]),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         "${message['sender']}: ${message['message']}",
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   );
