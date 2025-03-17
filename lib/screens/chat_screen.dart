@@ -85,11 +85,39 @@ class ChatScreenState extends State<ChatScreen> {
                 children: [
                   TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: "Digite sua pergunta...",
-                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.chat,
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                      ),
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white.withAlpha(30)
+                              : Colors.black.withAlpha(20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                     ),
                   ),
+
                   const SizedBox(height: 10),
                   CustomButton(
                     text: "Enviar",
