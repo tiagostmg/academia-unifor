@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/services/gemini_service.dart';
+import 'package:academia_unifor/widgets/custom_button.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -36,7 +37,12 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Perguntas sobre Treinos")),
+      appBar: AppBar(
+        title: Text(
+          "Perguntas sobre Treinos",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -71,17 +77,27 @@ class ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(),
               ),
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                labelText: "Digite sua pergunta...",
-                border: OutlineInputBorder(),
-              ),
-            ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _sendMessage,
-              child: const Text("Enviar"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      labelText: "Digite sua pergunta...",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  CustomButton(
+                    text: "Enviar",
+                    icon: Icons.send,
+                    onPressed: _sendMessage,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
