@@ -16,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: theme.colorScheme.primary,
       elevation: 1,
       titleSpacing: 0,
+      centerTitle: false,
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -42,6 +43,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.notifications, color: theme.colorScheme.onPrimary),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }
