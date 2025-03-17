@@ -83,6 +83,8 @@ class LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
+    bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -180,7 +182,7 @@ class LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 20),
                           TextField(
                             controller: _userController,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               labelText: 'Usuário',
@@ -258,15 +260,20 @@ class LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "Não tem uma conta? Dirija-se à recepção.",
-                                style: TextStyle(
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
+                          SizedBox(height: isKeyboardOpen ? 0 : 15),
+                          Visibility(
+                            visible: !isKeyboardOpen,
+                            child: Center(
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Não tem uma conta? Dirija-se à recepção.",
+                                  style: TextStyle(
+                                    color:
+                                        isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                  ),
                                 ),
                               ),
                             ),
