@@ -148,194 +148,28 @@ class LoginScreenState extends State<LoginScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Center(
-                            child: SvgPicture.string(
-                              uniforLogoSVG,
-                              fit: BoxFit.contain,
-                              colorFilter: ColorFilter.mode(
-                                theme.colorScheme.onPrimary,
-                                BlendMode.srcIn,
-                              ),
-                            ),
+                          LoginHeader(
+                            isKeyboardOpen: isKeyboardOpen,
+                            isDarkMode: isDarkMode,
+                            theme: theme,
                           ),
-                          SizedBox(height: isKeyboardOpen ? 20 : 30),
-                          Visibility(
-                            visible: !isKeyboardOpen,
-                            child: Text(
-                              "Bem-vindo!",
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: isKeyboardOpen ? 0 : 10),
-                          Visibility(
-                            visible: !isKeyboardOpen,
-                            child: Text(
-                              "Faça login para continuar",
-                              style: TextStyle(
-                                color:
-                                    isDarkMode
-                                        ? Colors.white70
-                                        : Colors.black87,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: isKeyboardOpen ? 0 : 20),
-                          TextField(
-                            controller: _userController,
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              labelText: 'Usuário',
-                              labelStyle: TextStyle(
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                              filled: true,
-                              fillColor:
-                                  isDarkMode
-                                      ? Colors.white.withAlpha(30)
-                                      : Colors.black.withAlpha(20),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          TextField(
-                            controller: _passwordController,
-                            obscureText: !_isPasswordVisible,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              labelText: 'Senha',
-                              labelStyle: TextStyle(
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                              filled: true,
-                              fillColor:
-                                  isDarkMode
-                                      ? Colors.white.withAlpha(30)
-                                      : Colors.black.withAlpha(20),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.black,
-                            ),
+                          const SizedBox(height: 20),
+                          LoginFields(
+                            userController: _userController,
+                            passwordController: _passwordController,
+                            isPasswordVisible: _isPasswordVisible,
+                            togglePasswordVisibility: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                            isDarkMode: isDarkMode,
+                            onLogin: _login,
                           ),
                           const SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {},
-                              style: ButtonStyle(
-                                overlayColor: WidgetStateProperty.all(
-                                  Colors.transparent,
-                                ),
-                                foregroundColor:
-                                    WidgetStateProperty.resolveWith<Color>((
-                                      Set<WidgetState> states,
-                                    ) {
-                                      if (states.contains(
-                                        WidgetState.pressed,
-                                      )) {
-                                        return Colors.blue;
-                                      }
-                                      return isDarkMode
-                                          ? Colors.white
-                                          : Colors.black;
-                                    }),
-                                padding: WidgetStateProperty.all(
-                                  EdgeInsets.zero,
-                                ),
-                                minimumSize: WidgetStateProperty.all(Size.zero),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                "Esqueci minha senha",
-                                style: TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          ElasticIn(
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: CustomButton(
-                                text: "Entrar",
-                                icon: Icons.login,
-                                onPressed: _login,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: isKeyboardOpen ? 0 : 15),
-                          Visibility(
-                            visible: !isKeyboardOpen,
-                            child: Center(
-                              child: TextButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  overlayColor: WidgetStateProperty.all(
-                                    Colors.transparent,
-                                  ),
-                                  foregroundColor:
-                                      WidgetStateProperty.resolveWith<Color>((
-                                        Set<WidgetState> states,
-                                      ) {
-                                        if (states.contains(
-                                          WidgetState.pressed,
-                                        )) {
-                                          return Colors.blue;
-                                        }
-                                        return isDarkMode
-                                            ? Colors.white
-                                            : Colors.black;
-                                      }),
-                                  padding: WidgetStateProperty.all(
-                                    EdgeInsets.zero,
-                                  ),
-                                  minimumSize: WidgetStateProperty.all(
-                                    Size.zero,
-                                  ),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                child: const Text(
-                                  "Não tem uma conta?",
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              ),
-                            ),
+                          LoginFooter(
+                            isKeyboardOpen: isKeyboardOpen,
+                            isDarkMode: isDarkMode,
                           ),
                         ],
                       ),
@@ -349,4 +183,198 @@ class LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+class LoginHeader extends StatelessWidget {
+  final bool isKeyboardOpen;
+  final bool isDarkMode;
+  final ThemeData theme;
+
+  const LoginHeader({
+    required this.isKeyboardOpen,
+    required this.isDarkMode,
+    required this.theme,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: SvgPicture.string(
+            uniforLogoSVG,
+            fit: BoxFit.contain,
+            colorFilter: ColorFilter.mode(
+              theme.colorScheme.onPrimary,
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+        SizedBox(height: isKeyboardOpen ? 20 : 30),
+        if (!isKeyboardOpen)
+          Text(
+            "Bem-vindo!",
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+        if (!isKeyboardOpen) const SizedBox(height: 10),
+        if (!isKeyboardOpen)
+          Text(
+            "Faça login para continuar",
+            style: TextStyle(
+              color: isDarkMode ? Colors.white70 : Colors.black87,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class LoginFields extends StatelessWidget {
+  final TextEditingController userController;
+  final TextEditingController passwordController;
+  final bool isPasswordVisible;
+  final VoidCallback togglePasswordVisibility;
+  final bool isDarkMode;
+  final VoidCallback onLogin;
+
+  const LoginFields({
+    required this.userController,
+    required this.passwordController,
+    required this.isPasswordVisible,
+    required this.togglePasswordVisibility,
+    required this.isDarkMode,
+    required this.onLogin,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          controller: userController,
+          decoration: InputDecoration(
+            labelText: 'Usuário',
+            labelStyle: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            prefixIcon: Icon(
+              Icons.person,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            filled: true,
+            fillColor:
+                isDarkMode
+                    ? Colors.white.withAlpha(30)
+                    : Colors.black.withAlpha(20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        ),
+        const SizedBox(height: 15),
+        TextField(
+          controller: passwordController,
+          obscureText: !isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: 'Senha',
+            labelStyle: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            filled: true,
+            fillColor:
+                isDarkMode
+                    ? Colors.white.withAlpha(30)
+                    : Colors.black.withAlpha(20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+              onPressed: togglePasswordVisibility,
+            ),
+          ),
+          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        ),
+        const SizedBox(height: 10),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () {},
+            style: _linkButtonStyle(isDarkMode),
+            child: const Text(
+              "Esqueci minha senha",
+              style: TextStyle(fontSize: 13),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        ElasticIn(
+          child: SizedBox(
+            width: double.infinity,
+            child: CustomButton(
+              text: "Entrar",
+              icon: Icons.login,
+              onPressed: onLogin,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LoginFooter extends StatelessWidget {
+  final bool isKeyboardOpen;
+  final bool isDarkMode;
+
+  const LoginFooter({
+    required this.isKeyboardOpen,
+    required this.isDarkMode,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isKeyboardOpen) return const SizedBox.shrink();
+    return Center(
+      child: TextButton(
+        onPressed: () {},
+        style: _linkButtonStyle(isDarkMode),
+        child: const Text("Não tem uma conta?", style: TextStyle(fontSize: 13)),
+      ),
+    );
+  }
+}
+
+ButtonStyle _linkButtonStyle(bool isDarkMode) {
+  return ButtonStyle(
+    overlayColor: WidgetStateProperty.all(Colors.transparent),
+    foregroundColor: WidgetStateProperty.resolveWith<Color>((
+      Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.pressed)) {
+        return Colors.blue;
+      }
+      return isDarkMode ? Colors.white : Colors.black;
+    }),
+    padding: WidgetStateProperty.all(EdgeInsets.zero),
+    minimumSize: WidgetStateProperty.all(Size.zero),
+    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  );
 }
