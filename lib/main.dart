@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:academia_unifor/theme/theme.dart';
 import 'package:academia_unifor/routes/router.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  debugPrint("GEMINI_API_KEY => ${dotenv.env['GEMINI_API_KEY']}");
   runApp(const MainApp());
 }
 
