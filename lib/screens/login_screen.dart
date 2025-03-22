@@ -3,9 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
-// botão
 import 'package:academia_unifor/widgets.dart';
-// logo
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:academia_unifor/assets/unifor_logo.dart';
 
@@ -100,7 +98,6 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // Camada de filtro gradiente por cima das imagens
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -113,7 +110,6 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // Conteúdo do login
           Center(
             child: FadeInUp(
               duration: const Duration(milliseconds: 800),
@@ -261,9 +257,7 @@ class LoginScreenState extends State<LoginScreen> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {
-                                // ação futura
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                 overlayColor: WidgetStateProperty.all(
                                   Colors.transparent,
@@ -310,14 +304,35 @@ class LoginScreenState extends State<LoginScreen> {
                             child: Center(
                               child: TextButton(
                                 onPressed: () {},
-                                child: Text(
-                                  "Não tem uma conta?",
-                                  style: TextStyle(
-                                    color:
-                                        isDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
+                                style: ButtonStyle(
+                                  overlayColor: WidgetStateProperty.all(
+                                    Colors.transparent,
                                   ),
+                                  foregroundColor:
+                                      WidgetStateProperty.resolveWith<Color>((
+                                        Set<WidgetState> states,
+                                      ) {
+                                        if (states.contains(
+                                          WidgetState.pressed,
+                                        )) {
+                                          return Colors.blue;
+                                        }
+                                        return isDarkMode
+                                            ? Colors.white
+                                            : Colors.black;
+                                      }),
+                                  padding: WidgetStateProperty.all(
+                                    EdgeInsets.zero,
+                                  ),
+                                  minimumSize: WidgetStateProperty.all(
+                                    Size.zero,
+                                  ),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                child: const Text(
+                                  "Não tem uma conta?",
+                                  style: TextStyle(fontSize: 13),
                                 ),
                               ),
                             ),
