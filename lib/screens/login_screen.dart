@@ -354,7 +354,7 @@ class LoginFooter extends StatelessWidget {
     if (isKeyboardOpen) return const SizedBox.shrink();
     return Center(
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => context.go('/register'),
         style: _linkButtonStyle(isDarkMode),
         child: const Text("Não tem uma conta?", style: TextStyle(fontSize: 13)),
       ),

@@ -20,6 +20,11 @@ final GoRouter router = GoRouter(
           (context, state) => NoTransitionPage(child: const LoginScreen()),
     ),
     GoRoute(
+      path: '/register',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: const RegisterScreen()),
+    ),
+    GoRoute(
       path: '/home',
       pageBuilder:
           (context, state) => NoTransitionPage(child: const HomeScreen()),
