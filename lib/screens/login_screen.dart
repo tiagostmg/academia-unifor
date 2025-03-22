@@ -257,7 +257,43 @@ class LoginScreenState extends State<LoginScreen> {
                               color: isDarkMode ? Colors.white : Colors.black,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                // ação futura
+                              },
+                              style: ButtonStyle(
+                                overlayColor: WidgetStateProperty.all(
+                                  Colors.transparent,
+                                ),
+                                foregroundColor:
+                                    WidgetStateProperty.resolveWith<Color>((
+                                      Set<WidgetState> states,
+                                    ) {
+                                      if (states.contains(
+                                        WidgetState.pressed,
+                                      )) {
+                                        return Colors.blue;
+                                      }
+                                      return isDarkMode
+                                          ? Colors.white
+                                          : Colors.black;
+                                    }),
+                                padding: WidgetStateProperty.all(
+                                  EdgeInsets.zero,
+                                ),
+                                minimumSize: WidgetStateProperty.all(Size.zero),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: const Text(
+                                "Esqueci minha senha",
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
                           ElasticIn(
                             child: SizedBox(
                               width: double.infinity,
@@ -275,7 +311,7 @@ class LoginScreenState extends State<LoginScreen> {
                               child: TextButton(
                                 onPressed: () {},
                                 child: Text(
-                                  "Não tem uma conta? Dirija-se à recepção.",
+                                  "Não tem uma conta?",
                                   style: TextStyle(
                                     color:
                                         isDarkMode
