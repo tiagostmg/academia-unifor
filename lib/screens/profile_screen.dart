@@ -86,19 +86,42 @@ class ProfileAvatar extends StatelessWidget {
   }
 }
 
-class ProfileInfo extends StatelessWidget {
+class ProfileInfo extends StatefulWidget {
   const ProfileInfo({super.key});
+
+  @override
+  State<ProfileInfo> createState() => _ProfileInfoState();
+}
+
+class _ProfileInfoState extends State<ProfileInfo> {
+  final _nameController = TextEditingController(text: "Carlos Felipe Araújo");
+  final _emailController = TextEditingController(
+    text: "carlosxfelipe@gmail.com",
+  );
+  final _phoneController = TextEditingController(text: "(85) 99950-2195");
+  final _addressController = TextEditingController(text: "Fortaleza, CE");
+  final _birthDateController = TextEditingController(text: "03/10/1987");
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ProfileItem(title: "Nome:", value: "Carlos Felipe Araújo"),
-        ProfileItem(title: "E-mail:", value: "carlosxfelipe@gmail.com"),
-        ProfileItem(title: "Telefone:", value: "(85) 99950-2195"),
-        ProfileItem(title: "Localização:", value: "Fortaleza, CE"),
-        ProfileItem(title: "Data de Nascimento:", value: "03/10/1987"),
+        EditableProfileItem(title: "Nome:", controller: _nameController),
+        EditableProfileItem(
+          title: "E-mail:",
+          controller: _emailController,
+          isReadOnly: true,
+        ),
+        EditableProfileItem(title: "Telefone:", controller: _phoneController),
+        EditableProfileItem(
+          title: "Logradouro:",
+          controller: _addressController,
+        ),
+        EditableProfileItem(
+          title: "Data de Nascimento:",
+          controller: _birthDateController,
+        ),
         ListTile(
           leading: Icon(
             Icons.settings,
@@ -143,6 +166,97 @@ class ProfileInfo extends StatelessWidget {
             },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class EditableProfileItem extends StatefulWidget {
+  final String title;
+  final TextEditingController controller;
+  final bool isReadOnly;
+
+  const EditableProfileItem({
+    super.key,
+    required this.title,
+    required this.controller,
+    this.isReadOnly = false,
+  });
+
+  @override
+  State<EditableProfileItem> createState() => _EditableProfileItemState();
+}
+
+class _EditableProfileItemState extends State<EditableProfileItem> {
+  late String _initialValue;
+  bool _hasChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialValue = widget.controller.text;
+
+    widget.controller.addListener(() {
+      final changed = widget.controller.text != _initialValue;
+      if (changed != _hasChanged) {
+        setState(() {
+          _hasChanged = changed;
+        });
+      }
+    });
+  }
+
+  void _saveValue() {
+    debugPrint("${widget.title} ${widget.controller.text}");
+    setState(() {
+      _initialValue = widget.controller.text;
+      _hasChanged = false;
+    });
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Campo salvo!")));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: widget.controller,
+                readOnly: widget.isReadOnly,
+                decoration: const InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            if (_hasChanged && !widget.isReadOnly)
+              IconButton(
+                icon: const Icon(Icons.check, color: Colors.green),
+                onPressed: _saveValue,
+              ),
+          ],
+        ),
+        Divider(thickness: 1, color: theme.dividerColor),
       ],
     );
   }
