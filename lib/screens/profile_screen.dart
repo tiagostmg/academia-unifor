@@ -242,43 +242,58 @@ class _EditableProfileItemState extends State<EditableProfileItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: widget.controller,
-                readOnly: widget.isReadOnly,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: InputBorder.none,
-                ),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.title,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
             ),
-            if (_hasChanged && !widget.isReadOnly)
-              IconButton(
-                icon: const Icon(Icons.check, color: Colors.green),
-                onPressed: _saveValue,
+          ),
+          const SizedBox(height: 2),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: widget.controller,
+                  readOnly: widget.isReadOnly,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withAlpha(30)
+                            : Colors.black.withAlpha(20),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
               ),
-          ],
-        ),
-        Divider(thickness: 1, color: theme.dividerColor),
-      ],
+              if (_hasChanged && !widget.isReadOnly)
+                IconButton(
+                  icon: const Icon(Icons.check, color: Colors.green),
+                  onPressed: _saveValue,
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
