@@ -266,7 +266,7 @@ class _EditableProfileItemState extends State<EditableProfileItem> {
               fillColor:
                   isDarkMode
                       ? Colors.white.withAlpha(30)
-                      : Colors.black.withAlpha(20),
+                      : Colors.black.withAlpha(10),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 10,
