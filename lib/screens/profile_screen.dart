@@ -241,9 +241,10 @@ class _EditableProfileItemState extends State<EditableProfileItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -255,42 +256,46 @@ class _EditableProfileItemState extends State<EditableProfileItem> {
               color: Colors.grey,
             ),
           ),
-          const SizedBox(height: 2),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: widget.controller,
-                  readOnly: widget.isReadOnly,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withAlpha(30)
-                            : Colors.black.withAlpha(20),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ),
+          const SizedBox(height: 3),
+          TextFormField(
+            controller: widget.controller,
+            readOnly: widget.isReadOnly,
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              fillColor:
+                  isDarkMode
+                      ? Colors.white.withAlpha(30)
+                      : Colors.black.withAlpha(20),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
               ),
-              if (_hasChanged && !widget.isReadOnly)
-                IconButton(
-                  icon: const Icon(Icons.check, color: Colors.green),
-                  onPressed: _saveValue,
-                ),
-            ],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              suffixIcon:
+                  widget.isReadOnly
+                      ? null
+                      : _hasChanged
+                      ? IconButton(
+                        icon: Icon(
+                          Icons.save,
+                          color: isDarkMode ? Colors.white : Colors.grey[800],
+                        ),
+                        onPressed: _saveValue,
+                      )
+                      : Icon(
+                        Icons.edit,
+                        color: isDarkMode ? Colors.white : Colors.grey[800],
+                      ),
+            ),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: theme.textTheme.bodyLarge?.color,
+            ),
           ),
         ],
       ),
