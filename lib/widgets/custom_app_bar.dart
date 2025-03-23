@@ -6,7 +6,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
-  const CustomAppBar({super.key}) : preferredSize = const Size.fromHeight(56.0);
+  final bool showNotificationIcon;
+
+  const CustomAppBar({super.key, this.showNotificationIcon = true})
+    : preferredSize = const Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +46,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.notifications, color: theme.colorScheme.onPrimary),
-          onPressed: () {},
-        ),
-      ],
+      actions:
+          showNotificationIcon
+              ? [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                  onPressed: () {},
+                ),
+              ]
+              : null,
     );
   }
 }
