@@ -40,5 +40,9 @@ final GoRouter router = GoRouter(
           (context, state) => NoTransitionPage(child: const ProfileScreen()),
     ),
     GoRoute(path: '/admin', builder: (context, state) => const AdminScreen()),
+    GoRoute(
+      path: '/admin/equipments',
+      builder: (context, state) => const EquipmentsScreen(),
+    ),
   ],
 );
