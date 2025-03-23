@@ -3,13 +3,6 @@ import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/services/gym_data_service.dart';
 import 'package:academia_unifor/models/gym_equipment.dart';
 
-Map<String, int> suggestions = {
-  "Máquinas para treinamento de força": 40,
-  "Aparelhos ergométricos (cárdio)": 24,
-  "Esteiras": 12,
-  "Bikes para atividades de spinning": 11,
-};
-
 class EquipmentsScreen extends StatelessWidget {
   const EquipmentsScreen({super.key});
 
@@ -40,6 +33,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   String? selectedCategory;
   List<EquipmentItem> allItems = [];
   List<EquipmentItem> selectedItems = [];
+  Map<String, int> categoryCounts = {};
 
   @override
   void initState() {
@@ -50,8 +44,11 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   void _loadAllItems() async {
     final categories = await loadGymEquipment();
     final items = categories.expand((c) => c.items).toList();
+    final counts = {for (var c in categories) c.category: c.total};
+
     setState(() {
       allItems = items;
+      categoryCounts = counts;
     });
   }
 
@@ -126,6 +123,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
           child:
               selectedCategory == null
                   ? _EmptySearchSection(
+                    categoryCounts: categoryCounts,
                     chipColor: chipColor,
                     textColor: textColor,
                     onChipTap: _loadCategory,
@@ -148,11 +146,13 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
 }
 
 class _EmptySearchSection extends StatelessWidget {
+  final Map<String, int> categoryCounts;
   final Color chipColor;
   final Color textColor;
   final void Function(String) onChipTap;
 
   const _EmptySearchSection({
+    required this.categoryCounts,
     required this.chipColor,
     required this.textColor,
     required this.onChipTap,
@@ -174,20 +174,20 @@ class _EmptySearchSection extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children:
-              suggestions.keys
-                  .map(
-                    (equipamento) => ActionChip(
-                      label: Text(equipamento),
-                      backgroundColor: chipColor,
-                      labelStyle: TextStyle(color: textColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.transparent),
-                      ),
-                      onPressed: () => onChipTap(equipamento),
-                    ),
-                  )
-                  .toList(),
+              categoryCounts.entries.map((entry) {
+                final name = entry.key;
+                final total = entry.value;
+                return ActionChip(
+                  label: Text('$name ($total)'),
+                  backgroundColor: chipColor,
+                  labelStyle: TextStyle(color: textColor),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: Colors.transparent),
+                  ),
+                  onPressed: () => onChipTap(name),
+                );
+              }).toList(),
         ),
       ],
     );
