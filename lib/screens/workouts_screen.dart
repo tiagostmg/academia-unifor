@@ -93,12 +93,25 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
                         .toList(),
               ),
             ] else ...[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  selectedCategory!,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        selectedCategory = null;
+                        selectedItems = [];
+                      });
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      selectedCategory!,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               ListView.separated(
