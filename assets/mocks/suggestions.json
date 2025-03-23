@@ -2,7 +2,7 @@
   "suggestions": [
     {
       "category": "Máquinas para treinamento de força",
-      "total": 40,
+      "total": 58,
       "items": [
         {
           "name": "Leg Press 45º",
@@ -57,12 +57,48 @@
           "brand": "Hammer Strength",
           "model": "HD Elite",
           "quantity": 5
+        },
+        {
+          "name": "Hack Machine",
+          "brand": "Panatta",
+          "model": "Power Line",
+          "quantity": 3
+        },
+        {
+          "name": "Glúteo",
+          "brand": "Life Fitness",
+          "model": "Signature Series",
+          "quantity": 2
+        },
+        {
+          "name": "Abdutora",
+          "brand": "Matrix",
+          "model": "Aura Series",
+          "quantity": 3
+        },
+        {
+          "name": "Adutora",
+          "brand": "Matrix",
+          "model": "Aura Series",
+          "quantity": 3
+        },
+        {
+          "name": "Bíceps Scott",
+          "brand": "Technogym",
+          "model": "Selection 900",
+          "quantity": 2
+        },
+        {
+          "name": "Tríceps Testa",
+          "brand": "Hammer Strength",
+          "model": "Select",
+          "quantity": 2
         }
       ]
     },
     {
       "category": "Aparelhos ergométricos (cárdio)",
-      "total": 24,
+      "total": 33,
       "items": [
         {
           "name": "Elíptico",
@@ -93,12 +129,25 @@
           "brand": "Concept2",
           "model": "Model D",
           "quantity": 5
-        }
+        },
+        {
+          "name": "Bicicleta reclinada",
+          "brand": "Life Fitness",
+          "model": "RS3 Go",
+          "quantity": 3
+        },
+        {
+          "name": "Elíptico lateral",
+          "brand": "Precor",
+          "model": "Adaptive Motion Trainer",
+          "quantity": 2
+        },
+        { "name": "SkiErg", "brand": "Concept2", "model": "PM5", "quantity": 2 }
       ]
     },
     {
       "category": "Esteiras",
-      "total": 12,
+      "total": 16,
       "items": [
         {
           "name": "Esteira elétrica",
@@ -117,12 +166,24 @@
           "brand": "Assault Fitness",
           "model": "AirRunner",
           "quantity": 4
+        },
+        {
+          "name": "Esteira com inclinação automática",
+          "brand": "ProForm",
+          "model": "Pro 9000",
+          "quantity": 2
+        },
+        {
+          "name": "Esteira compacta para aquecimento",
+          "brand": "NordicTrack",
+          "model": "T 6.5 Si",
+          "quantity": 2
         }
       ]
     },
     {
       "category": "Bikes para atividades de spinning",
-      "total": 11,
+      "total": 15,
       "items": [
         {
           "name": "Bike Spinning",
@@ -141,6 +202,18 @@
           "brand": "Soul Fitness",
           "model": "S1000",
           "quantity": 3
+        },
+        {
+          "name": "Bike magnética de alta performance",
+          "brand": "Schwinn",
+          "model": "IC4",
+          "quantity": 2
+        },
+        {
+          "name": "Bike ergométrica vertical",
+          "brand": "Movement",
+          "model": "V4",
+          "quantity": 2
         }
       ]
     }
