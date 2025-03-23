@@ -2,6 +2,12 @@
 
 Aplicativo Flutter desenvolvido como parte de um trabalho universitário. Devido ao curto prazo para entrega, nem todas as boas práticas de desenvolvimento foram seguidas.
 
+Suporte a tema claro e escuro (light/dark mode)
+
+<p align="center">
+  <img src="./screenshots/585shots_so.png" alt="Telas de login" />
+</p>
+
 ## Clonando o projeto
 
 ```bash
