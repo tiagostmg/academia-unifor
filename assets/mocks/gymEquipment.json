@@ -30,7 +30,7 @@
           "brand": "Cybex",
           "model": "VR1",
           "quantity": 3,
-          "image": ""
+          "image": "https://img.medicalexpo.com/pt/images_me/photo-g/84049-10067023.webp"
         },
         {
           "name": "Extensora",
@@ -120,49 +120,49 @@
           "brand": "Octane",
           "model": "Q37",
           "quantity": 6,
-          "image": ""
+          "image": "https://m.fit4.com.br/media/catalog/product/cache/2/image/600x/9df78eab33525d08d6e5fb8d27136e95/q/3/q35x3.jpg"
         },
         {
           "name": "Escada simuladora",
           "brand": "StairMaster",
           "model": "Gauntlet",
           "quantity": 4,
-          "image": ""
+          "image": "https://a-static.mlcdn.com.br/800x560/simulador-escada-stair-master-lt9700-luminafit/luminafit/14/cf78483d1c7b17ae1ccb1eb3e4216799.jpeg"
         },
         {
           "name": "Wave",
           "brand": "Technogym",
           "model": "Excite+",
           "quantity": 4,
-          "image": ""
+          "image": "https://atlas-content-cdn.pixelsquid.com/assets_v2/250/2504612542018491550/jpeg-600/G03.jpg?modifiedAt=1"
         },
         {
           "name": "Air Bike",
           "brand": "Assault Fitness",
           "model": "AssaultBike Pro",
           "quantity": 5,
-          "image": ""
+          "image": "https://m.media-amazon.com/images/I/61eDvMwHE3L._AC_SL1500_.jpg"
         },
         {
           "name": "Remo indoor",
           "brand": "Concept2",
           "model": "Model D",
           "quantity": 5,
-          "image": ""
+          "image": "https://images.tcdn.com.br/img/img_prod/450774/remo_indoor_seco_concept2_8_1_73136176d47daa79c975311ad17c0141.jpg"
         },
         {
           "name": "Bicicleta reclinada",
           "brand": "Life Fitness",
           "model": "RS3 Go",
           "quantity": 3,
-          "image": ""
+          "image": "https://resources.fitshop.com/bilder/lifefitness/recumbentbike/rs3-go/lifefitness-rs3-go-01_1600.jpg"
         },
         {
           "name": "Elíptico lateral",
           "brand": "Precor",
           "model": "Adaptive Motion Trainer",
           "quantity": 2,
-          "image": ""
+          "image": "https://m.media-amazon.com/images/I/615uj1gAeJL._AC_UF1000,1000_QL80_.jpg"
         },
         {
           "name": "SkiErg",
@@ -182,7 +182,7 @@
           "brand": "Movement",
           "model": "RT250",
           "quantity": 4,
-          "image": ""
+          "image": "https://images.tcdn.com.br/img/img_prod/1323056/esteira_profissional_rt250_g3_movement_799_1_39affaed3a42575466ad36097838f6a7.png"
         },
         {
           "name": "Esteira profissional",
@@ -196,21 +196,21 @@
           "brand": "Assault Fitness",
           "model": "AirRunner",
           "quantity": 4,
-          "image": ""
+          "image": "https://www.absfitness.com.br/uploads/product_file/BIGesteira-mecanica-airrunner---movement.jpeg"
         },
         {
           "name": "Esteira com inclinação automática",
           "brand": "ProForm",
           "model": "Pro 9000",
           "quantity": 2,
-          "image": ""
+          "image": "https://shop.athletic.com.br/media/amasty/webp/catalog/product/cache/ad37a3107a8cff531597511fac24d463/0/3/03880_03881_-_esteira_ergom_trica_athletic_advanced_1_jpg.webp"
         },
         {
           "name": "Esteira compacta para aquecimento",
           "brand": "NordicTrack",
           "model": "T 6.5 Si",
           "quantity": 2,
-          "image": ""
+          "image": "https://m.media-amazon.com/images/I/41QblOX6f4L.jpg"
         }
       ]
     },
@@ -223,14 +223,14 @@
           "brand": "Keiser",
           "model": "M3i",
           "quantity": 5,
-          "image": ""
+          "image": "https://images.tcdn.com.br/img/img_prod/775128/bicicleta_ergometrica_indoor_m3i_studio_plus_keiser_3056_1_2c30134d37ce6da57f0eed4dda8fb08c.png"
         },
         {
           "name": "Bike Indoor",
           "brand": "Technogym",
           "model": "Group Cycle",
           "quantity": 3,
-          "image": ""
+          "image": "https://www.technogym.com/en-CH/feed/images/D92RNN/group-cycle-ride-plp.jpg"
         },
         {
           "name": "Bike Spinning",
@@ -244,14 +244,14 @@
           "brand": "Schwinn",
           "model": "IC4",
           "quantity": 2,
-          "image": ""
+          "image": "https://m.media-amazon.com/images/I/71QM8GywwML._AC_SL1500_.jpg"
         },
         {
           "name": "Bike ergométrica vertical",
           "brand": "Movement",
           "model": "V4",
           "quantity": 2,
-          "image": ""
+          "image": "https://m.media-amazon.com/images/I/51JeB2u-y2L._AC_SL1000_.jpg"
         }
       ]
     }
