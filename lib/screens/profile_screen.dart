@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:academia_unifor/services/profile_service.dart';
+import 'package:academia_unifor/models/profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -31,25 +33,44 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 40),
-          const ProfileAvatar(),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: const ProfileInfo(),
+    return FutureBuilder<Profile>(
+      future: ProfileService().loadProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 100),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          return const Center(child: Text("Erro ao carregar o perfil"));
+        }
+
+        final profile = snapshot.data!;
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              ProfileAvatar(avatarUrl: profile.avatarUrl),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ProfileInfo(profile: profile),
+              ),
+              const SizedBox(height: 60),
+            ],
           ),
-          const SizedBox(height: 60),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class ProfileAvatar extends StatelessWidget {
-  const ProfileAvatar({super.key});
+  final String avatarUrl;
+  const ProfileAvatar({super.key, required this.avatarUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +96,9 @@ class ProfileAvatar extends StatelessWidget {
             ),
           ],
         ),
-        child: const CircleAvatar(
+        child: CircleAvatar(
           radius: 60,
-          backgroundImage: NetworkImage(
-            "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
-          ),
+          backgroundImage: NetworkImage(avatarUrl),
         ),
       ),
     );
@@ -87,20 +106,30 @@ class ProfileAvatar extends StatelessWidget {
 }
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({super.key});
+  final Profile profile;
+  const ProfileInfo({super.key, required this.profile});
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
-  final _nameController = TextEditingController(text: "Carlos Felipe Araújo");
-  final _emailController = TextEditingController(
-    text: "carlosxfelipe@gmail.com",
-  );
-  final _phoneController = TextEditingController(text: "(85) 99950-2195");
-  final _addressController = TextEditingController(text: "Fortaleza, CE");
-  final _birthDateController = TextEditingController(text: "03/10/1987");
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+  late TextEditingController _birthDateController;
+
+  @override
+  void initState() {
+    super.initState();
+    final p = widget.profile;
+    _nameController = TextEditingController(text: p.name);
+    _emailController = TextEditingController(text: p.email);
+    _phoneController = TextEditingController(text: p.phone);
+    _addressController = TextEditingController(text: p.address);
+    _birthDateController = TextEditingController(text: p.birthDate);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,21 +157,13 @@ class _ProfileInfoState extends State<ProfileInfo> {
             color: Theme.of(context).iconTheme.color,
           ),
           title: const Text("Configurações"),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 18,
-            color: Theme.of(context).iconTheme.color,
-          ),
+          trailing: Icon(Icons.arrow_forward_ios, size: 18),
           onTap: () {},
         ),
         ListTile(
           leading: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
           title: const Text("Compartilhar App"),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 18,
-            color: Theme.of(context).iconTheme.color,
-          ),
+          trailing: Icon(Icons.arrow_forward_ios, size: 18),
           onTap: () async {
             final Uri url = Uri.parse(
               "https://github.com/carlosxfelipe/academia-unifor",
