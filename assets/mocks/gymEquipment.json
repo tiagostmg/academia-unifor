@@ -8,91 +8,106 @@
           "name": "Leg Press 45º",
           "brand": "Movement",
           "model": "LPX300",
-          "quantity": 4
+          "quantity": 4,
+          "image": "https://www.movement.com.br/wp-content/uploads/2023/02/bolt-leg45-frontal.png"
         },
         {
           "name": "Crossover",
           "brand": "Life Fitness",
           "model": "Signature Series",
-          "quantity": 5
+          "quantity": 5,
+          "image": "https://www.fitkituk.com/images/products/1602497237-82069700.jpg"
         },
         {
           "name": "Pulley frente",
           "brand": "Technogym",
           "model": "Selection 700",
-          "quantity": 6
+          "quantity": 6,
+          "image": "https://cdn.webshopapp.com/shops/278510/files/329848222/technogym-selection-pulley.jpg"
         },
         {
           "name": "Remada baixa",
           "brand": "Cybex",
           "model": "VR1",
-          "quantity": 3
+          "quantity": 3,
+          "image": ""
         },
         {
           "name": "Extensora",
           "brand": "Matrix",
           "model": "Aura Series",
-          "quantity": 4
+          "quantity": 4,
+          "image": "https://www.strengthindustry.com/image-smp/matrix-aura-leg-extensiona-la-carte-strengthmatrix-aura-leg-extensionmatrix_1535_800x800.png"
         },
         {
           "name": "Flexora",
           "brand": "Movement",
           "model": "FXR500",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Peck Deck",
           "brand": "Life Fitness",
           "model": "Optima",
-          "quantity": 5
+          "quantity": 5,
+          "image": "https://graysfitness.com.au/wp-content/uploads/Life-Fitness-Optima-Series-Pectoral-Fly-Rear-Deltoid-OSFLY-600x600.jpg"
         },
         {
           "name": "Desenvolvimento ombro",
           "brand": "Technogym",
           "model": "Element+",
-          "quantity": 4
+          "quantity": 4,
+          "image": "https://eurofitness.al/wp-content/uploads/2017/12/ELEMENT-ARM-CURL.jpg"
         },
         {
           "name": "Smith Machine",
           "brand": "Hammer Strength",
           "model": "HD Elite",
-          "quantity": 5
+          "quantity": 5,
+          "image": "https://amazonleisure.co.uk/wp-content/uploads/2020/06/Hammer-Strength-HD-Elite-Dual-Pulldown-600x600.jpg"
         },
         {
           "name": "Hack Machine",
           "brand": "Panatta",
           "model": "Power Line",
-          "quantity": 3
+          "quantity": 3,
+          "image": "https://panattafitness.com/wp-content/uploads/2021/07/1MTH092.jpg"
         },
         {
           "name": "Glúteo",
           "brand": "Life Fitness",
           "model": "Signature Series",
-          "quantity": 2
+          "quantity": 2,
+          "image": "https://www.lifefitness.com/Kentico13CoreBase/media/LFMedia/LifeFitnessImages/MediaSync/404-431-glute.png"
         },
         {
           "name": "Abdutora",
           "brand": "Matrix",
           "model": "Aura Series",
-          "quantity": 3
+          "quantity": 3,
+          "image": "https://prfitnessequipment.com/sites/prfitnessequipment.com/files/commerce/product/Matrix%20Aura%20G3-S74%20Adductor.jpg"
         },
         {
           "name": "Adutora",
           "brand": "Matrix",
           "model": "Aura Series",
-          "quantity": 3
+          "quantity": 3,
+          "image": "https://prfitnessequipment.com/sites/prfitnessequipment.com/files/commerce/product/Matrix%20Aura%20G3-S74%20Adductor.jpg"
         },
         {
           "name": "Bíceps Scott",
           "brand": "Technogym",
           "model": "Selection 900",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         },
         {
           "name": "Tríceps Testa",
           "brand": "Hammer Strength",
           "model": "Select",
-          "quantity": 2
+          "quantity": 2,
+          "image": "https://resources.fitshop.com/bilder/hammerstrength/tricepsextension/hammerstrength-triceps-extension-1_1600.jpg"
         }
       ]
     },
@@ -104,45 +119,58 @@
           "name": "Elíptico",
           "brand": "Octane",
           "model": "Q37",
-          "quantity": 6
+          "quantity": 6,
+          "image": ""
         },
         {
           "name": "Escada simuladora",
           "brand": "StairMaster",
           "model": "Gauntlet",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Wave",
           "brand": "Technogym",
           "model": "Excite+",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Air Bike",
           "brand": "Assault Fitness",
           "model": "AssaultBike Pro",
-          "quantity": 5
+          "quantity": 5,
+          "image": ""
         },
         {
           "name": "Remo indoor",
           "brand": "Concept2",
           "model": "Model D",
-          "quantity": 5
+          "quantity": 5,
+          "image": ""
         },
         {
           "name": "Bicicleta reclinada",
           "brand": "Life Fitness",
           "model": "RS3 Go",
-          "quantity": 3
+          "quantity": 3,
+          "image": ""
         },
         {
           "name": "Elíptico lateral",
           "brand": "Precor",
           "model": "Adaptive Motion Trainer",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         },
-        { "name": "SkiErg", "brand": "Concept2", "model": "PM5", "quantity": 2 }
+        {
+          "name": "SkiErg",
+          "brand": "Concept2",
+          "model": "PM5",
+          "quantity": 2,
+          "image": ""
+        }
       ]
     },
     {
@@ -153,31 +181,36 @@
           "name": "Esteira elétrica",
           "brand": "Movement",
           "model": "RT250",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Esteira profissional",
           "brand": "Life Fitness",
           "model": "T5 Track Connect",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Esteira curva",
           "brand": "Assault Fitness",
           "model": "AirRunner",
-          "quantity": 4
+          "quantity": 4,
+          "image": ""
         },
         {
           "name": "Esteira com inclinação automática",
           "brand": "ProForm",
           "model": "Pro 9000",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         },
         {
           "name": "Esteira compacta para aquecimento",
           "brand": "NordicTrack",
           "model": "T 6.5 Si",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         }
       ]
     },
@@ -189,31 +222,36 @@
           "name": "Bike Spinning",
           "brand": "Keiser",
           "model": "M3i",
-          "quantity": 5
+          "quantity": 5,
+          "image": ""
         },
         {
           "name": "Bike Indoor",
           "brand": "Technogym",
           "model": "Group Cycle",
-          "quantity": 3
+          "quantity": 3,
+          "image": ""
         },
         {
           "name": "Bike Spinning",
           "brand": "Soul Fitness",
           "model": "S1000",
-          "quantity": 3
+          "quantity": 3,
+          "image": ""
         },
         {
           "name": "Bike magnética de alta performance",
           "brand": "Schwinn",
           "model": "IC4",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         },
         {
           "name": "Bike ergométrica vertical",
           "brand": "Movement",
           "model": "V4",
-          "quantity": 2
+          "quantity": 2,
+          "image": ""
         }
       ]
     }
