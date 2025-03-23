@@ -87,13 +87,16 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
     });
   }
 
-  Widget _fallbackImage() {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: ClipRRect(
+  Widget fallbackImageWithBorder() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white, width: 4),
         borderRadius: BorderRadius.circular(12),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
         child: Container(
-          color: Colors.grey[200],
+          color: Colors.white,
           child: const Center(
             child: Icon(
               Icons.image_not_supported,
@@ -133,7 +136,7 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
                         selectedItems = [];
                       });
                     },
-                    fallbackImage: _fallbackImage,
+                    fallbackImage: fallbackImageWithBorder,
                   ),
         ),
       ),
@@ -226,6 +229,11 @@ class _SelectedCategoryList extends StatelessWidget {
           itemBuilder: (context, index) {
             final item = items[index];
             return Card(
+              elevation: 0,
+              color: Theme.of(context).colorScheme.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               clipBehavior: Clip.antiAlias,
               child: SizedBox(
                 height: 150,
@@ -242,9 +250,10 @@ class _SelectedCategoryList extends StatelessWidget {
                           children: [
                             Text(
                               item.name,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -252,15 +261,24 @@ class _SelectedCategoryList extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               item.brand,
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                             Text(
                               item.model,
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                             Text(
                               'Qtd: ${item.quantity}',
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
                           ],
                         ),
@@ -271,29 +289,32 @@ class _SelectedCategoryList extends StatelessWidget {
                       flex: 1,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 4),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              color: Colors.white,
-                              child:
-                                  item.image.isNotEmpty
-                                      ? Image.network(
+                        child:
+                            item.image.isNotEmpty
+                                ? Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 4,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: Image.network(
                                         item.image,
                                         height: double.infinity,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (_, __, ___) => fallbackImage(),
-                                      )
-                                      : fallbackImage(),
-                            ),
-                          ),
-                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                : fallbackImage(),
                       ),
                     ),
                   ],
