@@ -39,7 +39,11 @@ final GoRouter router = GoRouter(
       pageBuilder:
           (context, state) => NoTransitionPage(child: const ProfileScreen()),
     ),
-    GoRoute(path: '/admin', builder: (context, state) => const AdminScreen()),
+    GoRoute(
+      path: '/admin',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: const AdminScreen()),
+    ),
     GoRoute(
       path: '/admin/equipments',
       pageBuilder:

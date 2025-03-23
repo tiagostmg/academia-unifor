@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -12,11 +13,27 @@ class AdminScreen extends StatelessWidget {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 0, // Altere para 1 ou 2 conforme a aba
+          currentIndex: 0,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(showNotificationIcon: false),
-            body: const Center(child: Text('Bem-vindo, Admin!')),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      text: "Sair para tela de login",
+                      icon: Icons.logout,
+                      onPressed: () {
+                        context.go('/');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
