@@ -271,19 +271,28 @@ class _SelectedCategoryList extends StatelessWidget {
                       flex: 1,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child:
-                              item.image.isNotEmpty
-                                  ? Image.network(
-                                    item.image,
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (_, __, ___) => fallbackImage(),
-                                  )
-                                  : fallbackImage(),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 4),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              color: Colors.white,
+                              child:
+                                  item.image.isNotEmpty
+                                      ? Image.network(
+                                        item.image,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (_, __, ___) => fallbackImage(),
+                                      )
+                                      : fallbackImage(),
+                            ),
+                          ),
                         ),
                       ),
                     ),
