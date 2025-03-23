@@ -20,13 +20,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
 
+  final _phoneController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _birthDateController = TextEditingController();
+
   void _register() {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+    final phone = _phoneController.text.trim();
+    final location = _locationController.text.trim();
+    final birthDate = _birthDateController.text.trim();
+
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        phone.isEmpty ||
+        location.isEmpty ||
+        birthDate.isEmpty) {
       _showMessage("Preencha todos os campos");
     } else if (password != confirmPassword) {
       _showMessage("As senhas não coincidem");
@@ -144,6 +157,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               _emailController,
                               isDarkMode,
                               Icons.email,
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTextField(
+                              "Telefone",
+                              _phoneController,
+                              isDarkMode,
+                              Icons.phone,
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTextField(
+                              "Localização",
+                              _locationController,
+                              isDarkMode,
+                              Icons.location_on,
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTextField(
+                              "Data de Nascimento (dd/mm/aaaa)",
+                              _birthDateController,
+                              isDarkMode,
+                              Icons.cake,
                             ),
                             const SizedBox(height: 15),
                             _buildPasswordField("Senha", _passwordController),
