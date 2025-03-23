@@ -53,6 +53,17 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
     });
   }
 
+  Widget _fallbackImage() {
+    return Container(
+      color: Colors.grey[200],
+      height: double.infinity,
+      width: double.infinity,
+      child: const Center(
+        child: Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -68,7 +79,7 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
               const Icon(Icons.search, size: 80, color: Colors.grey),
               const SizedBox(height: 16),
               const Text(
-                "Pesquise por um treino...",
+                "Pesquise por um aparelho...",
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
               const SizedBox(height: 20),
@@ -122,56 +133,66 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
                 itemBuilder: (context, index) {
                   final item = selectedItems[index];
                   return Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        item.image.isNotEmpty
-                            ? Image.network(
-                              item.image,
-                              height: 160,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (_, __, ___) => const SizedBox(
-                                    height: 160,
-                                    child: Icon(Icons.broken_image),
+                    clipBehavior: Clip.antiAlias,
+                    child: SizedBox(
+                      height: 120,
+                      child: Row(
+                        children: [
+                          // Informações
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                            )
-                            : const SizedBox(
-                              height: 160,
-                              child: Icon(Icons.image_not_supported),
-                            ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    item.brand,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    item.model,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  Text(
+                                    'Qtd: ${item.quantity}',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
                               ),
-                              Text(item.brand),
-                              Text(item.model),
-                              Text('Qtd: ${item.quantity}'),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                          // Imagem
+                          Expanded(
+                            flex: 1,
+                            child:
+                                item.image.isNotEmpty
+                                    ? Image.network(
+                                      item.image,
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (_, __, ___) => _fallbackImage(),
+                                    )
+                                    : _fallbackImage(),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    selectedCategory = null;
-                    selectedItems = [];
-                  });
-                },
-                icon: const Icon(Icons.arrow_back),
-                label: const Text('Voltar'),
               ),
             ],
           ],
