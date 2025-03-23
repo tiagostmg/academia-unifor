@@ -1,0 +1,148 @@
+{
+  "suggestions": [
+    {
+      "category": "Máquinas para treinamento de força",
+      "total": 40,
+      "items": [
+        {
+          "name": "Leg Press 45º",
+          "brand": "Movement",
+          "model": "LPX300",
+          "quantity": 4
+        },
+        {
+          "name": "Crossover",
+          "brand": "Life Fitness",
+          "model": "Signature Series",
+          "quantity": 5
+        },
+        {
+          "name": "Pulley frente",
+          "brand": "Technogym",
+          "model": "Selection 700",
+          "quantity": 6
+        },
+        {
+          "name": "Remada baixa",
+          "brand": "Cybex",
+          "model": "VR1",
+          "quantity": 3
+        },
+        {
+          "name": "Extensora",
+          "brand": "Matrix",
+          "model": "Aura Series",
+          "quantity": 4
+        },
+        {
+          "name": "Flexora",
+          "brand": "Movement",
+          "model": "FXR500",
+          "quantity": 4
+        },
+        {
+          "name": "Peck Deck",
+          "brand": "Life Fitness",
+          "model": "Optima",
+          "quantity": 5
+        },
+        {
+          "name": "Desenvolvimento ombro",
+          "brand": "Technogym",
+          "model": "Element+",
+          "quantity": 4
+        },
+        {
+          "name": "Smith Machine",
+          "brand": "Hammer Strength",
+          "model": "HD Elite",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "category": "Aparelhos ergométricos (cárdio)",
+      "total": 24,
+      "items": [
+        {
+          "name": "Elíptico",
+          "brand": "Octane",
+          "model": "Q37",
+          "quantity": 6
+        },
+        {
+          "name": "Escada simuladora",
+          "brand": "StairMaster",
+          "model": "Gauntlet",
+          "quantity": 4
+        },
+        {
+          "name": "Wave",
+          "brand": "Technogym",
+          "model": "Excite+",
+          "quantity": 4
+        },
+        {
+          "name": "Air Bike",
+          "brand": "Assault Fitness",
+          "model": "AssaultBike Pro",
+          "quantity": 5
+        },
+        {
+          "name": "Remo indoor",
+          "brand": "Concept2",
+          "model": "Model D",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "category": "Esteiras",
+      "total": 12,
+      "items": [
+        {
+          "name": "Esteira elétrica",
+          "brand": "Movement",
+          "model": "RT250",
+          "quantity": 4
+        },
+        {
+          "name": "Esteira profissional",
+          "brand": "Life Fitness",
+          "model": "T5 Track Connect",
+          "quantity": 4
+        },
+        {
+          "name": "Esteira curva",
+          "brand": "Assault Fitness",
+          "model": "AirRunner",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "category": "Bikes para atividades de spinning",
+      "total": 11,
+      "items": [
+        {
+          "name": "Bike Spinning",
+          "brand": "Keiser",
+          "model": "M3i",
+          "quantity": 5
+        },
+        {
+          "name": "Bike Indoor",
+          "brand": "Technogym",
+          "model": "Group Cycle",
+          "quantity": 3
+        },
+        {
+          "name": "Bike Spinning",
+          "brand": "Soul Fitness",
+          "model": "S1000",
+          "quantity": 3
+        }
+      ]
+    }
+  ]
+}
