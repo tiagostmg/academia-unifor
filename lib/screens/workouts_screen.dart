@@ -22,11 +22,7 @@ class WorkoutsScreen extends StatelessWidget {
       child: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 1, // Índice correspondente ao botão "Treinos"
-          child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: SearchAppBar(),
-            body: const WorkoutsBody(),
-          ),
+          child: const WorkoutsBody(),
         ),
       ),
     );
@@ -42,7 +38,22 @@ class WorkoutsBody extends StatefulWidget {
 
 class _WorkoutsBodyState extends State<WorkoutsBody> {
   String? selectedCategory;
+  List<EquipmentItem> allItems = [];
   List<EquipmentItem> selectedItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAllItems();
+  }
+
+  void _loadAllItems() async {
+    final categories = await loadGymEquipment();
+    final items = categories.expand((c) => c.items).toList();
+    setState(() {
+      allItems = items;
+    });
+  }
 
   void _loadCategory(String category) async {
     final categories = await loadGymEquipment();
@@ -50,6 +61,29 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
     setState(() {
       selectedCategory = category;
       selectedItems = selected.items;
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        selectedCategory = null;
+        selectedItems = [];
+      });
+      return;
+    }
+
+    final filtered =
+        allItems.where((item) {
+          final lower = query.toLowerCase();
+          return item.name.toLowerCase().contains(lower) ||
+              item.brand.toLowerCase().contains(lower) ||
+              item.model.toLowerCase().contains(lower);
+        }).toList();
+
+    setState(() {
+      selectedCategory = 'Resultados da busca';
+      selectedItems = filtered;
     });
   }
 
@@ -78,138 +112,142 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
     final chipColor = isDarkMode ? Colors.grey[800]! : Colors.grey[200]!;
     final textColor = isDarkMode ? Colors.white : Colors.black;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            if (selectedCategory == null) ...[
-              const Icon(Icons.search, size: 80, color: Colors.grey),
-              const SizedBox(height: 16),
-              const Text(
-                "Pesquise por um aparelho...",
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-              const SizedBox(height: 20),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                runSpacing: 10,
-                children:
-                    suggestions.keys
-                        .map(
-                          (equipamento) => ActionChip(
-                            label: Text(equipamento),
-                            backgroundColor: chipColor,
-                            labelStyle: TextStyle(color: textColor),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: BorderSide(color: Colors.transparent),
+    return Scaffold(
+      appBar: SearchAppBar(onSearchChanged: _onSearchChanged),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              if (selectedCategory == null) ...[
+                const Icon(Icons.search, size: 80, color: Colors.grey),
+                const SizedBox(height: 16),
+                const Text(
+                  "Pesquise por um aparelho...",
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 10,
+                  children:
+                      suggestions.keys
+                          .map(
+                            (equipamento) => ActionChip(
+                              label: Text(equipamento),
+                              backgroundColor: chipColor,
+                              labelStyle: TextStyle(color: textColor),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(color: Colors.transparent),
+                              ),
+                              onPressed: () => _loadCategory(equipamento),
                             ),
-                            onPressed: () => _loadCategory(equipamento),
-                          ),
-                        )
-                        .toList(),
-              ),
-            ] else ...[
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedCategory = null;
-                        selectedItems = [];
-                      });
-                    },
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      selectedCategory!,
-                      style: Theme.of(context).textTheme.titleLarge,
+                          )
+                          .toList(),
+                ),
+              ] else ...[
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedCategory = null;
+                          selectedItems = [];
+                        });
+                      },
+                      icon: const Icon(Icons.arrow_back),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: selectedItems.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  final item = selectedItems[index];
-                  return Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          // Informações
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    item.brand,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  Text(
-                                    item.model,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  Text(
-                                    'Qtd: ${item.quantity}',
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Imagem
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child:
-                                    item.image.isNotEmpty
-                                        ? Image.network(
-                                          item.image,
-                                          height: double.infinity,
-                                          width: double.infinity,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (_, __, ___) => _fallbackImage(),
-                                        )
-                                        : _fallbackImage(),
-                              ),
-                            ),
-                          ),
-                        ],
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        selectedCategory!,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
-                  );
-                },
-              ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: selectedItems.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final item = selectedItems[index];
+                    return Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            // Informações
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.brand,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      item.model,
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                    Text(
+                                      'Qtd: ${item.quantity}',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            // Imagem
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child:
+                                      item.image.isNotEmpty
+                                          ? Image.network(
+                                            item.image,
+                                            height: double.infinity,
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (_, __, ___) =>
+                                                    _fallbackImage(),
+                                          )
+                                          : _fallbackImage(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
