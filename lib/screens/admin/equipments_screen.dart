@@ -116,7 +116,10 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
     final textColor = isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
-      appBar: SearchAppBar(onSearchChanged: _onSearchChanged),
+      appBar: SearchAppBar(
+        onSearchChanged: _onSearchChanged,
+        showChatIcon: false,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

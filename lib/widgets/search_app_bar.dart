@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onSearchChanged;
+  final bool showChatIcon;
 
-  const SearchAppBar({super.key, this.onSearchChanged});
+  const SearchAppBar({
+    super.key,
+    this.onSearchChanged,
+    this.showChatIcon = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +44,20 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: false,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.chat, color: theme.colorScheme.onPrimary),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ChatScreen()),
-            );
-          },
-        ),
-      ],
+      actions:
+          showChatIcon
+              ? [
+                IconButton(
+                  icon: Icon(Icons.chat, color: theme.colorScheme.onPrimary),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatScreen()),
+                    );
+                  },
+                ),
+              ]
+              : null,
     );
   }
 
