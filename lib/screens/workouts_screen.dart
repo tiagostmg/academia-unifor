@@ -117,139 +117,183 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              if (selectedCategory == null) ...[
-                const Icon(Icons.search, size: 80, color: Colors.grey),
-                const SizedBox(height: 16),
-                const Text(
-                  "Pesquise por um aparelho...",
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 10,
-                  runSpacing: 10,
-                  children:
-                      suggestions.keys
-                          .map(
-                            (equipamento) => ActionChip(
-                              label: Text(equipamento),
-                              backgroundColor: chipColor,
-                              labelStyle: TextStyle(color: textColor),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                side: BorderSide(color: Colors.transparent),
-                              ),
-                              onPressed: () => _loadCategory(equipamento),
-                            ),
-                          )
-                          .toList(),
-                ),
-              ] else ...[
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedCategory = null;
-                          selectedItems = [];
-                        });
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        selectedCategory!,
-                        style: Theme.of(context).textTheme.titleLarge,
+          child:
+              selectedCategory == null
+                  ? _EmptySearchSection(
+                    chipColor: chipColor,
+                    textColor: textColor,
+                    onChipTap: _loadCategory,
+                  )
+                  : _SelectedCategoryList(
+                    selectedCategory: selectedCategory!,
+                    items: selectedItems,
+                    onBack: () {
+                      setState(() {
+                        selectedCategory = null;
+                        selectedItems = [];
+                      });
+                    },
+                    fallbackImage: _fallbackImage,
+                  ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptySearchSection extends StatelessWidget {
+  final Color chipColor;
+  final Color textColor;
+  final void Function(String) onChipTap;
+
+  const _EmptySearchSection({
+    required this.chipColor,
+    required this.textColor,
+    required this.onChipTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Icon(Icons.search, size: 80, color: Colors.grey),
+        const SizedBox(height: 16),
+        const Text(
+          "Pesquise por um aparelho...",
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 10,
+          runSpacing: 10,
+          children:
+              suggestions.keys
+                  .map(
+                    (equipamento) => ActionChip(
+                      label: Text(equipamento),
+                      backgroundColor: chipColor,
+                      labelStyle: TextStyle(color: textColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: Colors.transparent),
                       ),
+                      onPressed: () => onChipTap(equipamento),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: selectedItems.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) {
-                    final item = selectedItems[index];
-                    return Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: SizedBox(
-                        height: 150,
-                        child: Row(
+                  )
+                  .toList(),
+        ),
+      ],
+    );
+  }
+}
+
+class _SelectedCategoryList extends StatelessWidget {
+  final String selectedCategory;
+  final List<EquipmentItem> items;
+  final VoidCallback onBack;
+  final Widget Function() fallbackImage;
+
+  const _SelectedCategoryList({
+    required this.selectedCategory,
+    required this.items,
+    required this.onBack,
+    required this.fallbackImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                selectedCategory,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: items.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          itemBuilder: (context, index) {
+            final item = items[index];
+            return Card(
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
+                height: 150,
+                child: Row(
+                  children: [
+                    // Informações
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Informações
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      item.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      item.brand,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      item.model,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                    Text(
-                                      'Qtd: ${item.quantity}',
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
-                                  ],
-                                ),
+                            Text(
+                              item.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            // Imagem
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child:
-                                      item.image.isNotEmpty
-                                          ? Image.network(
-                                            item.image,
-                                            height: double.infinity,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (_, __, ___) =>
-                                                    _fallbackImage(),
-                                          )
-                                          : _fallbackImage(),
-                                ),
-                              ),
+                            const SizedBox(height: 4),
+                            Text(
+                              item.brand,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              item.model,
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              'Qtd: ${item.quantity}',
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
+                    ),
+                    // Imagem
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child:
+                              item.image.isNotEmpty
+                                  ? Image.network(
+                                    item.image,
+                                    height: double.infinity,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (_, __, ___) => fallbackImage(),
+                                  )
+                                  : fallbackImage(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ],
-          ),
+              ),
+            );
+          },
         ),
-      ),
+      ],
     );
   }
 }
