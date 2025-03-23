@@ -30,3 +30,4 @@ flutter:
     - assets/
     - .env
     - assets/mocks/gymEquipment.json
+    - assets/mocks/exercises.json
