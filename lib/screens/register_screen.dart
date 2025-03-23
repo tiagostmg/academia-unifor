@@ -192,6 +192,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
+        floatingLabelStyle: TextStyle(
+          color: isDark ? Colors.white : Colors.black,
+        ),
         prefixIcon: Icon(icon, color: isDark ? Colors.white : Colors.black),
         filled: true,
         fillColor:
@@ -215,6 +219,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
+        floatingLabelStyle: TextStyle(
+          color: isDark ? Colors.white : Colors.black,
+        ),
         prefixIcon: Icon(
           Icons.lock,
           color: isDark ? Colors.white : Colors.black,
