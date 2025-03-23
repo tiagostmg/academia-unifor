@@ -40,9 +40,13 @@ class LoginScreenState extends State<LoginScreen> {
 
   void _startImageRotation() {
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (!mounted) return;
+
       setState(() => _opacity = 0.0);
 
       Future.delayed(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
+
         setState(() {
           _currentImageIndex = (_currentImageIndex + 1) % imagePaths.length;
           _opacity = 1.0;
