@@ -17,9 +17,9 @@ class EquipmentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(color: theme.colorScheme.primary),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: theme.colorScheme.primary,
+      body: SafeArea(
         child: AdminConvexBottomBar(
           currentIndex: 1, // Índice correspondente ao botão "Aparelhos"
           child: const EquipmentsBody(),
