@@ -54,12 +54,20 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
   }
 
   Widget _fallbackImage() {
-    return Container(
-      color: Colors.grey[200],
-      height: double.infinity,
-      width: double.infinity,
-      child: const Center(
-        child: Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          color: Colors.grey[200],
+          child: const Center(
+            child: Icon(
+              Icons.image_not_supported,
+              size: 40,
+              color: Colors.grey,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -135,7 +143,7 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
                   return Card(
                     clipBehavior: Clip.antiAlias,
                     child: SizedBox(
-                      height: 120,
+                      height: 150,
                       child: Row(
                         children: [
                           // Informações
@@ -176,17 +184,23 @@ class _WorkoutsBodyState extends State<WorkoutsBody> {
                           // Imagem
                           Expanded(
                             flex: 1,
-                            child:
-                                item.image.isNotEmpty
-                                    ? Image.network(
-                                      item.image,
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (_, __, ___) => _fallbackImage(),
-                                    )
-                                    : _fallbackImage(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child:
+                                    item.image.isNotEmpty
+                                        ? Image.network(
+                                          item.image,
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (_, __, ___) => _fallbackImage(),
+                                        )
+                                        : _fallbackImage(),
+                              ),
+                            ),
                           ),
                         ],
                       ),
