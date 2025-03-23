@@ -6,6 +6,7 @@ class Exercise {
   final String type;
   final String level;
   final String notes;
+  final String image;
 
   Exercise({
     required this.name,
@@ -15,6 +16,7 @@ class Exercise {
     required this.type,
     required this.level,
     required this.notes,
+    required this.image,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class Exercise {
       type: json['type'],
       level: json['level'],
       notes: json['notes'],
+      image: json['image'] ?? '',
     );
   }
 }

@@ -7,7 +7,8 @@
       "equipment": "Banco reto, barra olímpica",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Manter os pés no chão e não tirar as costas do banco."
+      "notes": "Manter os pés no chão e não tirar as costas do banco.",
+      "image": ""
     },
     {
       "name": "Agachamento Livre",
@@ -16,7 +17,8 @@
       "equipment": "Barra olímpica",
       "type": "Força",
       "level": "Avançado",
-      "notes": "Cuidado com a postura da lombar. Fazer com supervisão no início."
+      "notes": "Cuidado com a postura da lombar. Fazer com supervisão no início.",
+      "image": ""
     },
     {
       "name": "Puxada na frente na polia alta",
@@ -25,7 +27,8 @@
       "equipment": "Máquina com polia alta",
       "type": "Força",
       "level": "Iniciante",
-      "notes": "Manter o tronco levemente inclinado para trás."
+      "notes": "Manter o tronco levemente inclinado para trás.",
+      "image": ""
     },
     {
       "name": "Leg Press 45º",
@@ -34,7 +37,8 @@
       "equipment": "Máquina Leg Press",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Não estender totalmente os joelhos para evitar sobrecarga articular."
+      "notes": "Não estender totalmente os joelhos para evitar sobrecarga articular.",
+      "image": ""
     },
     {
       "name": "Rosca direta com barra",
@@ -43,7 +47,8 @@
       "equipment": "Barra reta ou W",
       "type": "Hipertrofia",
       "level": "Intermediário",
-      "notes": "Evitar balanço do corpo para não perder a efetividade do exercício."
+      "notes": "Evitar balanço do corpo para não perder a efetividade do exercício.",
+      "image": ""
     },
     {
       "name": "Cadeira Extensora",
@@ -52,7 +57,8 @@
       "equipment": "Máquina extensora",
       "type": "Força",
       "level": "Iniciante",
-      "notes": "Ajustar o encosto para garantir o posicionamento correto do joelho."
+      "notes": "Ajustar o encosto para garantir o posicionamento correto do joelho.",
+      "image": ""
     },
     {
       "name": "Abdominal Supra no Solo",
@@ -61,7 +67,8 @@
       "equipment": "Colchonete",
       "type": "Resistência",
       "level": "Iniciante",
-      "notes": "Evitar forçar o pescoço com as mãos."
+      "notes": "Evitar forçar o pescoço com as mãos.",
+      "image": ""
     },
     {
       "name": "Elevação lateral com halteres",
@@ -70,7 +77,8 @@
       "equipment": "Halteres",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Movimento deve ser controlado, sem impulso."
+      "notes": "Movimento deve ser controlado, sem impulso.",
+      "image": ""
     },
     {
       "name": "Stiff com halteres",
@@ -79,7 +87,8 @@
       "equipment": "Halteres ou barra",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Manter joelhos levemente flexionados e a coluna neutra."
+      "notes": "Manter joelhos levemente flexionados e a coluna neutra.",
+      "image": ""
     },
     {
       "name": "Flexão de braço no solo",
@@ -88,7 +97,8 @@
       "equipment": "Peso corporal",
       "type": "Resistência",
       "level": "Iniciante",
-      "notes": "Manter o abdômen contraído durante o movimento."
+      "notes": "Manter o abdômen contraído durante o movimento.",
+      "image": ""
     },
     {
       "name": "Remada Curvada com Barra",
@@ -97,7 +107,8 @@
       "equipment": "Barra olímpica",
       "type": "Força",
       "level": "Avançado",
-      "notes": "Manter a lombar reta e os joelhos levemente flexionados."
+      "notes": "Manter a lombar reta e os joelhos levemente flexionados.",
+      "image": ""
     },
     {
       "name": "Tríceps Corda na Polia",
@@ -106,7 +117,8 @@
       "equipment": "Polia alta com corda",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Evitar usar os ombros no movimento."
+      "notes": "Evitar usar os ombros no movimento.",
+      "image": ""
     },
     {
       "name": "Afundo com Halteres",
@@ -115,7 +127,8 @@
       "equipment": "Halteres",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Manter o tronco ereto durante a descida."
+      "notes": "Manter o tronco ereto durante a descida.",
+      "image": ""
     },
     {
       "name": "Panturrilha em Pé",
@@ -124,7 +137,8 @@
       "equipment": "Máquina ou peso corporal",
       "type": "Isolado",
       "level": "Iniciante",
-      "notes": "Subir e descer lentamente, foco na contração."
+      "notes": "Subir e descer lentamente, foco na contração.",
+      "image": ""
     },
     {
       "name": "Crucifixo no Banco Reto",
@@ -133,7 +147,8 @@
       "equipment": "Halteres, banco reto",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Evitar estender demais os braços para proteger os ombros."
+      "notes": "Evitar estender demais os braços para proteger os ombros.",
+      "image": ""
     },
     {
       "name": "Pull Over com Halteres",
@@ -142,7 +157,8 @@
       "equipment": "Halteres, banco",
       "type": "Composto",
       "level": "Intermediário",
-      "notes": "Executar com controle, sem arquear a lombar."
+      "notes": "Executar com controle, sem arquear a lombar.",
+      "image": ""
     },
     {
       "name": "Prancha Abdominal",
@@ -151,7 +167,8 @@
       "equipment": "Colchonete",
       "type": "Estático",
       "level": "Iniciante",
-      "notes": "Evitar elevar ou abaixar demais o quadril."
+      "notes": "Evitar elevar ou abaixar demais o quadril.",
+      "image": ""
     },
     {
       "name": "Desenvolvimento com Halteres",
@@ -160,7 +177,8 @@
       "equipment": "Halteres, banco com encosto",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Evitar arqueamento da lombar."
+      "notes": "Evitar arqueamento da lombar.",
+      "image": ""
     },
     {
       "name": "Elevação de Pernas na Barra Fixa",
@@ -169,7 +187,8 @@
       "equipment": "Barra fixa",
       "type": "Resistência",
       "level": "Avançado",
-      "notes": "Não balançar o corpo durante o exercício."
+      "notes": "Não balançar o corpo durante o exercício.",
+      "image": ""
     },
     {
       "name": "Mountain Climbers",
@@ -178,7 +197,8 @@
       "equipment": "Peso corporal",
       "type": "Cardio",
       "level": "Intermediário",
-      "notes": "Manter o abdômen contraído e ritmo constante."
+      "notes": "Manter o abdômen contraído e ritmo constante.",
+      "image": ""
     },
     {
       "name": "Remada Unilateral com Halteres",
@@ -187,7 +207,8 @@
       "equipment": "Halteres, banco",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Evitar movimentar o tronco durante a execução."
+      "notes": "Evitar movimentar o tronco durante a execução.",
+      "image": ""
     },
     {
       "name": "Glúteo no Cabo",
@@ -196,7 +217,8 @@
       "equipment": "Cabo com tornozeleira",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Controlar a volta do movimento para maior ativação."
+      "notes": "Controlar a volta do movimento para maior ativação.",
+      "image": ""
     },
     {
       "name": "Abdução de Quadril no Solo",
@@ -205,7 +227,8 @@
       "equipment": "Peso corporal",
       "type": "Isolado",
       "level": "Iniciante",
-      "notes": "Manter a perna em 90 graus com controle."
+      "notes": "Manter a perna em 90 graus com controle.",
+      "image": ""
     },
     {
       "name": "Rosca Concentrada",
@@ -214,7 +237,8 @@
       "equipment": "Halter",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Evitar girar o tronco. Foco na contração do bíceps."
+      "notes": "Evitar girar o tronco. Foco na contração do bíceps.",
+      "image": ""
     },
     {
       "name": "Tríceps Banco",
@@ -223,7 +247,8 @@
       "equipment": "Banco ou apoio",
       "type": "Resistência",
       "level": "Iniciante",
-      "notes": "Evitar descer além de 90º no cotovelo."
+      "notes": "Evitar descer além de 90º no cotovelo.",
+      "image": ""
     },
     {
       "name": "Corrida na Esteira",
@@ -232,7 +257,8 @@
       "equipment": "Esteira",
       "type": "Cardio",
       "level": "Intermediário",
-      "notes": "Manter ritmo constante e postura ereta."
+      "notes": "Manter ritmo constante e postura ereta.",
+      "image": ""
     },
     {
       "name": "Abdominal Infra na Barra",
@@ -241,7 +267,8 @@
       "equipment": "Barra fixa",
       "type": "Resistência",
       "level": "Avançado",
-      "notes": "Controlar o balanço do corpo."
+      "notes": "Controlar o balanço do corpo.",
+      "image": ""
     },
     {
       "name": "Burpee",
@@ -250,7 +277,8 @@
       "equipment": "Peso corporal",
       "type": "Cardio",
       "level": "Avançado",
-      "notes": "Realizar com ritmo e cuidado nas articulações."
+      "notes": "Realizar com ritmo e cuidado nas articulações.",
+      "image": ""
     },
     {
       "name": "Elevação de Ombros com Halteres",
@@ -259,7 +287,8 @@
       "equipment": "Halteres",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Subir os ombros em direção às orelhas sem girar."
+      "notes": "Subir os ombros em direção às orelhas sem girar.",
+      "image": ""
     },
     {
       "name": "Ponte de Glúteo",
@@ -268,7 +297,8 @@
       "equipment": "Peso corporal ou barra leve",
       "type": "Isolado",
       "level": "Iniciante",
-      "notes": "Evitar hiperextensão da lombar."
+      "notes": "Evitar hiperextensão da lombar.",
+      "image": ""
     },
     {
       "name": "Avanço Alternado",
@@ -277,7 +307,8 @@
       "equipment": "Peso corporal ou halteres",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Cuidado para o joelho não ultrapassar a ponta do pé."
+      "notes": "Cuidado para o joelho não ultrapassar a ponta do pé.",
+      "image": ""
     },
     {
       "name": "Puxada Pegada Fechada",
@@ -286,7 +317,8 @@
       "equipment": "Máquina de polia alta",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Foco na contração escapular."
+      "notes": "Foco na contração escapular.",
+      "image": ""
     },
     {
       "name": "Extensão de Tríceps Testa com Halteres",
@@ -295,7 +327,8 @@
       "equipment": "Halteres",
       "type": "Isolado",
       "level": "Intermediário",
-      "notes": "Evitar movimentar os cotovelos para os lados."
+      "notes": "Evitar movimentar os cotovelos para os lados.",
+      "image": ""
     },
     {
       "name": "Corrida na Air Bike",
@@ -304,7 +337,8 @@
       "equipment": "Air Bike",
       "type": "Cardio",
       "level": "Intermediário",
-      "notes": "Ideal para HIIT e resistência aeróbica."
+      "notes": "Ideal para HIIT e resistência aeróbica.",
+      "image": ""
     },
     {
       "name": "Abdominal Canivete",
@@ -313,7 +347,8 @@
       "equipment": "Colchonete",
       "type": "Resistência",
       "level": "Intermediário",
-      "notes": "Evitar puxar o pescoço, subir com controle."
+      "notes": "Evitar puxar o pescoço, subir com controle.",
+      "image": ""
     },
     {
       "name": "Remada Sentada com Triângulo",
@@ -322,7 +357,8 @@
       "equipment": "Máquina de cabo baixo",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Manter as costas retas e puxar com os braços."
+      "notes": "Manter as costas retas e puxar com os braços.",
+      "image": ""
     },
     {
       "name": "Agachamento na Cadeira Hack",
@@ -331,7 +367,8 @@
       "equipment": "Máquina Hack",
       "type": "Força",
       "level": "Avançado",
-      "notes": "Não travar os joelhos ao final do movimento."
+      "notes": "Não travar os joelhos ao final do movimento.",
+      "image": ""
     },
     {
       "name": "Pliometria com Caixa",
@@ -340,7 +377,8 @@
       "equipment": "Caixa pliométrica",
       "type": "Explosão",
       "level": "Avançado",
-      "notes": "Aterrissar suavemente com joelhos flexionados."
+      "notes": "Aterrissar suavemente com joelhos flexionados.",
+      "image": ""
     },
     {
       "name": "Remada Alta com Barra",
@@ -349,7 +387,8 @@
       "equipment": "Barra reta",
       "type": "Força",
       "level": "Intermediário",
-      "notes": "Evitar puxar além da linha dos ombros."
+      "notes": "Evitar puxar além da linha dos ombros.",
+      "image": ""
     },
     {
       "name": "Corrida Intervalada na Esteira",
@@ -358,7 +397,8 @@
       "equipment": "Esteira",
       "type": "Cardio",
       "level": "Avançado",
-      "notes": "Ajustar velocidade conforme condicionamento."
+      "notes": "Ajustar velocidade conforme condicionamento.",
+      "image": ""
     }
   ]
 }
