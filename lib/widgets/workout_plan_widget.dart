@@ -66,6 +66,20 @@ class _WorkoutPlanWidgetState extends State<WorkoutPlanWidget> {
     }
 
     final groupedExercises = _splitByWorkoutDays(_exercises);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Color getCardColor(String treino) {
+      switch (treino) {
+        case 'Treino A':
+          return isDark ? Colors.orange.shade300 : Colors.orange.shade100;
+        case 'Treino B':
+          return isDark ? Colors.green.shade400 : Colors.green.shade100;
+        case 'Treino C':
+          return isDark ? Colors.blue.shade400 : Colors.blue.shade100;
+        default:
+          return isDark ? Colors.grey.shade700 : Colors.grey.shade200;
+      }
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,17 +93,10 @@ class _WorkoutPlanWidgetState extends State<WorkoutPlanWidget> {
         ),
         const SizedBox(height: 10),
         ...groupedExercises.entries.map((entry) {
-          final color = switch (entry.key) {
-            'Treino A' => Colors.orange.shade100,
-            'Treino B' => Colors.green.shade100,
-            'Treino C' => Colors.blue.shade100,
-            _ => Colors.grey.shade200,
-          };
-
           return _WorkoutGroup(
             title: entry.key,
             exercises: entry.value,
-            cardColor: color,
+            cardColor: getCardColor(entry.key),
           );
         }),
       ],
@@ -152,6 +159,12 @@ class _ExerciseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final textColor =
+        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
+            ? Colors.white
+            : Colors.black;
+
     return Container(
       width: 180,
       decoration: BoxDecoration(
@@ -167,20 +180,30 @@ class _ExerciseCard extends StatelessWidget {
             exercise.name,
             style: theme.textTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w600,
+              color: textColor,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 6),
-          Text(exercise.reps, style: theme.textTheme.bodySmall),
+          Text(
+            exercise.reps,
+            style: theme.textTheme.bodySmall?.copyWith(color: textColor),
+          ),
           const Spacer(),
           Text(
             'Nível: ${exercise.level}',
-            style: theme.textTheme.bodySmall?.copyWith(fontSize: 12),
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12,
+              color: textColor,
+            ),
           ),
           Text(
             'Tipo: ${exercise.type}',
-            style: theme.textTheme.bodySmall?.copyWith(fontSize: 12),
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12,
+              color: textColor,
+            ),
           ),
         ],
       ),
