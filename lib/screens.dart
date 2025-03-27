@@ -9,3 +9,4 @@ export 'package:academia_unifor/screens/chat_screen.dart';
 // admin
 export 'package:academia_unifor/screens/admin/admin_screen.dart';
 export 'package:academia_unifor/screens/admin/equipments_screen.dart';
+export 'package:academia_unifor/screens/admin/students_screen.dart';

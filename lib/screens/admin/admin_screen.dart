@@ -17,25 +17,34 @@ class AdminScreen extends StatelessWidget {
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(showNotificationIcon: false),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: "Sair para tela de login",
-                      icon: Icons.logout,
-                      onPressed: () {
-                        context.go('/');
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            body: AdminScreenBody(),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AdminScreenBody extends StatelessWidget {
+  const AdminScreenBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: CustomButton(
+              text: "Sair para tela de login",
+              icon: Icons.logout,
+              onPressed: () {
+                context.go('/');
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -25,15 +25,6 @@ class WorkoutsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: SearchAppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Text(
-          'Aqui eu preciso colocar a ficha e tudo que for relativo ao treino',
-          style: TextStyle(fontSize: 14),
-        ),
-      ),
-    );
+    return const Scaffold(appBar: SearchAppBar(), body: WorkoutPlanWidget());
   }
 }

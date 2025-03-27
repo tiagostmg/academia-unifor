@@ -49,5 +49,10 @@ final GoRouter router = GoRouter(
       pageBuilder:
           (context, state) => NoTransitionPage(child: const EquipmentsScreen()),
     ),
+    GoRoute(
+      path: '/admin/students',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: StudentsScreen()),
+    ),
   ],
 );
