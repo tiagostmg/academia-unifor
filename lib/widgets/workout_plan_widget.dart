@@ -166,11 +166,14 @@ class _ExerciseCardState extends State<_ExerciseCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textColor =
+
+    final isDark =
         ThemeData.estimateBrightnessForColor(widget.backgroundColor) ==
-                Brightness.dark
-            ? Colors.white
-            : Colors.black;
+        Brightness.dark;
+
+    final textColor = isDark ? Colors.white : Colors.black;
+    final repsBackground = isDark ? Colors.black : Colors.white;
+    final repsTextColor = isDark ? Colors.white : Colors.black;
 
     return Container(
       width: 180,
@@ -183,6 +186,7 @@ class _ExerciseCardState extends State<_ExerciseCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Título + ícone
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -205,7 +209,7 @@ class _ExerciseCardState extends State<_ExerciseCard> {
                 },
                 child: Icon(
                   isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-                  color: isDone ? Colors.green : textColor.withAlpha(120),
+                  color: isDone ? Colors.black : textColor.withAlpha(120),
                   size: 20,
                 ),
               ),
@@ -213,6 +217,7 @@ class _ExerciseCardState extends State<_ExerciseCard> {
           ),
           const SizedBox(height: 12),
 
+          // Nível e tipo
           Text(
             'Nível: ${widget.exercise.level}',
             style: theme.textTheme.bodySmall?.copyWith(
@@ -230,20 +235,21 @@ class _ExerciseCardState extends State<_ExerciseCard> {
 
           const Spacer(),
 
+          // Badge de repetições
           Row(
             children: [
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: textColor.withAlpha(25),
+                  color: repsBackground,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: textColor.withAlpha(76)),
+                  border: Border.all(color: repsTextColor.withAlpha(100)),
                 ),
                 child: Text(
                   widget.exercise.reps,
                   style: TextStyle(
-                    color: textColor,
+                    color: repsTextColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
