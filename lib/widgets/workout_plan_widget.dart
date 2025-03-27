@@ -192,8 +192,10 @@ class _ExerciseCardState extends State<_ExerciseCard> {
     final repsBackground = isDark ? Colors.black : Colors.white;
     final repsTextColor = isDark ? Colors.white : Colors.black;
 
+    final cardWidth = widget.exercise.reps.length > 10 ? 220.0 : 180.0;
+
     return Container(
-      width: 180,
+      width: cardWidth,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(12),
