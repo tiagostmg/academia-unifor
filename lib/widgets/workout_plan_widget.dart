@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +57,22 @@ class _WorkoutPlanWidgetState extends State<WorkoutPlanWidget> {
       }
     }
 
-    return {'Treino A': treinoA, 'Treino B': treinoB, 'Treino C': treinoC};
+    final random = Random();
+
+    treinoA.shuffle();
+    treinoB.shuffle();
+    treinoC.shuffle();
+
+    int randomAmount(List<Exercise> list) =>
+        list.length < 6
+            ? list.length
+            : 6 + random.nextInt(min(5, list.length - 6) + 1);
+
+    return {
+      'Treino A': treinoA.take(randomAmount(treinoA)).toList(),
+      'Treino B': treinoB.take(randomAmount(treinoB)).toList(),
+      'Treino C': treinoC.take(randomAmount(treinoC)).toList(),
+    };
   }
 
   @override
@@ -93,8 +109,9 @@ class _WorkoutPlanWidgetState extends State<WorkoutPlanWidget> {
         ),
         const SizedBox(height: 10),
         ...groupedExercises.entries.map((entry) {
+          final titleWithCount = '${entry.key} (${entry.value.length})';
           return _WorkoutGroup(
-            title: entry.key,
+            title: titleWithCount,
             exercises: entry.value,
             cardColor: getCardColor(entry.key),
           );
