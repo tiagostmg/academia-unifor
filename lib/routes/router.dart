@@ -1,3 +1,5 @@
+import 'package:academia_unifor/screens/admin/chats_admin_screen.dart';
+import 'package:academia_unifor/screens/admin/students_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia_unifor/screens.dart';
 
@@ -48,6 +50,16 @@ final GoRouter router = GoRouter(
       path: '/admin/equipments',
       pageBuilder:
           (context, state) => NoTransitionPage(child: const EquipmentsScreen()),
+    ),
+    GoRoute(
+      path: '/admin/chats',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: const ChatsAdminScreen()),
+    ),
+    GoRoute(
+      path: '/admin/students',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: StudentsScreen()),
     ),
   ],
 );
