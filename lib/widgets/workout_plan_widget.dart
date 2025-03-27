@@ -150,25 +150,32 @@ class _WorkoutGroup extends StatelessWidget {
   }
 }
 
-class _ExerciseCard extends StatelessWidget {
+class _ExerciseCard extends StatefulWidget {
   final Exercise exercise;
   final Color backgroundColor;
 
   const _ExerciseCard({required this.exercise, required this.backgroundColor});
 
   @override
+  State<_ExerciseCard> createState() => _ExerciseCardState();
+}
+
+class _ExerciseCardState extends State<_ExerciseCard> {
+  bool isDone = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     final textColor =
-        ThemeData.estimateBrightnessForColor(backgroundColor) == Brightness.dark
+        ThemeData.estimateBrightnessForColor(widget.backgroundColor) ==
+                Brightness.dark
             ? Colors.white
             : Colors.black;
 
     return Container(
       width: 180,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: widget.backgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
       ),
@@ -176,34 +183,72 @@ class _ExerciseCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.exercise.name,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isDone = !isDone;
+                  });
+                },
+                child: Icon(
+                  isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                  color: isDone ? Colors.green : textColor.withAlpha(120),
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
           Text(
-            exercise.name,
-            style: theme.textTheme.labelLarge?.copyWith(
-              fontWeight: FontWeight.w600,
+            'Nível: ${widget.exercise.level}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12,
               color: textColor,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 6),
           Text(
-            exercise.reps,
-            style: theme.textTheme.bodySmall?.copyWith(color: textColor),
+            'Tipo: ${widget.exercise.type}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12,
+              color: textColor,
+            ),
           ),
+
           const Spacer(),
-          Text(
-            'Nível: ${exercise.level}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 12,
-              color: textColor,
-            ),
-          ),
-          Text(
-            'Tipo: ${exercise.type}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 12,
-              color: textColor,
-            ),
+
+          Row(
+            children: [
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: textColor.withAlpha(25),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: textColor.withAlpha(76)),
+                ),
+                child: Text(
+                  widget.exercise.reps,
+                  style: TextStyle(
+                    color: textColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
