@@ -1,5 +1,5 @@
-import 'package:academia_unifor/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:academia_unifor/screens.dart';
 
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onSearchChanged;
@@ -12,6 +12,9 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showChatIcon = true,
     this.onBack,
   });
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +30,10 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               : null,
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.onPrimary,
-      surfaceTintColor: theme.colorScheme.primary,
+      elevation: 1,
+      centerTitle: false,
       title: SizedBox(
-        height: 45,
+        height: 40,
         child: TextField(
           onChanged: onSearchChanged,
           decoration: InputDecoration(
@@ -43,7 +47,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             filled: true,
             fillColor: theme.colorScheme.surface,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            contentPadding: EdgeInsets.zero,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
               borderSide: BorderSide.none,
@@ -52,7 +56,6 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: TextStyle(color: theme.colorScheme.onPrimary),
         ),
       ),
-      centerTitle: false,
       actions:
           showChatIcon
               ? [
@@ -69,7 +72,4 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
               : null,
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
