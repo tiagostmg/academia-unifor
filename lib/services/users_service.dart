@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:academia_unifor/models/users.dart';
 import 'package:flutter/services.dart';
-import '../models/users.dart';
 
 class UsersService {
-  Future<Users> loadUsers() async {
-    final data = await rootBundle.loadString('assets/mocks/users.json');
-    final jsonResult = json.decode(data);
-    return Users.fromJson(jsonResult);
+  Future<List<User>> loadUsers() async {
+    final jsonStr = await rootBundle.loadString('assets/mocks/users.json');
+    final List<dynamic> data = json.decode(jsonStr);
+    return data.map((e) => User.fromJson(e)).toList();
   }
 }

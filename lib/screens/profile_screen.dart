@@ -33,7 +33,7 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Users>(
+    return FutureBuilder<List<User>>(
       future: UsersService().loadUsers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,16 +48,17 @@ class ProfileBody extends StatelessWidget {
         }
 
         final users = snapshot.data!;
+        final user = users.firstWhere((u) => u.id == 1);
 
         return SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 40),
-              ProfileAvatar(avatarUrl: users.avatarUrl),
+              ProfileAvatar(avatarUrl: user.avatarUrl),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ProfileInfo(users: users),
+                child: ProfileInfo(user: user),
               ),
               const SizedBox(height: 60),
             ],
@@ -106,8 +107,8 @@ class ProfileAvatar extends StatelessWidget {
 }
 
 class ProfileInfo extends StatefulWidget {
-  final Users users;
-  const ProfileInfo({super.key, required this.users});
+  final User user;
+  const ProfileInfo({super.key, required this.user});
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
@@ -123,12 +124,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
   @override
   void initState() {
     super.initState();
-    final p = widget.users;
-    _nameController = TextEditingController(text: p.name);
-    _emailController = TextEditingController(text: p.email);
-    _phoneController = TextEditingController(text: p.phone);
-    _addressController = TextEditingController(text: p.address);
-    _birthDateController = TextEditingController(text: p.birthDate);
+    final u = widget.user;
+    _nameController = TextEditingController(text: u.name);
+    _emailController = TextEditingController(text: u.email);
+    _phoneController = TextEditingController(text: u.phone);
+    _addressController = TextEditingController(text: u.address);
+    _birthDateController = TextEditingController(text: u.birthDate);
   }
 
   @override

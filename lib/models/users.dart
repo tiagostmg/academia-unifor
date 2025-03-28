@@ -1,4 +1,5 @@
-class Users {
+class User {
+  final int id;
   final String name;
   final String email;
   final String phone;
@@ -6,7 +7,8 @@ class Users {
   final String birthDate;
   final String avatarUrl;
 
-  Users({
+  User({
+    required this.id,
     required this.name,
     required this.email,
     required this.phone,
@@ -15,14 +17,27 @@ class Users {
     required this.avatarUrl,
   });
 
-  factory Users.fromJson(Map<String, dynamic> json) {
-    return Users(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'],
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
       address: json['address'],
       birthDate: json['birthDate'],
-      avatarUrl: json['avatarUrl'],
+      avatarUrl: json['avatarUrl'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'address': address,
+      'birthDate': birthDate,
+      'avatarUrl': avatarUrl,
+    };
   }
 }
