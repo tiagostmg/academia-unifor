@@ -30,18 +30,58 @@ class AdminScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
+      padding: const EdgeInsets.all(16),
+      child: Row(
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              text: "Sair para tela de login",
-              icon: Icons.logout,
-              onPressed: () {
-                context.go('/');
-              },
+          Expanded(
+            child: GestureDetector(
+              onTap: () => context.go('/'),
+              child: Container(
+                height: 120,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.logout, size: 36, color: colorScheme.onSurface),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Sair',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => context.go('/home'),
+              child: Container(
+                height: 120,
+                margin: const EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.home, size: 36, color: colorScheme.onSurface),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Ir para o app',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

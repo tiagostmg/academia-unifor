@@ -42,7 +42,7 @@ class AdminConvexBottomBar extends StatelessWidget {
           }
         },
         items: const [
-          TabItem(icon: Icons.home, title: 'Início'),
+          TabItem(icon: Icons.admin_panel_settings, title: 'Admin'),
           TabItem(icon: Icons.fitness_center, title: 'Aparelhos'),
           TabItem(icon: Icons.school, title: 'Alunos'),
         ],
