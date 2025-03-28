@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onSearchChanged;
   final bool showChatIcon;
+  final VoidCallback? onBack;
 
   const SearchAppBar({
     super.key,
     this.onSearchChanged,
     this.showChatIcon = true,
+    this.onBack,
   });
 
   @override
@@ -16,6 +18,13 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
 
     return AppBar(
+      leading:
+          onBack != null
+              ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: onBack,
+              )
+              : null,
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.onPrimary,
       surfaceTintColor: theme.colorScheme.primary,

@@ -116,6 +116,15 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       appBar: SearchAppBar(
         onSearchChanged: _onSearchChanged,
         showChatIcon: false,
+        onBack:
+            selectedCategory != null
+                ? () {
+                  setState(() {
+                    selectedCategory = null;
+                    selectedItems = [];
+                  });
+                }
+                : null,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -218,19 +227,6 @@ class _SelectedCategoryList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            IconButton(onPressed: onBack, icon: const Icon(Icons.arrow_back)),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                selectedCategory,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
