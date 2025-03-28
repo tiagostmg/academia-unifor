@@ -1,4 +1,4 @@
-import 'package:academia_unifor/services/profile_service.dart';
+import 'package:academia_unifor/services/users_service.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -47,17 +47,17 @@ class ProfileBody extends StatelessWidget {
           return const Center(child: Text("Erro ao carregar o perfil"));
         }
 
-        final profile = snapshot.data!;
+        final users = snapshot.data!;
 
         return SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 40),
-              ProfileAvatar(avatarUrl: profile.avatarUrl),
+              ProfileAvatar(avatarUrl: users.avatarUrl),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ProfileInfo(profile: profile),
+                child: ProfileInfo(users: users),
               ),
               const SizedBox(height: 60),
             ],
@@ -106,8 +106,8 @@ class ProfileAvatar extends StatelessWidget {
 }
 
 class ProfileInfo extends StatefulWidget {
-  final Users profile;
-  const ProfileInfo({super.key, required this.profile});
+  final Users users;
+  const ProfileInfo({super.key, required this.users});
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
@@ -123,7 +123,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   @override
   void initState() {
     super.initState();
-    final p = widget.profile;
+    final p = widget.users;
     _nameController = TextEditingController(text: p.name);
     _emailController = TextEditingController(text: p.email);
     _phoneController = TextEditingController(text: p.phone);
