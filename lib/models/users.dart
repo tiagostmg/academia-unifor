@@ -1,4 +1,4 @@
-class User {
+class Users {
   final int id;
   final String name;
   final String email;
@@ -7,7 +7,7 @@ class User {
   final String birthDate;
   final String avatarUrl;
 
-  User({
+  Users({
     required this.id,
     required this.name,
     required this.email,
@@ -17,8 +17,8 @@ class User {
     required this.avatarUrl,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory Users.fromJson(Map<String, dynamic> json) {
+    return Users(
       id: json['id'],
       name: json['name'],
       email: json['email'],

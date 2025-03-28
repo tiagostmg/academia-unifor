@@ -1,8 +1,8 @@
-import 'package:academia_unifor/services/users_service.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
+import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/models/users.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -33,7 +33,7 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<User>>(
+    return FutureBuilder<List<Users>>(
       future: UsersService().loadUsers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,8 +47,11 @@ class ProfileBody extends StatelessWidget {
           return const Center(child: Text("Erro ao carregar o perfil"));
         }
 
-        final users = snapshot.data!;
-        final user = users.firstWhere((u) => u.id == 1);
+        final usersList = snapshot.data!;
+        final user = usersList.firstWhere(
+          (u) => u.id == 1,
+          orElse: () => usersList.first,
+        );
 
         return SingleChildScrollView(
           child: Column(
@@ -58,7 +61,7 @@ class ProfileBody extends StatelessWidget {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ProfileInfo(user: user),
+                child: ProfileInfo(users: user),
               ),
               const SizedBox(height: 60),
             ],
@@ -107,8 +110,8 @@ class ProfileAvatar extends StatelessWidget {
 }
 
 class ProfileInfo extends StatefulWidget {
-  final User user;
-  const ProfileInfo({super.key, required this.user});
+  final Users users;
+  const ProfileInfo({super.key, required this.users});
 
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
@@ -124,7 +127,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   @override
   void initState() {
     super.initState();
-    final u = widget.user;
+    final u = widget.users;
     _nameController = TextEditingController(text: u.name);
     _emailController = TextEditingController(text: u.email);
     _phoneController = TextEditingController(text: u.phone);
