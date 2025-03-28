@@ -32,4 +32,4 @@ flutter:
     - .env
     - assets/mocks/gymEquipment.json
     - assets/mocks/exercises.json
-    - assets/mocks/profile.json
+    - assets/mocks/users.json

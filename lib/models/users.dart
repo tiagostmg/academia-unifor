@@ -1,4 +1,4 @@
-class Profile {
+class Users {
   final String name;
   final String email;
   final String phone;
@@ -6,7 +6,7 @@ class Profile {
   final String birthDate;
   final String avatarUrl;
 
-  Profile({
+  Users({
     required this.name,
     required this.email,
     required this.phone,
@@ -15,8 +15,8 @@ class Profile {
     required this.avatarUrl,
   });
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
+  factory Users.fromJson(Map<String, dynamic> json) {
+    return Users(
       name: json['name'],
       email: json['email'],
       phone: json['phone'],

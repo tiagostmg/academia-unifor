@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../models/profile.dart';
+import '../models/users.dart';
 
-class ProfileService {
-  Future<Profile> loadProfile() async {
-    final data = await rootBundle.loadString('assets/mocks/profile.json');
+class UsersService {
+  Future<Users> loadUsers() async {
+    final data = await rootBundle.loadString('assets/mocks/users.json');
     final jsonResult = json.decode(data);
-    return Profile.fromJson(jsonResult);
+    return Users.fromJson(jsonResult);
   }
 }

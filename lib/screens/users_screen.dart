@@ -1,9 +1,9 @@
+import 'package:academia_unifor/services/profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
-import 'package:academia_unifor/services/profile_service.dart';
-import 'package:academia_unifor/models/profile.dart';
+import 'package:academia_unifor/models/users.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -33,8 +33,8 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Profile>(
-      future: ProfileService().loadProfile(),
+    return FutureBuilder<Users>(
+      future: UsersService().loadUsers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -106,7 +106,7 @@ class ProfileAvatar extends StatelessWidget {
 }
 
 class ProfileInfo extends StatefulWidget {
-  final Profile profile;
+  final Users profile;
   const ProfileInfo({super.key, required this.profile});
 
   @override
