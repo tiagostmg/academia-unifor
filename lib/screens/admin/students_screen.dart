@@ -15,7 +15,7 @@ class StudentsScreen extends StatelessWidget {
           currentIndex: 0,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: CustomAppBar(showNotificationIcon: false),
+            appBar: SearchAppBar(),
             body: StudentsScreenBody(),
           ),
         ),
