@@ -7,6 +7,7 @@ class Users {
   final String address;
   final String birthDate;
   final String avatarUrl;
+  final bool isAdmin;
 
   Users({
     required this.id,
@@ -17,6 +18,7 @@ class Users {
     required this.address,
     required this.birthDate,
     required this.avatarUrl,
+    required this.isAdmin,
   });
 
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Users {
       address: json['address'],
       birthDate: json['birthDate'],
       avatarUrl: json['avatarUrl'] ?? '',
+      isAdmin: json['isAdmin'] ?? false,
     );
   }
 
@@ -42,6 +45,7 @@ class Users {
       'address': address,
       'birthDate': birthDate,
       'avatarUrl': avatarUrl,
+      'isAdmin': isAdmin,
     };
   }
 }

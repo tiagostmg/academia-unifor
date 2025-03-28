@@ -12,7 +12,7 @@
   {
     "id": 2,
     "name": "Igor Praciano Thomaz",
-    "email": "igor.praciano@example.com",
+    "email": "igor.praciano@unifor.com",
     "password": "senha123",
     "phone": "85997766609",
     "address": "Fortaleza, CE",
@@ -22,17 +22,18 @@
   {
     "id": 3,
     "name": "Rafael Lima Cacau",
-    "email": "cacau.show@example.com",
+    "email": "cacau.show@unifor.com",
     "password": "senha123",
     "phone": "85988194598",
     "address": "Fortaleza, CE",
     "birthDate": "22/11/1990",
-    "avatarUrl": ""
+    "avatarUrl": "",
+    "isAdmin": true
   },
   {
     "id": 4,
     "name": "Tiago Silveira Taumaturgo",
-    "email": "tiago.silveira@example.com",
+    "email": "tiago.silveira@unifor.com",
     "password": "senha123",
     "phone": "85988292191",
     "address": "Fortaleza, CE",
