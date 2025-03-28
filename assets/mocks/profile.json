@@ -1,8 +1,38 @@
-{
-  "name": "Carlos Felipe Araújo",
-  "email": "carlosxfelipe@gmail.com",
-  "phone": "(85) 99950-2195",
-  "address": "Fortaleza, CE",
-  "birthDate": "03/10/1987",
-  "avatarUrl": "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4"
-}
+[
+  {
+    "id": 1,
+    "name": "Carlos Felipe Araújo",
+    "email": "carlosxfelipe@gmail.com",
+    "phone": "85999502195",
+    "address": "Fortaleza, CE",
+    "birthDate": "03/10/1987",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4"
+  },
+  {
+    "id": 2,
+    "name": "Igor Praciano Thomaz",
+    "email": "igor.praciano@example.com",
+    "phone": "85997766609",
+    "address": "Fortaleza, CE",
+    "birthDate": "15/06/1992",
+    "avatarUrl": ""
+  },
+  {
+    "id": 3,
+    "name": "Rafael Lima Cacau",
+    "email": "cacau.show@example.com",
+    "phone": "85988194598",
+    "address": "Fortaleza, CE",
+    "birthDate": "22/11/1990",
+    "avatarUrl": ""
+  },
+  {
+    "id": 4,
+    "name": "Tiago Silveira Taumaturgo",
+    "email": "tiago.silveira@example.com",
+    "phone": "85988292191",
+    "address": "Fortaleza, CE",
+    "birthDate": "22/11/1990",
+    "avatarUrl": ""
+  }
+]
