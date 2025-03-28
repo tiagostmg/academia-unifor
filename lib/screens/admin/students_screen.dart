@@ -1,8 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:academia_unifor/models/users.dart';
+import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
 
-class StudentsScreen extends StatelessWidget {
+class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
+
+  @override
+  State<StudentsScreen> createState() => _StudentsScreenState();
+}
+
+class _StudentsScreenState extends State<StudentsScreen> {
+  List<Users> allUsers = [];
+  List<Users> filteredUsers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+  }
+
+  Future<void> _loadUsers() async {
+    final users = await UsersService().loadUsers();
+    setState(() {
+      allUsers = users;
+      filteredUsers = users;
+    });
+  }
+
+  void _filterUsers(String query) {
+    setState(() {
+      filteredUsers =
+          allUsers
+              .where(
+                (user) => user.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +47,11 @@ class StudentsScreen extends StatelessWidget {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 0,
+          currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: SearchAppBar(),
-            body: StudentsScreenBody(),
+            appBar: SearchAppBar(onSearchChanged: _filterUsers),
+            body: StudentsScreenBody(users: filteredUsers),
           ),
         ),
       ),
@@ -25,17 +60,31 @@ class StudentsScreen extends StatelessWidget {
 }
 
 class StudentsScreenBody extends StatelessWidget {
-  const StudentsScreenBody({super.key});
+  final List<Users> users;
+
+  const StudentsScreenBody({super.key, required this.users});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: const [
-          SizedBox(height: 8), // adiciona espaço acima
-          Text('Olá mundo', style: TextStyle(fontSize: 20)),
-        ],
+      child: ListView.separated(
+        itemCount: users.length,
+        separatorBuilder: (_, __) => const Divider(),
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage:
+                  user.avatarUrl.isNotEmpty
+                      ? NetworkImage(user.avatarUrl)
+                      : null,
+              child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
+            ),
+            title: Text(user.name),
+            subtitle: Text(user.email),
+          );
+        },
       ),
     );
   }
