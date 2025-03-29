@@ -15,7 +15,7 @@ class ExercisesScreen extends StatelessWidget {
           currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: CustomAppBar(showNotificationIcon: false),
+            appBar: SearchAppBar(showChatIcon: false),
             body: ExercisesScreenBody(),
           ),
         ),
