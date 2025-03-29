@@ -121,45 +121,88 @@ class StudentsScreenBody extends StatelessWidget {
 
               showDialog(
                 context: context,
-                builder:
-                    (_) => Dialog(
-                      child: Stack(
-                        children: [
-                          Padding(
+                builder: (_) {
+                  bool isEditing = false;
+                  TextEditingController nameController = TextEditingController(
+                    text: user.name,
+                  );
+                  TextEditingController emailController = TextEditingController(
+                    text: user.email,
+                  );
+                  TextEditingController phoneController = TextEditingController(
+                    text: user.phone,
+                  );
+
+                  return StatefulBuilder(
+                    builder:
+                        (context, setState) => Dialog(
+                          child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  user.name,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        isEditing ? Icons.save : Icons.edit,
+                                      ),
+                                      onPressed: () {
+                                        if (isEditing) {
+                                          user.name = nameController.text;
+                                          user.email = emailController.text;
+                                          user.phone = phoneController.text;
+                                        }
+                                        setState(() => isEditing = !isEditing);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 16),
-                                SingleChildScrollView(
-                                  child: Text(
-                                    JsonEncoder.withIndent(
-                                      '  ',
-                                    ).convert(userMap),
-                                    style: const TextStyle(
-                                      fontFamily: 'monospace',
+                                if (isEditing) ...[
+                                  TextField(
+                                    controller: nameController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Nome',
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(height: 8),
+                                  TextField(
+                                    controller: emailController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'E-mail',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  TextField(
+                                    controller: phoneController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Telefone',
+                                    ),
+                                  ),
+                                ] else
+                                  SingleChildScrollView(
+                                    child: Text(
+                                      JsonEncoder.withIndent(
+                                        '  ',
+                                      ).convert(userMap),
+                                      style: const TextStyle(
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                  );
+                },
               );
             },
           );

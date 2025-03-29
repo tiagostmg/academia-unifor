@@ -1,13 +1,13 @@
 class Users {
   final int id;
-  final String name;
-  final String email;
-  final String password;
-  final String phone;
-  final String address;
-  final String birthDate;
-  final String avatarUrl;
-  final bool isAdmin;
+  String name;
+  String email;
+  String password;
+  String phone;
+  String address;
+  String birthDate;
+  String avatarUrl;
+  bool isAdmin;
 
   Users({
     required this.id,
