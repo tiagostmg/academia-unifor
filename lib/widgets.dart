@@ -6,6 +6,5 @@ export 'package:academia_unifor/widgets/carousel_widget.dart';
 export 'package:academia_unifor/widgets/schedule_widget.dart';
 export 'package:academia_unifor/widgets/contact_widget.dart';
 
+// admin
 export 'package:academia_unifor/widgets/admin/admin_convex_bottom_bar.dart';
-
-export 'package:academia_unifor/widgets/workout_plan_widget.dart';
