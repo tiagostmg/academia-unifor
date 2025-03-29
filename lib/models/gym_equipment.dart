@@ -1,9 +1,9 @@
 class EquipmentItem {
-  final String name;
-  final String brand;
-  final String model;
-  final int quantity;
-  final String image;
+  String name;
+  String brand;
+  String model;
+  int quantity;
+  String image;
 
   EquipmentItem({
     required this.name,
@@ -25,9 +25,9 @@ class EquipmentItem {
 }
 
 class EquipmentCategory {
-  final String category;
-  final int total;
-  final List<EquipmentItem> items;
+  String category;
+  int total;
+  List<EquipmentItem> items;
 
   EquipmentCategory({
     required this.category,
