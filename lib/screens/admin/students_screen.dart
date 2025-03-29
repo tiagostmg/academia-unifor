@@ -51,7 +51,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
           currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: SearchAppBar(onSearchChanged: _filterUsers),
+            appBar: SearchAppBar(
+              onSearchChanged: _filterUsers,
+              showChatIcon: false,
+            ),
             body: StudentsScreenBody(users: filteredUsers),
           ),
         ),
