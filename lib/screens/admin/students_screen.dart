@@ -115,7 +115,6 @@ class StudentsScreenBody extends StatelessWidget {
                   ),
               ],
             ),
-
             onTap: () {
               final userMap = user.toJson()..remove('password');
 
@@ -132,6 +131,11 @@ class StudentsScreenBody extends StatelessWidget {
                   TextEditingController phoneController = TextEditingController(
                     text: user.phone,
                   );
+                  TextEditingController addressController =
+                      TextEditingController(text: user.address);
+                  TextEditingController birthDateController =
+                      TextEditingController(text: user.birthDate);
+                  bool isAdmin = user.isAdmin;
 
                   return StatefulBuilder(
                     builder:
@@ -155,6 +159,10 @@ class StudentsScreenBody extends StatelessWidget {
                                           user.name = nameController.text;
                                           user.email = emailController.text;
                                           user.phone = phoneController.text;
+                                          user.address = addressController.text;
+                                          user.birthDate =
+                                              birthDateController.text;
+                                          user.isAdmin = isAdmin;
                                         }
                                         setState(() => isEditing = !isEditing);
                                       },
@@ -172,19 +180,37 @@ class StudentsScreenBody extends StatelessWidget {
                                       labelText: 'Nome',
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
                                   TextField(
                                     controller: emailController,
                                     decoration: const InputDecoration(
                                       labelText: 'E-mail',
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
                                   TextField(
                                     controller: phoneController,
                                     decoration: const InputDecoration(
                                       labelText: 'Telefone',
                                     ),
+                                  ),
+                                  TextField(
+                                    controller: addressController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Endereço',
+                                    ),
+                                  ),
+                                  TextField(
+                                    controller: birthDateController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Data de Nascimento',
+                                    ),
+                                  ),
+                                  CheckboxListTile(
+                                    value: isAdmin,
+                                    onChanged:
+                                        (value) => setState(
+                                          () => isAdmin = value ?? false,
+                                        ),
+                                    title: const Text('Administrador'),
                                   ),
                                 ] else
                                   SingleChildScrollView(
