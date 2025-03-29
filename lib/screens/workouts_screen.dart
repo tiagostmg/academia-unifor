@@ -25,6 +25,6 @@ class WorkoutsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(appBar: SearchAppBar(), body: WorkoutPlanWidget());
+    return const Scaffold(appBar: SearchAppBar(), body: Text("Workouts"));
   }
 }

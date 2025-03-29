@@ -7,7 +7,37 @@
     "phone": "85999502195",
     "address": "Fortaleza, CE",
     "birthDate": "03/10/1987",
-    "avatarUrl": "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4"
+    "avatarUrl": "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
+    "workouts": [
+      {
+        "name": "Treino A",
+        "description": "Segunda e quinta",
+        "exercises": [
+          {
+            "name": "Supino Reto com Barra",
+            "reps": "4x12"
+          },
+          {
+            "name": "Agachamento Livre",
+            "reps": "4x10"
+          }
+        ]
+      },
+      {
+        "name": "Treino B",
+        "description": "Terça e sexta",
+        "exercises": [
+          {
+            "name": "Puxada na frente na polia alta",
+            "reps": "3x12"
+          },
+          {
+            "name": "Leg Press 45º",
+            "reps": "4x10"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": 2,
@@ -17,7 +47,8 @@
     "phone": "85997766609",
     "address": "Fortaleza, CE",
     "birthDate": "15/06/1992",
-    "avatarUrl": "https://avatars.githubusercontent.com/u/191243359?v=4"
+    "avatarUrl": "https://avatars.githubusercontent.com/u/191243359?v=4",
+    "workouts": []
   },
   {
     "id": 3,
@@ -28,7 +59,8 @@
     "address": "Fortaleza, CE",
     "birthDate": "22/11/1990",
     "avatarUrl": "https://img.deliverydireto.com.br/unsafe/origxorig/https://duisktnou8b89.cloudfront.net/img/brands/64c7b58022923.png",
-    "isAdmin": true
+    "isAdmin": true,
+    "workouts": []
   },
   {
     "id": 4,
@@ -38,6 +70,7 @@
     "phone": "85988292191",
     "address": "Fortaleza, CE",
     "birthDate": "22/11/1990",
-    "avatarUrl": "https://avatars.githubusercontent.com/u/165815345?v=4"
+    "avatarUrl": "https://avatars.githubusercontent.com/u/165815345?v=4",
+    "workouts": []
   }
 ]

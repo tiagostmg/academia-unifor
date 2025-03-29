@@ -1,3 +1,5 @@
+import 'package:academia_unifor/models/workout.dart';
+
 class Users {
   final int id;
   String name;
@@ -8,6 +10,7 @@ class Users {
   String birthDate;
   String avatarUrl;
   bool isAdmin;
+  List<Workout> workouts;
 
   Users({
     required this.id,
@@ -19,6 +22,7 @@ class Users {
     required this.birthDate,
     required this.avatarUrl,
     required this.isAdmin,
+    required this.workouts,
   });
 
   factory Users.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,11 @@ class Users {
       birthDate: json['birthDate'],
       avatarUrl: json['avatarUrl'] ?? '',
       isAdmin: json['isAdmin'] ?? false,
+      workouts:
+          (json['workouts'] as List<dynamic>?)
+              ?.map((w) => Workout.fromJson(w))
+              .toList() ??
+          [],
     );
   }
 
@@ -46,6 +55,7 @@ class Users {
       'birthDate': birthDate,
       'avatarUrl': avatarUrl,
       'isAdmin': isAdmin,
+      'workouts': workouts.map((w) => w.toJson()).toList(),
     };
   }
 }
