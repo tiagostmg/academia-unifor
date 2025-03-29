@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -64,6 +65,21 @@ class StudentsScreenBody extends StatelessWidget {
 
   const StudentsScreenBody({super.key, required this.users});
 
+  String formatPhoneNumber(String phone) {
+    final cleaned = phone.replaceAll(RegExp(r'\D'), '');
+
+    if (cleaned.length == 11) {
+      // celular com DDD: 85999502195 → (85) 99950-2195
+      return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7)}';
+    } else if (cleaned.length == 10) {
+      // fixo com DDD: 8534567890 → (85) 3456-7890
+      return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6)}';
+    } else {
+      // formato desconhecido, retorna como está
+      return phone;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,7 +98,41 @@ class StudentsScreenBody extends StatelessWidget {
               child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
             ),
             title: Text(user.name),
-            subtitle: Text(user.email),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(user.email),
+                if (user.phone.isNotEmpty)
+                  Text(
+                    formatPhoneNumber(user.phone),
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+              ],
+            ),
+
+            onTap: () {
+              final userMap = user.toJson()..remove('password');
+
+              showDialog(
+                context: context,
+                builder:
+                    (_) => AlertDialog(
+                      title: Text(user.name),
+                      content: SingleChildScrollView(
+                        child: Text(
+                          JsonEncoder.withIndent('  ').convert(userMap),
+                          style: const TextStyle(fontFamily: 'monospace'),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Fechar'),
+                        ),
+                      ],
+                    ),
+              );
+            },
           );
         },
       ),
