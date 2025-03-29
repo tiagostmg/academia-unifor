@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../models/gym_equipment.dart';
+import '../models/equipment.dart';
 
 Future<List<EquipmentCategory>> loadGymEquipment() async {
   final jsonStr = await rootBundle.loadString('assets/mocks/gymEquipment.json');

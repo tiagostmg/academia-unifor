@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:academia_unifor/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/models/gym_equipment.dart';
+import 'package:academia_unifor/models/equipment.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});

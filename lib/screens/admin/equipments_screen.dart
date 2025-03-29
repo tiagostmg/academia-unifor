@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/services/gym_data_service.dart';
-import 'package:academia_unifor/models/gym_equipment.dart';
+import 'package:academia_unifor/models/equipment.dart';
 
 class EquipmentsScreen extends StatelessWidget {
   const EquipmentsScreen({super.key});
