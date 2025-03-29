@@ -22,21 +22,23 @@
             "name": "Agachamento Livre",
             "reps": "4x10",
             "notes": "Descer até o paralelo e manter a postura"
-          }
+          },
+          { "name": "Desenvolvimento com Halteres", "reps": "4x12" },
+          { "name": "Rosca Direta", "reps": "3x15" },
+          { "name": "Abdominal Supra", "reps": "3x20" },
+          { "name": "Leg Press 45º", "reps": "4x10" }
         ]
       },
       {
         "name": "Treino B",
         "description": "Terça e sexta",
         "exercises": [
-          {
-            "name": "Puxada na frente na polia alta",
-            "reps": "3x12"
-          },
-          {
-            "name": "Leg Press 45º",
-            "reps": "4x10"
-          }
+          { "name": "Puxada na Frente na Polia Alta", "reps": "3x12" },
+          { "name": "Leg Press 45º", "reps": "4x10" },
+          { "name": "Supino Inclinado com Halteres", "reps": "4x10" },
+          { "name": "Desenvolvimento Militar", "reps": "3x12" },
+          { "name": "Tríceps Testa", "reps": "4x12" },
+          { "name": "Flexão de Braços", "reps": "3x15" }
         ]
       }
     ]
@@ -50,7 +52,61 @@
     "address": "Fortaleza, CE",
     "birthDate": "15/06/1992",
     "avatarUrl": "https://avatars.githubusercontent.com/u/191243359?v=4",
-    "workouts": []
+    "workouts": [
+      {
+        "name": "Treino A",
+        "description": "Pernas e Braços",
+        "exercises": [
+          {
+            "name": "Supino Inclinado com Halteres",
+            "reps": "4x10",
+            "notes": "Manter os cotovelos levemente flexionados"
+          },
+          {
+            "name": "Agachamento Livre",
+            "reps": "4x12",
+            "notes": "Descer até o paralelo e manter a postura"
+          },
+          { "name": "Rosca Direta", "reps": "4x12" },
+          { "name": "Extensora", "reps": "4x10" },
+          { "name": "Flexora deitado", "reps": "4x10" }
+        ]
+      },
+      {
+        "name": "Treino B",
+        "description": "Costas e Peitoral",
+        "exercises": [
+          { "name": "Remada Curvada", "reps": "4x12" },
+          { "name": "Supino Inclinado", "reps": "4x10" },
+          { "name": "Tríceps Testa", "reps": "4x12" },
+          { "name": "Desenvolvimento Militar", "reps": "3x12" },
+          { "name": "Abdominal Infra", "reps": "3x20" }
+        ]
+      },
+      {
+        "name": "Treino C",
+        "description": "Cardio",
+        "exercises": [
+          {
+            "name": "Esteira",
+            "reps": "30 minutos",
+            "notes": "Corrida leve a moderada"
+          },
+          {
+            "name": "Bicicleta Ergométrica",
+            "reps": "20 minutos",
+            "notes": "Ritmo constante, resistência média"
+          },
+          {
+            "name": "Elíptico",
+            "reps": "15 minutos",
+            "notes": "Intensidade moderada"
+          },
+          { "name": "Burpees", "reps": "3x15" },
+          { "name": "Polichinelos", "reps": "3x20" }
+        ]
+      }
+    ]
   },
   {
     "id": 3,
@@ -73,6 +129,39 @@
     "address": "Fortaleza, CE",
     "birthDate": "22/11/1990",
     "avatarUrl": "https://avatars.githubusercontent.com/u/165815345?v=4",
-    "workouts": []
+    "workouts": [
+      {
+        "name": "Treino A",
+        "description": "Segunda e quinta",
+        "exercises": [
+          {
+            "name": "Supino Inclinado com Halteres",
+            "reps": "4x10",
+            "notes": "Manter os cotovelos levemente flexionados"
+          },
+          {
+            "name": "Agachamento Livre",
+            "reps": "4x12",
+            "notes": "Descer até o paralelo e manter a postura"
+          },
+          { "name": "Rosca Direta", "reps": "4x12" },
+          { "name": "Remada Curvada", "reps": "4x12" },
+          { "name": "Extensora", "reps": "4x10" },
+          { "name": "Flexora deitado", "reps": "4x10" }
+        ]
+      },
+      {
+        "name": "Treino B",
+        "description": "Terça e sexta",
+        "exercises": [
+          { "name": "Remada Curvada", "reps": "4x12" },
+          { "name": "Leg Press 45º", "reps": "4x10" },
+          { "name": "Supino Inclinado", "reps": "4x10" },
+          { "name": "Tríceps Testa", "reps": "4x12" },
+          { "name": "Desenvolvimento Militar", "reps": "3x12" },
+          { "name": "Abdominal Infra", "reps": "3x20" }
+        ]
+      }
+    ]
   }
 ]

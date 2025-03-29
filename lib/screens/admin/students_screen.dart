@@ -119,7 +119,10 @@ class StudentsScreenBody extends StatelessWidget {
               ],
             ),
             onTap: () {
-              final userMap = user.toJson()..remove('password');
+              final userMap =
+                  user.toJson()
+                    ..remove('password')
+                    ..remove('workouts');
 
               showDialog(
                 context: context,
