@@ -234,94 +234,189 @@ class _SelectedCategoryList extends StatelessWidget {
           separatorBuilder: (_, __) => const SizedBox(height: 16),
           itemBuilder: (context, index) {
             final item = items[index];
-            return Card(
-              elevation: 0,
-              color: Theme.of(context).colorScheme.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: SizedBox(
-                height: 150,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              item.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+            return GestureDetector(
+              onTap: () {
+                TextEditingController nameController = TextEditingController(
+                  text: item.name,
+                );
+                TextEditingController brandController = TextEditingController(
+                  text: item.brand,
+                );
+                TextEditingController modelController = TextEditingController(
+                  text: item.model,
+                );
+                TextEditingController quantityController =
+                    TextEditingController(text: item.quantity.toString());
+                TextEditingController imageController = TextEditingController(
+                  text: item.image,
+                );
+
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return Dialog(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.save),
+                                      onPressed: () {
+                                        // Salva as alterações
+                                        item.name = nameController.text;
+                                        item.brand = brandController.text;
+                                        item.model = modelController.text;
+                                        item.quantity =
+                                            int.tryParse(
+                                              quantityController.text,
+                                            ) ??
+                                            item.quantity;
+                                        item.image = imageController.text;
+
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                                TextField(
+                                  controller: nameController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Nome',
+                                  ),
+                                ),
+                                TextField(
+                                  controller: brandController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Marca',
+                                  ),
+                                ),
+                                TextField(
+                                  controller: modelController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Modelo',
+                                  ),
+                                ),
+                                TextField(
+                                  controller: quantityController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Quantidade',
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                ),
+                                TextField(
+                                  controller: imageController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'URL da Imagem',
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              item.brand,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+              child: Card(
+                elevation: 0,
+                color: Theme.of(context).colorScheme.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: SizedBox(
+                  height: 150,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                item.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                            Text(
-                              item.model,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                              const SizedBox(height: 4),
+                              Text(
+                                item.brand,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Qtd: ${item.quantity}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.onPrimary,
+                              Text(
+                                item.model,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
                               ),
-                            ),
-                          ],
+                              Text(
+                                'Qtd: ${item.quantity}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child:
-                            item.image.isNotEmpty
-                                ? Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 4,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child:
+                              item.image.isNotEmpty
+                                  ? Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 4,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Container(
-                                      color: Colors.white,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
                                         item.image,
                                         height: double.infinity,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (_, __, ___) => fallbackImage(),
                                       ),
                                     ),
-                                  ),
-                                )
-                                : fallbackImage(),
+                                  )
+                                  : fallbackImage(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
