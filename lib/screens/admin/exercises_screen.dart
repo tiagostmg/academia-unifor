@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 
-// template para a seção admin do aplicativo
-
-class TemplateScreen extends StatelessWidget {
-  const TemplateScreen({super.key});
+class ExercisesScreen extends StatelessWidget {
+  const ExercisesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +12,11 @@ class TemplateScreen extends StatelessWidget {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 0,
+          currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(showNotificationIcon: false),
-            body: TemplateScreenBody(),
+            body: ExercisesScreenBody(),
           ),
         ),
       ),
@@ -26,8 +24,8 @@ class TemplateScreen extends StatelessWidget {
   }
 }
 
-class TemplateScreenBody extends StatelessWidget {
-  const TemplateScreenBody({super.key});
+class ExercisesScreenBody extends StatelessWidget {
+  const ExercisesScreenBody({super.key});
 
   @override
   Widget build(BuildContext context) {
