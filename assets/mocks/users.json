@@ -15,11 +15,13 @@
         "exercises": [
           {
             "name": "Supino Reto com Barra",
-            "reps": "4x12"
+            "reps": "4x12",
+            "notes": "Manter as escápulas contraídas e controle na descida"
           },
           {
             "name": "Agachamento Livre",
-            "reps": "4x10"
+            "reps": "4x10",
+            "notes": "Descer até o paralelo e manter a postura"
           }
         ]
       },
