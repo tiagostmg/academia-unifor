@@ -135,6 +135,8 @@ class StudentsScreenBody extends StatelessWidget {
                       TextEditingController(text: user.address);
                   TextEditingController birthDateController =
                       TextEditingController(text: user.birthDate);
+                  TextEditingController avatarUrlController =
+                      TextEditingController(text: user.avatarUrl);
                   bool isAdmin = user.isAdmin;
 
                   return StatefulBuilder(
@@ -162,6 +164,8 @@ class StudentsScreenBody extends StatelessWidget {
                                           user.address = addressController.text;
                                           user.birthDate =
                                               birthDateController.text;
+                                          user.avatarUrl =
+                                              avatarUrlController.text;
                                           user.isAdmin = isAdmin;
                                         }
                                         setState(() => isEditing = !isEditing);
@@ -202,6 +206,12 @@ class StudentsScreenBody extends StatelessWidget {
                                     controller: birthDateController,
                                     decoration: const InputDecoration(
                                       labelText: 'Data de Nascimento',
+                                    ),
+                                  ),
+                                  TextField(
+                                    controller: avatarUrlController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'URL da Imagem',
                                     ),
                                   ),
                                   CheckboxListTile(
