@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../models/equipment.dart';
 
 Future<List<EquipmentCategory>> loadGymEquipment() async {
-  final jsonStr = await rootBundle.loadString('assets/mocks/gymEquipment.json');
+  final jsonStr = await rootBundle.loadString('assets/mocks/equipment.json');
   final data = json.decode(jsonStr);
   final categories = data['gymEquipment'] as List;
 

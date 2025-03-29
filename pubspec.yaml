@@ -30,6 +30,6 @@ flutter:
   assets:
     - assets/
     - .env
-    - assets/mocks/gymEquipment.json
+    - assets/mocks/equipment.json
     - assets/mocks/exercises.json
     - assets/mocks/users.json

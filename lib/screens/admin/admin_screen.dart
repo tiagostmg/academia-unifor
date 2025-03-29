@@ -50,7 +50,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
 
     final usersJson = await bundle.loadString('assets/mocks/users.json');
     final equipmentJson = await bundle.loadString(
-      'assets/mocks/gymEquipment.json',
+      'assets/mocks/equipment.json',
     );
 
     final users =
