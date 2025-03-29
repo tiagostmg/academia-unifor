@@ -103,9 +103,15 @@ class StudentsScreenBody extends StatelessWidget {
               children: [
                 Text(user.email),
                 if (user.phone.isNotEmpty)
-                  Text(
-                    formatPhoneNumber(user.phone),
-                    style: Theme.of(context).textTheme.bodySmall,
+                  Row(
+                    children: [
+                      const Icon(Icons.phone, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        formatPhoneNumber(user.phone),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
                   ),
               ],
             ),
@@ -116,20 +122,43 @@ class StudentsScreenBody extends StatelessWidget {
               showDialog(
                 context: context,
                 builder:
-                    (_) => AlertDialog(
-                      title: Text(user.name),
-                      content: SingleChildScrollView(
-                        child: Text(
-                          JsonEncoder.withIndent('  ').convert(userMap),
-                          style: const TextStyle(fontFamily: 'monospace'),
-                        ),
+                    (_) => Dialog(
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const SizedBox(height: 16),
+                                SingleChildScrollView(
+                                  child: Text(
+                                    JsonEncoder.withIndent(
+                                      '  ',
+                                    ).convert(userMap),
+                                    style: const TextStyle(
+                                      fontFamily: 'monospace',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Fechar'),
-                        ),
-                      ],
                     ),
               );
             },
