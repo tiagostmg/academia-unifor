@@ -1,12 +1,12 @@
 class Exercise {
-  final String name;
-  final String reps;
-  final List<String> muscles;
-  final String equipment;
-  final String type;
-  final String level;
-  final String notes;
-  final String image;
+  String name;
+  String reps;
+  List<String> muscles;
+  String equipment;
+  String type;
+  String level;
+  String notes;
+  String image;
 
   Exercise({
     required this.name,
