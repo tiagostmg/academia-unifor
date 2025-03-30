@@ -11,7 +11,7 @@
     "workouts": [
       {
         "name": "Treino A",
-        "description": "Segunda e quinta",
+        "description": "Peitoral, Pernas, Ombros e Bíceps",
         "exercises": [
           {
             "name": "Supino Reto com Barra",
@@ -31,7 +31,7 @@
       },
       {
         "name": "Treino B",
-        "description": "Terça e sexta",
+        "description": "Costas, Peitoral, Ombros, Tríceps e Pernas",
         "exercises": [
           { "name": "Puxada na Frente na Polia Alta", "reps": "3x12" },
           { "name": "Leg Press 45º", "reps": "4x10" },
@@ -55,7 +55,7 @@
     "workouts": [
       {
         "name": "Treino A",
-        "description": "Pernas e Braços",
+        "description": "Peitoral, Pernas e Bíceps",
         "exercises": [
           {
             "name": "Supino Inclinado com Halteres",
@@ -74,7 +74,7 @@
       },
       {
         "name": "Treino B",
-        "description": "Costas e Peitoral",
+        "description": "Costas, Peitoral, Ombros, Tríceps e Abdômen",
         "exercises": [
           { "name": "Remada Curvada", "reps": "4x12" },
           { "name": "Supino Inclinado", "reps": "4x10" },
@@ -132,7 +132,7 @@
     "workouts": [
       {
         "name": "Treino A",
-        "description": "Segunda e quinta",
+        "description": "Peitoral, Pernas, Bíceps e Costas",
         "exercises": [
           {
             "name": "Supino Inclinado com Halteres",
@@ -152,7 +152,7 @@
       },
       {
         "name": "Treino B",
-        "description": "Terça e sexta",
+        "description": "Costas, Pernas, Ombros, Peitoral, Tríceps e Abdômen",
         "exercises": [
           { "name": "Remada Curvada", "reps": "4x12" },
           { "name": "Leg Press 45º", "reps": "4x10" },
