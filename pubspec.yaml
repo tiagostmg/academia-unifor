@@ -31,5 +31,4 @@ flutter:
     - assets/
     - .env
     - assets/mocks/equipment.json
-    - assets/mocks/exercises.json
     - assets/mocks/users.json
