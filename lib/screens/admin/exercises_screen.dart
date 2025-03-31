@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/models/workout.dart';
 
 class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
@@ -119,29 +119,9 @@ class ExercisesScreenBody extends StatelessWidget {
               ],
             ),
             onTap: () {
-              final userMap = user.toJson()..remove('password');
-
               showDialog(
                 context: context,
                 builder: (_) {
-                  bool isEditing = false;
-                  TextEditingController nameController = TextEditingController(
-                    text: user.name,
-                  );
-                  TextEditingController emailController = TextEditingController(
-                    text: user.email,
-                  );
-                  TextEditingController phoneController = TextEditingController(
-                    text: user.phone,
-                  );
-                  TextEditingController addressController =
-                      TextEditingController(text: user.address);
-                  TextEditingController birthDateController =
-                      TextEditingController(text: user.birthDate);
-                  TextEditingController avatarUrlController =
-                      TextEditingController(text: user.avatarUrl);
-                  bool isAdmin = user.isAdmin;
-
                   return StatefulBuilder(
                     builder:
                         (context, setState) => Dialog(
@@ -149,93 +129,51 @@ class ExercisesScreenBody extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        isEditing ? Icons.save : Icons.edit,
-                                      ),
-                                      onPressed: () {
-                                        if (isEditing) {
-                                          user.name = nameController.text;
-                                          user.email = emailController.text;
-                                          user.phone = phoneController.text;
-                                          user.address = addressController.text;
-                                          user.birthDate =
-                                              birthDateController.text;
-                                          user.avatarUrl =
-                                              avatarUrlController.text;
-                                          user.isAdmin = isAdmin;
-                                        }
-                                        setState(() => isEditing = !isEditing);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ],
+                                Text(
+                                  'Editar Workouts',
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
-                                if (isEditing) ...[
-                                  TextField(
-                                    controller: nameController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Nome',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: emailController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'E-mail',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: phoneController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Telefone',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: addressController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Endereço',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: birthDateController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Data de Nascimento',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: avatarUrlController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'URL da Imagem',
-                                    ),
-                                  ),
-                                  CheckboxListTile(
-                                    value: isAdmin,
-                                    onChanged:
-                                        (value) => setState(
-                                          () => isAdmin = value ?? false,
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: user.workouts.length,
+                                    itemBuilder: (context, index) {
+                                      final workout = user.workouts[index];
+                                      return ListTile(
+                                        title: Text(workout.name),
+                                        subtitle: Text(workout.description),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () {
+                                            setState(() {
+                                              user.workouts.removeAt(index);
+                                            });
+                                          },
                                         ),
-                                    title: const Text('Administrador'),
+                                      );
+                                    },
                                   ),
-                                ] else
-                                  SingleChildScrollView(
-                                    child: Text(
-                                      JsonEncoder.withIndent(
-                                        '  ',
-                                      ).convert(userMap),
-                                      style: const TextStyle(
-                                        fontFamily: 'monospace',
-                                      ),
-                                    ),
-                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      user.workouts.add(
+                                        Workout(
+                                          name: 'Novo Treino',
+                                          description: 'Descrição do Treino',
+                                          exercises: [],
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  child: const Text('Adicionar Treino'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Salvar'),
+                                ),
                               ],
                             ),
                           ),
