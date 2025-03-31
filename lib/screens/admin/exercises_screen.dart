@@ -160,11 +160,15 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
+  String getFirstName(String fullName) {
+    return fullName.split(' ')[0];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Treinos'),
+        title: Text('Editar Treinos - ${getFirstName(widget.user.name)}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
