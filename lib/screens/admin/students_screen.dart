@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -40,6 +39,16 @@ class _StudentsScreenState extends State<StudentsScreen> {
     });
   }
 
+  void _updateUser(Users updatedUser) {
+    setState(() {
+      final index = allUsers.indexWhere((u) => u.id == updatedUser.id);
+      if (index != -1) {
+        allUsers[index] = updatedUser;
+        filteredUsers[index] = updatedUser;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -55,7 +64,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
               onSearchChanged: _filterUsers,
               showChatIcon: false,
             ),
-            body: StudentsScreenBody(users: filteredUsers),
+            body: StudentsScreenBody(
+              users: filteredUsers,
+              onUpdateUser: _updateUser,
+            ),
           ),
         ),
       ),
@@ -65,20 +77,22 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
 class StudentsScreenBody extends StatelessWidget {
   final List<Users> users;
+  final Function(Users) onUpdateUser;
 
-  const StudentsScreenBody({super.key, required this.users});
+  const StudentsScreenBody({
+    super.key,
+    required this.users,
+    required this.onUpdateUser,
+  });
 
   String formatPhoneNumber(String phone) {
     final cleaned = phone.replaceAll(RegExp(r'\D'), '');
 
     if (cleaned.length == 11) {
-      // celular com DDD: 85999502195 → (85) 99950-2195
       return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7)}';
     } else if (cleaned.length == 10) {
-      // fixo com DDD: 8534567890 → (85) 3456-7890
       return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6)}';
     } else {
-      // formato desconhecido, retorna como está
       return phone;
     }
   }
@@ -118,137 +132,134 @@ class StudentsScreenBody extends StatelessWidget {
                   ),
               ],
             ),
-            onTap: () {
-              final userMap =
-                  user.toJson()
-                    ..remove('password')
-                    ..remove('workouts');
-
-              showDialog(
-                context: context,
-                builder: (_) {
-                  bool isEditing = false;
-                  TextEditingController nameController = TextEditingController(
-                    text: user.name,
-                  );
-                  TextEditingController emailController = TextEditingController(
-                    text: user.email,
-                  );
-                  TextEditingController phoneController = TextEditingController(
-                    text: user.phone,
-                  );
-                  TextEditingController addressController =
-                      TextEditingController(text: user.address);
-                  TextEditingController birthDateController =
-                      TextEditingController(text: user.birthDate);
-                  TextEditingController avatarUrlController =
-                      TextEditingController(text: user.avatarUrl);
-                  bool isAdmin = user.isAdmin;
-
-                  return StatefulBuilder(
-                    builder:
-                        (context, setState) => Dialog(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        isEditing ? Icons.save : Icons.edit,
-                                      ),
-                                      onPressed: () {
-                                        if (isEditing) {
-                                          user.name = nameController.text;
-                                          user.email = emailController.text;
-                                          user.phone = phoneController.text;
-                                          user.address = addressController.text;
-                                          user.birthDate =
-                                              birthDateController.text;
-                                          user.avatarUrl =
-                                              avatarUrlController.text;
-                                          user.isAdmin = isAdmin;
-                                        }
-                                        setState(() => isEditing = !isEditing);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ],
-                                ),
-                                if (isEditing) ...[
-                                  TextField(
-                                    controller: nameController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Nome',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: emailController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'E-mail',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: phoneController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Telefone',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: addressController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Endereço',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: birthDateController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Data de Nascimento',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: avatarUrlController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'URL da Imagem',
-                                    ),
-                                  ),
-                                  CheckboxListTile(
-                                    value: isAdmin,
-                                    onChanged:
-                                        (value) => setState(
-                                          () => isAdmin = value ?? false,
-                                        ),
-                                    title: const Text('Administrador'),
-                                  ),
-                                ] else
-                                  SingleChildScrollView(
-                                    child: Text(
-                                      JsonEncoder.withIndent(
-                                        '  ',
-                                      ).convert(userMap),
-                                      style: const TextStyle(
-                                        fontFamily: 'monospace',
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                  );
-                },
+            onTap: () async {
+              final updatedUser = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditUserScreen(user: user),
+                ),
               );
+
+              if (updatedUser != null && updatedUser is Users) {
+                onUpdateUser(
+                  updatedUser,
+                ); // Usa o callback para atualizar o usuário
+              }
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class EditUserScreen extends StatefulWidget {
+  final Users user;
+
+  const EditUserScreen({
+    super.key,
+    required this.user,
+  }); // Uso do super parâmetro
+
+  @override
+  EditUserScreenState createState() => EditUserScreenState(); // Nome público da classe
+}
+
+class EditUserScreenState extends State<EditUserScreen> {
+  late TextEditingController nameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  late TextEditingController addressController;
+  late TextEditingController birthDateController;
+  late TextEditingController avatarUrlController;
+  late bool isAdmin;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.user.name);
+    emailController = TextEditingController(text: widget.user.email);
+    phoneController = TextEditingController(text: widget.user.phone);
+    addressController = TextEditingController(text: widget.user.address);
+    birthDateController = TextEditingController(text: widget.user.birthDate);
+    avatarUrlController = TextEditingController(text: widget.user.avatarUrl);
+    isAdmin = widget.user.isAdmin;
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    birthDateController.dispose();
+    avatarUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Editar Usuário'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              setState(() {
+                widget.user.name = nameController.text;
+                widget.user.email = emailController.text;
+                widget.user.phone = phoneController.text;
+                widget.user.address = addressController.text;
+                widget.user.birthDate = birthDateController.text;
+                widget.user.avatarUrl = avatarUrlController.text;
+                widget.user.isAdmin = isAdmin;
+              });
+              Navigator.pop(
+                context,
+                widget.user,
+              ); // Retorna o usuário atualizado
+            },
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Nome'),
+            ),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'E-mail'),
+            ),
+            TextField(
+              controller: phoneController,
+              decoration: const InputDecoration(labelText: 'Telefone'),
+            ),
+            TextField(
+              controller: addressController,
+              decoration: const InputDecoration(labelText: 'Endereço'),
+            ),
+            TextField(
+              controller: birthDateController,
+              decoration: const InputDecoration(
+                labelText: 'Data de Nascimento',
+              ),
+            ),
+            TextField(
+              controller: avatarUrlController,
+              decoration: const InputDecoration(labelText: 'URL da Imagem'),
+            ),
+            CheckboxListTile(
+              value: isAdmin,
+              onChanged: (value) => setState(() => isAdmin = value ?? false),
+              title: const Text('Administrador'),
+            ),
+          ],
+        ),
       ),
     );
   }

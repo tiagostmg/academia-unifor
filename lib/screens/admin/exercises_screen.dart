@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/models/workout.dart';
 
 class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
@@ -40,6 +40,16 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     });
   }
 
+  void _updateUser(Users updatedUser) {
+    setState(() {
+      final index = allUsers.indexWhere((u) => u.id == updatedUser.id);
+      if (index != -1) {
+        allUsers[index] = updatedUser;
+        filteredUsers[index] = updatedUser;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -55,7 +65,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
               onSearchChanged: _filterUsers,
               showChatIcon: false,
             ),
-            body: ExercisesScreenBody(users: filteredUsers),
+            body: ExercisesScreenBody(
+              users: filteredUsers,
+              onUpdateUser: _updateUser,
+            ),
           ),
         ),
       ),
@@ -65,23 +78,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
 class ExercisesScreenBody extends StatelessWidget {
   final List<Users> users;
+  final Function(Users) onUpdateUser;
 
-  const ExercisesScreenBody({super.key, required this.users});
-
-  String formatPhoneNumber(String phone) {
-    final cleaned = phone.replaceAll(RegExp(r'\D'), '');
-
-    if (cleaned.length == 11) {
-      // celular com DDD: 85999502195 → (85) 99950-2195
-      return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7)}';
-    } else if (cleaned.length == 10) {
-      // fixo com DDD: 8534567890 → (85) 3456-7890
-      return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6)}';
-    } else {
-      // formato desconhecido, retorna como está
-      return phone;
-    }
-  }
+  const ExercisesScreenBody({
+    super.key,
+    required this.users,
+    required this.onUpdateUser,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,151 +104,107 @@ class ExercisesScreenBody extends StatelessWidget {
               child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
             ),
             title: Text(user.name),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(user.email),
-                if (user.phone.isNotEmpty)
-                  Row(
-                    children: [
-                      const Icon(Icons.phone, size: 16, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        formatPhoneNumber(user.phone),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-            onTap: () {
-              final userMap = user.toJson()..remove('password');
-
-              showDialog(
-                context: context,
-                builder: (_) {
-                  bool isEditing = false;
-                  TextEditingController nameController = TextEditingController(
-                    text: user.name,
-                  );
-                  TextEditingController emailController = TextEditingController(
-                    text: user.email,
-                  );
-                  TextEditingController phoneController = TextEditingController(
-                    text: user.phone,
-                  );
-                  TextEditingController addressController =
-                      TextEditingController(text: user.address);
-                  TextEditingController birthDateController =
-                      TextEditingController(text: user.birthDate);
-                  TextEditingController avatarUrlController =
-                      TextEditingController(text: user.avatarUrl);
-                  bool isAdmin = user.isAdmin;
-
-                  return StatefulBuilder(
-                    builder:
-                        (context, setState) => Dialog(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        isEditing ? Icons.save : Icons.edit,
-                                      ),
-                                      onPressed: () {
-                                        if (isEditing) {
-                                          user.name = nameController.text;
-                                          user.email = emailController.text;
-                                          user.phone = phoneController.text;
-                                          user.address = addressController.text;
-                                          user.birthDate =
-                                              birthDateController.text;
-                                          user.avatarUrl =
-                                              avatarUrlController.text;
-                                          user.isAdmin = isAdmin;
-                                        }
-                                        setState(() => isEditing = !isEditing);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ],
-                                ),
-                                if (isEditing) ...[
-                                  TextField(
-                                    controller: nameController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Nome',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: emailController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'E-mail',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: phoneController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Telefone',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: addressController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Endereço',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: birthDateController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'Data de Nascimento',
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: avatarUrlController,
-                                    decoration: const InputDecoration(
-                                      labelText: 'URL da Imagem',
-                                    ),
-                                  ),
-                                  CheckboxListTile(
-                                    value: isAdmin,
-                                    onChanged:
-                                        (value) => setState(
-                                          () => isAdmin = value ?? false,
-                                        ),
-                                    title: const Text('Administrador'),
-                                  ),
-                                ] else
-                                  SingleChildScrollView(
-                                    child: Text(
-                                      JsonEncoder.withIndent(
-                                        '  ',
-                                      ).convert(userMap),
-                                      style: const TextStyle(
-                                        fontFamily: 'monospace',
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                  );
-                },
+            subtitle: Text('${user.workouts.length} Treinos'),
+            onTap: () async {
+              final updatedUser = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditWorkoutsScreen(user: user),
+                ),
               );
+
+              if (updatedUser != null && updatedUser is Users) {
+                onUpdateUser(updatedUser);
+              }
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class EditWorkoutsScreen extends StatefulWidget {
+  final Users user;
+
+  const EditWorkoutsScreen({super.key, required this.user});
+
+  @override
+  EditWorkoutsScreenState createState() => EditWorkoutsScreenState();
+}
+
+class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
+  late List<Workout> workouts;
+
+  @override
+  void initState() {
+    super.initState();
+    workouts = List<Workout>.from(widget.user.workouts);
+  }
+
+  void _addWorkout() {
+    setState(() {
+      workouts.add(
+        Workout(
+          name: 'Novo Treino',
+          description: 'Descrição do Treino',
+          exercises: [],
+        ),
+      );
+    });
+  }
+
+  void _removeWorkout(int index) {
+    setState(() {
+      workouts.removeAt(index);
+    });
+  }
+
+  String getFirstName(String fullName) {
+    return fullName.split(' ')[0];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Editar Treinos - ${getFirstName(widget.user.name)}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: () {
+              widget.user.workouts = workouts;
+              Navigator.pop(context, widget.user);
+            },
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: workouts.length,
+                itemBuilder: (context, index) {
+                  final workout = workouts[index];
+                  return ListTile(
+                    title: Text(workout.name),
+                    subtitle: Text(workout.description),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _removeWorkout(index),
+                    ),
+                  );
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: _addWorkout,
+              child: const Text('Adicionar Treino'),
+            ),
+          ],
+        ),
       ),
     );
   }
