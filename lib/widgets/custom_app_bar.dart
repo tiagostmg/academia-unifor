@@ -54,10 +54,46 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Icons.notifications,
                     color: theme.colorScheme.onPrimary,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _showNotificationsModal(context);
+                  },
                 ),
               ]
               : null,
+    );
+  }
+
+  void _showNotificationsModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          contentPadding: const EdgeInsets.all(16),
+          title: Text(
+            'Notificações',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: const SizedBox(
+            height: 100,
+            child: Center(
+              child: Text(
+                'Não há notificações',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

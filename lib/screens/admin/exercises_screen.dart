@@ -1,3 +1,4 @@
+import 'package:academia_unifor/models/exercise.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/users_service.dart';
@@ -160,6 +161,14 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
+  void _addExercise(Workout workout) {
+    setState(() {
+      workout.exercises.add(
+        Exercise(name: 'Novo Exercício', reps: '3x10', notes: ''),
+      );
+    });
+  }
+
   String getFirstName(String fullName) {
     return fullName.split(' ')[0];
   }
@@ -181,30 +190,75 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: workouts.length,
-                itemBuilder: (context, index) {
-                  final workout = workouts[index];
-                  return ListTile(
-                    title: Text(workout.name),
-                    subtitle: Text(workout.description),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => _removeWorkout(index),
+        child: ListView.builder(
+          itemCount: workouts.length,
+          itemBuilder: (context, index) {
+            final workout = workouts[index];
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: TextEditingController(text: workout.name),
+                      decoration: const InputDecoration(
+                        labelText: 'Nome do Treino',
+                      ),
+                      onChanged: (value) => workout.name = value,
                     ),
-                  );
-                },
+                    TextField(
+                      controller: TextEditingController(
+                        text: workout.description,
+                      ),
+                      decoration: const InputDecoration(labelText: 'Descrição'),
+                      onChanged: (value) => workout.description = value,
+                    ),
+                    const SizedBox(height: 8),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: workout.exercises.length,
+                      itemBuilder: (context, exIndex) {
+                        final exercise = workout.exercises[exIndex];
+                        return ListTile(
+                          title: Text(exercise.name),
+                          subtitle: Text('Repetições: ${exercise.reps}'),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                workout.exercises.removeAt(exIndex);
+                              });
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () => _addExercise(workout),
+                      child: Text(
+                        'Adicionar Exercício',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => _removeWorkout(index),
+                      child: const Text(
+                        'Remover Treino',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: _addWorkout,
-              child: const Text('Adicionar Treino'),
-            ),
-          ],
+            );
+          },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addWorkout,
+        child: const Icon(Icons.add),
       ),
     );
   }
