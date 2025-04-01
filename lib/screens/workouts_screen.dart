@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/models/exercise.dart'; // Import necessário para usar Exercise
+import 'package:academia_unifor/models/exercise.dart';
 import 'package:academia_unifor/services/user_provider.dart';
 import 'package:academia_unifor/models/workout.dart';
 
@@ -107,14 +107,16 @@ class WorkoutCard extends StatelessWidget {
   }
 }
 
-class ExerciseTile extends StatelessWidget {
+class ExerciseTile extends ConsumerWidget {
   final Exercise exercise;
 
   const ExerciseTile({required this.exercise, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final exerciseState = ref.watch(exerciseStateProvider);
+    final isCompleted = exerciseState[exercise.name] ?? false;
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -122,36 +124,69 @@ class ExerciseTile extends StatelessWidget {
         color: theme.colorScheme.secondary.withAlpha(25),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Text(
-            exercise.name,
-            style: theme.textTheme.bodyMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
+          Checkbox(
+            value: isCompleted,
+            onChanged: (value) {
+              ref
+                  .read(exerciseStateProvider.notifier)
+                  .toggleExercise(exercise.name);
+            },
           ),
-          const SizedBox(height: 4),
-          Text(
-            "Reps: ${exercise.reps}",
-            style: theme.textTheme.bodyMedium!.copyWith(
-              color: theme.colorScheme.onSurface.withAlpha(179),
-            ),
-          ),
-          if (exercise.notes != null && exercise.notes!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                "Notas: ${exercise.notes}",
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color: theme.colorScheme.onSurface.withAlpha(153),
-                  fontStyle: FontStyle.italic,
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exercise.name,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                    decoration: isCompleted ? TextDecoration.lineThrough : null,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 4),
+                Text(
+                  "Reps: ${exercise.reps}",
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    color: theme.colorScheme.onSurface.withAlpha(179),
+                  ),
+                ),
+                if (exercise.notes != null && exercise.notes!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Notas: ${exercise.notes}",
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        color: theme.colorScheme.onSurface.withAlpha(153),
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+              ],
             ),
+          ),
         ],
       ),
     );
   }
 }
+
+class ExerciseStateNotifier extends StateNotifier<Map<String, bool>> {
+  ExerciseStateNotifier() : super({});
+
+  void toggleExercise(String exerciseName) {
+    state = {...state, exerciseName: !(state[exerciseName] ?? false)};
+  }
+
+  bool isCompleted(String exerciseName) {
+    return state[exerciseName] ?? false;
+  }
+}
+
+final exerciseStateProvider =
+    StateNotifierProvider<ExerciseStateNotifier, Map<String, bool>>(
+      (ref) => ExerciseStateNotifier(),
+    );
