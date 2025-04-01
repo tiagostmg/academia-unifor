@@ -117,6 +117,18 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _buildCard(
+                context,
+                Icons.description,
+                'Ver treinos',
+                '$totalUsers',
+                onTap: () => context.go('/admin/exercises'),
+              ),
+            ],
+          ),
         ],
       ),
     );

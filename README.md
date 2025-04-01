@@ -37,9 +37,24 @@ Você pode usar o arquivo `.env.template` como base.
 flutter run
 ```
 
-## Usuários disponíveis
+## Usuários - Emails e Senhas
 
-Por enquanto, há dois usuários cadastrados para testes:
+### Carlos Felipe Araújo
 
-- **admin / admin**
-- **user / user**
+- **Email:** `carlosxfelipe@gmail.com`
+- **Senha:** `senha123`
+
+### Igor Praciano Thomaz
+
+- **Email:** `igor.praciano@unifor.com`
+- **Senha:** `senha123`
+
+### Rafael Lima Cacau
+
+- **Email:** `cacau.show@unifor.com`
+- **Senha:** `senha123`
+
+### Tiago Silveira Taumaturgo
+
+- **Email:** `tiago.silveira@unifor.com`
+- **Senha:** `senha123`

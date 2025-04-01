@@ -1,20 +1,25 @@
 import 'dart:async';
 import 'dart:ui';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
-import 'package:academia_unifor/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/assets/unifor_logo.dart';
+import 'package:academia_unifor/models/users.dart';
+import 'package:academia_unifor/services/user_provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
   LoginScreenState createState() => LoginScreenState();
 }
 
-class LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -55,18 +60,67 @@ class LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _login() {
-    String username = _userController.text.trim();
+  // void _login() {
+  //   String username = _userController.text.trim();
+  //   String password = _passwordController.text.trim();
+
+  //   if (username == 'user' && password == 'user') {
+  //     context.go('/home');
+  //   } else if (username == 'admin' && password == 'admin') {
+  //     context.go('/admin');
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: const Text('Usuário ou senha incorretos'),
+  //         behavior: SnackBarBehavior.floating,
+  //         backgroundColor: Theme.of(context).colorScheme.errorContainer,
+  //       ),
+  //     );
+  //   }
+  // }
+
+  void _login() async {
+    String email = _userController.text.trim();
     String password = _passwordController.text.trim();
 
-    if (username == 'user' && password == 'user') {
-      context.go('/home');
-    } else if (username == 'admin' && password == 'admin') {
-      context.go('/admin');
-    } else {
+    try {
+      final String response = await DefaultAssetBundle.of(
+        context,
+      ).loadString('assets/mocks/users.json');
+      final List<dynamic> usersJson = json.decode(response);
+      List<Users> usersList =
+          usersJson.map((user) => Users.fromJson(user)).toList();
+
+      Users? foundUser = usersList.firstWhereOrNull(
+        (user) => user.email == email && user.password == password,
+      );
+
+      if (!mounted) return;
+
+      if (foundUser != null) {
+        // Salva o usuário autenticado no Provider
+        ref.read(userProvider.notifier).state = foundUser;
+
+        if (foundUser.isAdmin) {
+          context.go('/admin');
+        } else {
+          context.go('/home');
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Usuário ou senha incorretos'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          ),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Usuário ou senha incorretos'),
+          content: Text('Erro ao carregar os dados: $error'),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
         ),
