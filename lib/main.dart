@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:academia_unifor/theme/theme.dart';
 import 'package:academia_unifor/routes/router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   debugPrint("GEMINI_API_KEY => ${dotenv.env['GEMINI_API_KEY']}");
-  runApp(const MainApp());
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {

@@ -195,6 +195,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
           itemBuilder: (context, index) {
             final workout = workouts[index];
             return Card(
+              color: Theme.of(context).colorScheme.primary,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -221,33 +222,116 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                       itemCount: workout.exercises.length,
                       itemBuilder: (context, exIndex) {
                         final exercise = workout.exercises[exIndex];
-                        return ListTile(
-                          title: Text(exercise.name),
-                          subtitle: Text('Repetições: ${exercise.reps}'),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                workout.exercises.removeAt(exIndex);
-                              });
-                            },
+
+                        return Card(
+                          color: Theme.of(context).colorScheme.primary,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Exercício ${exIndex + 1}',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium!.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          workout.exercises.removeAt(exIndex);
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 8),
+                                TextField(
+                                  controller: TextEditingController(
+                                    text: exercise.name,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Nome do Exercício',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged:
+                                      (value) =>
+                                          setState(() => exercise.name = value),
+                                ),
+                                const SizedBox(height: 8),
+                                TextField(
+                                  controller: TextEditingController(
+                                    text: exercise.reps,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Repetições',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged:
+                                      (value) =>
+                                          setState(() => exercise.reps = value),
+                                ),
+                                const SizedBox(height: 8),
+                                TextField(
+                                  controller: TextEditingController(
+                                    text: exercise.notes ?? '',
+                                  ),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Notas / Observações',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  maxLines: 3,
+                                  onChanged:
+                                      (value) => setState(
+                                        () => exercise.notes = value,
+                                      ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
-                    TextButton(
-                      onPressed: () => _addExercise(workout),
-                      child: Text(
-                        'Adicionar Exercício',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => _removeWorkout(index),
-                      child: const Text(
-                        'Remover Treino',
-                        style: TextStyle(color: Colors.red),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _addExercise(workout),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Adicionar Exercício'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => _removeWorkout(index),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Remover Treino'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
