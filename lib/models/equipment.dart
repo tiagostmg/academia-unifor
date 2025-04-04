@@ -4,6 +4,7 @@ class EquipmentItem {
   String model;
   int quantity;
   String image;
+  bool operational;
 
   EquipmentItem({
     required this.name,
@@ -11,6 +12,7 @@ class EquipmentItem {
     required this.model,
     required this.quantity,
     required this.image,
+    required this.operational,
   });
 
   factory EquipmentItem.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class EquipmentItem {
       model: json['model'],
       quantity: json['quantity'],
       image: json['image'] ?? '',
+      operational: json['operational'] ?? true,
     );
   }
 }

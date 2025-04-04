@@ -44,7 +44,8 @@
           "brand": "Movement",
           "model": "FXR500",
           "quantity": 4,
-          "image": ""
+          "image": "",
+          "operational": false
         },
         {
           "name": "Peck Deck",
@@ -100,7 +101,8 @@
           "brand": "Technogym",
           "model": "Selection 900",
           "quantity": 2,
-          "image": ""
+          "image": "",
+          "operational": false
         },
         {
           "name": "Tríceps Testa",
@@ -169,7 +171,8 @@
           "brand": "Concept2",
           "model": "PM5",
           "quantity": 2,
-          "image": ""
+          "image": "",
+          "operational": false
         }
       ]
     },
@@ -189,7 +192,8 @@
           "brand": "Life Fitness",
           "model": "T5 Track Connect",
           "quantity": 4,
-          "image": ""
+          "image": "",
+          "operational": false
         },
         {
           "name": "Esteira curva",
@@ -230,7 +234,8 @@
           "brand": "Technogym",
           "model": "Group Cycle",
           "quantity": 3,
-          "image": "https://www.technogym.com/en-CH/feed/images/D92RNN/group-cycle-ride-plp.jpg"
+          "image": "https://www.technogym.com/en-CH/feed/images/D92RNN/group-cycle-ride-plp.jpg",
+          "operational": false
         },
         {
           "name": "Bike Spinning",
