@@ -1,3 +1,4 @@
+import 'package:academia_unifor/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 
@@ -17,6 +18,17 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(),
             body: const HomeBody(),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatScreen()),
+                );
+              },
+              backgroundColor: theme.colorScheme.primary,
+              tooltip: 'Abrir chat',
+              child: const Icon(Icons.chat),
+            ),
           ),
         ),
       ),
