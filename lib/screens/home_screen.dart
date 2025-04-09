@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/screens.dart';
 import 'package:academia_unifor/assets/gemini_logo.dart';
-import 'package:academia_unifor/screens/chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
