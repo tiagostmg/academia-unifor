@@ -60,25 +60,6 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     });
   }
 
-  // void _login() {
-  //   String username = _userController.text.trim();
-  //   String password = _passwordController.text.trim();
-
-  //   if (username == 'user' && password == 'user') {
-  //     context.go('/home');
-  //   } else if (username == 'admin' && password == 'admin') {
-  //     context.go('/admin');
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: const Text('Usuário ou senha incorretos'),
-  //         behavior: SnackBarBehavior.floating,
-  //         backgroundColor: Theme.of(context).colorScheme.errorContainer,
-  //       ),
-  //     );
-  //   }
-  // }
-
   void _login() async {
     String email = _userController.text.trim();
     String password = _passwordController.text.trim();

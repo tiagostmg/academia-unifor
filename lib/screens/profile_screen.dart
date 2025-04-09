@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:academia_unifor/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
-import 'package:academia_unifor/services/users_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models/users.dart';
+import 'package:academia_unifor/services/user_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -28,46 +29,30 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class ProfileBody extends StatelessWidget {
+class ProfileBody extends ConsumerWidget {
   const ProfileBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Users>>(
-      future: UsersService().loadUsers(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.only(top: 100),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
 
-        if (snapshot.hasError || !snapshot.hasData) {
-          return const Center(child: Text("Erro ao carregar o perfil"));
-        }
+    if (user == null) {
+      return const Center(child: Text("Nenhum usuário logado."));
+    }
 
-        final usersList = snapshot.data!;
-        final user = usersList.firstWhere(
-          (u) => u.id == 1,
-          orElse: () => usersList.first,
-        );
-
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              ProfileAvatar(avatarUrl: user.avatarUrl),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: ProfileInfo(users: user),
-              ),
-              const SizedBox(height: 60),
-            ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          ProfileAvatar(avatarUrl: user.avatarUrl),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: ProfileInfo(users: user),
           ),
-        );
-      },
+          const SizedBox(height: 60),
+        ],
+      ),
     );
   }
 }

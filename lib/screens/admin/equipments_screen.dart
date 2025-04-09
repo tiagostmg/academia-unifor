@@ -250,6 +250,7 @@ class _SelectedCategoryList extends StatelessWidget {
                 TextEditingController imageController = TextEditingController(
                   text: item.image,
                 );
+                bool operationalValue = item.operational;
 
                 showDialog(
                   context: context,
@@ -279,6 +280,7 @@ class _SelectedCategoryList extends StatelessWidget {
                                             ) ??
                                             item.quantity;
                                         item.image = imageController.text;
+                                        item.operational = operationalValue;
 
                                         Navigator.pop(context);
                                       },
@@ -319,6 +321,18 @@ class _SelectedCategoryList extends StatelessWidget {
                                   decoration: const InputDecoration(
                                     labelText: 'URL da Imagem',
                                   ),
+                                ),
+                                const SizedBox(height: 12),
+                                CheckboxListTile(
+                                  title: const Text('Operacional'),
+                                  value: operationalValue,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        operationalValue = value;
+                                      });
+                                    }
+                                  },
                                 ),
                               ],
                             ),
