@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactWidget extends StatelessWidget {
   const ContactWidget({super.key});
+
+  void _launchPhone() async {
+    final Uri uri = Uri.parse('tel:+558534773616');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('Não foi possível abrir o discador');
+    }
+  }
+
+  void _launchWhatsApp() async {
+    final Uri uri = Uri.parse(
+      'tel:+5585991625291',
+    ); // número do WhatsApp no discador
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('Não foi possível abrir o discador com o número do WhatsApp');
+    }
+  }
+
+  void _launchEmail() async {
+    final Uri uri = Uri(scheme: 'mailto', path: 'dad@unifor.br');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      debugPrint('Não foi possível abrir o app de e-mail');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +65,7 @@ class ContactWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _launchPhone,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(16),
                         shape: RoundedRectangleBorder(
@@ -52,7 +82,7 @@ class ContactWidget extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _launchWhatsApp,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(16),
                         shape: RoundedRectangleBorder(
@@ -69,7 +99,7 @@ class ContactWidget extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _launchEmail,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(16),
                         shape: RoundedRectangleBorder(
