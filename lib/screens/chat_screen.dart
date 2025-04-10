@@ -15,6 +15,32 @@ class ChatScreenState extends State<ChatScreen> {
   final List<Map<String, String>> _messages = [];
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _addInitialGreeting();
+  }
+
+  void _addInitialGreeting() {
+    final hour = DateTime.now().hour;
+    String greeting;
+
+    if (hour < 12) {
+      greeting = "Bom dia!";
+    } else if (hour < 18) {
+      greeting = "Boa tarde!";
+    } else {
+      greeting = "Boa noite!";
+    }
+
+    setState(() {
+      _messages.add({
+        "sender": "Bot",
+        "message": "$greeting Qual a sua dúvida relacionada a exercícios?",
+      });
+    });
+  }
+
   void _sendMessage() async {
     String userMessage = _controller.text.trim();
     if (userMessage.isNotEmpty) {
