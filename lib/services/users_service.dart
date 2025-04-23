@@ -10,10 +10,21 @@ class UsersService {
 
   Future<List<Users>> loadUsers() async {
     try {
-      final response = await _dio.get('/api/User/complete'); // exemplo de rota
+      final response = await _dio.get('/api/User/complete'); 
       final List<dynamic> data = response.data;
-      print(data);
       return data.map((e) => Users.fromJson(e)).toList();
+    } catch (e) {
+      print('Erro ao buscar usuários: $e');
+      return [];
+    }
+  }
+
+  //Criei esse medodo para filtrar os usuários que não são admin
+  Future<List<Users>> loadStudents() async {
+    try {
+      final response = await _dio.get('/api/User/complete'); 
+      final List<dynamic> data = response.data;
+      return data.map((e) => Users.fromJson(e)).where((e) => !e.isAdmin).toList();
     } catch (e) {
       print('Erro ao buscar usuários: $e');
       return [];

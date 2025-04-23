@@ -21,7 +21,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Future<void> _loadUsers() async {
-    final users = await UsersService().loadUsers();
+    final users = await UsersService().loadStudents();
     setState(() {
       allUsers = users;
       filteredUsers = users;
