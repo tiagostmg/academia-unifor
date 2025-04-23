@@ -1,9 +1,8 @@
+import 'package:academia_unifor/services/gym_data_service.dart';
+import 'package:academia_unifor/services/users_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:academia_unifor/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/models/equipment.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -45,33 +44,23 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
     _loadData();
   }
 
+  //Modifiquei essa parte para ele receber os metodos coretamentes
   Future<void> _loadData() async {
-    final bundle = DefaultAssetBundle.of(context);
+    try {
+      final users = await UsersService().loadStudents();
+      final equipmentCategories = await loadGymEquipment(); 
 
-    final usersJson = await bundle.loadString('assets/mocks/users.json');
-    final equipmentJson = await bundle.loadString(
-      'assets/mocks/equipment.json',
-    );
+      final total = equipmentCategories.fold<int>(0, (sum, e) => sum + e.total);
 
-    final users =
-        (jsonDecode(usersJson) as List)
-            .map((json) => Users.fromJson(json))
-            .where((user) => !user.isAdmin)
-            .toList();
+      if (!mounted) return;
 
-    final equipment =
-        (jsonDecode(equipmentJson)['gymEquipment'] as List)
-            .map((json) => EquipmentCategory.fromJson(json))
-            .toList();
-
-    final total = equipment.fold<int>(0, (sum, e) => sum + e.total);
-
-    if (!mounted) return;
-
-    setState(() {
-      totalUsers = users.length;
-      totalEquipments = total;
-    });
+      setState(() {
+        totalUsers = users.length;
+        totalEquipments = total;
+      });
+    } catch (e) {
+      debugPrint('Erro ao carregar dados: $e');
+    }
   }
 
   @override
