@@ -138,13 +138,19 @@ class EditWorkoutsScreen extends StatefulWidget {
 class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   late List<Workout> workouts;
 
+  // [1, 2, 3, 4]
+  // [1, 2, -0-]
+  // [3, 4, 0]
+
+  late List<int> workoutsToDelete = [];
+
   @override
   void initState() {
     super.initState();
     workouts = List<Workout>.from(widget.user.workouts);
   }
 
-  void _addWorkout() async {
+  void _addWorkout() {
     try {
       Workout newWorkout = Workout(
         id: 0, // id será atribuído pelo banco
@@ -154,8 +160,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
         exercises: [],
       );
 
-      //Workout model = await UsersService().addWorkoutByUserId(newWorkout);
-
       setState(() {
         workouts.add(newWorkout);
       });
@@ -164,8 +168,10 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     }
   }
 
+//TODO DELETAR WORKOUT DA LISTA
   void _removeWorkout(int index) {
     setState(() {
+      workoutsToDelete.add(workouts[index].id);
       workouts.removeAt(index);
     });
   }
@@ -178,14 +184,25 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
-  void _saveAllWorkouts() async {
+  void _saveAllWorkouts()  {
+    // Deletar os treinos que foram removidos da lista
+    for (int id in workoutsToDelete) {
+      if(id != 0){
+        UsersService().deleteWorkout(id); 
+      }
+    }
     for(Workout workout in workouts) {
       if (workout.id == 0) {
         // Se o id do treino for 0, significa que é um novo treino
         // e deve ser adicionado ao banco de dados
-        await UsersService().postWorkout(workout);
-      } else {
+        UsersService().postWorkout(workout); 
+      }
+      else {
         
+        //ja existe na lista
+        // 1- put -> existe esse id no banco
+        // 2- delete -> quando existe no bancoe nao existe na lista
+
         // Se o id do treino não for 0, significa que é um treino existente
         // e deve ser atualizado no banco de dados
         Workout newWorkout = Workout(
@@ -196,11 +213,10 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
           exercises: workout.exercises,
         );
         //put -> atualizar o treino existente
-          await UsersService().putWorkout(newWorkout);
+           UsersService().putWorkout(newWorkout); 
       }
     }
-    //TODO: nao ta atualizando quando salva os workouts
-    widget.user.workouts = workouts;
+    widget.user.workouts = workouts; 
   }
 
   String getFirstName(String fullName) {

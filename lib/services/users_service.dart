@@ -53,6 +53,18 @@ class UsersService {
       rethrow;
     }
   }
+
+  Future<List<Workout>> getWorkoutsByUserId(int id) async {
+    try {
+      final response = await _dio.get('/api/Workout/userid/$id');
+      final List<dynamic> data = response.data;
+      return data.map((e) => Workout.fromJson(e)).toList();
+    } catch (e) {
+      print('Erro ao buscar treinos: $e');
+      return [];
+    }
+  }
+
   Future<Workout> postWorkout(Workout workout) async {
     try {
       final response = await _dio.post('/api/Workout', data: workout.toJson());
@@ -66,6 +78,15 @@ class UsersService {
   Future<Workout> putWorkout(Workout workout) async {
     try {
       final response = await _dio.put('/api/Workout/${workout.id}', data: workout.toJson());
+      return Workout.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar treino: $e');
+      rethrow;
+    }
+  }
+  Future<Workout> deleteWorkout(int id) async {
+    try {
+      final response = await _dio.delete('/api/Workout/$id');
       return Workout.fromJson(response.data);
     } catch (e) {
       print('Erro ao adicionar treino: $e');
