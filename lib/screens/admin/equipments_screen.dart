@@ -423,11 +423,6 @@ class _SelectedCategoryList extends StatelessWidget {
                                         height: double.infinity,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
-                                        
-                                        //coloquei esse erroBuilder para evitar o travamento do aplicativo quando não carrega a imagem
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return fallbackImage();
-                                        },
                                       ),
                                     ),
                                   )

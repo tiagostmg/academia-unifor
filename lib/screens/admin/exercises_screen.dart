@@ -134,6 +134,7 @@ class EditWorkoutsScreen extends StatefulWidget {
   EditWorkoutsScreenState createState() => EditWorkoutsScreenState();
 }
 
+//TODO aqui
 class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   late List<Workout> workouts;
 
@@ -143,16 +144,24 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     workouts = List<Workout>.from(widget.user.workouts);
   }
 
-  void _addWorkout() {
-    setState(() {
-      workouts.add(
-        Workout(
-          name: 'Novo Treino',
-          description: 'Descrição do Treino',
-          exercises: [],
-        ),
+  void _addWorkout() async {
+    try {
+      Workout newWorkout = Workout(
+        id: 0, // id será atribuído pelo banco
+        userId: widget.user.id,
+        name: 'Novo Treino',
+        description: 'Descrição do Treino',
+        exercises: [],
       );
-    });
+
+      //Workout model = await UsersService().addWorkoutByUserId(newWorkout);
+
+      setState(() {
+        workouts.add(newWorkout);
+      });
+    } catch (e) {
+      print('Erro ao adicionar treino: $e');
+    }
   }
 
   void _removeWorkout(int index) {
@@ -169,6 +178,31 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
+  void _saveAllWorkouts() async {
+    for(Workout workout in workouts) {
+      if (workout.id == 0) {
+        // Se o id do treino for 0, significa que é um novo treino
+        // e deve ser adicionado ao banco de dados
+        await UsersService().postWorkout(workout);
+      } else {
+        
+        // Se o id do treino não for 0, significa que é um treino existente
+        // e deve ser atualizado no banco de dados
+        Workout newWorkout = Workout(
+          id: workout.id,
+          userId: widget.user.id,
+          name: workout.name,
+          description: workout.description,
+          exercises: workout.exercises,
+        );
+        //put -> atualizar o treino existente
+          await UsersService().putWorkout(newWorkout);
+      }
+    }
+    //TODO: nao ta atualizando quando salva os workouts
+    widget.user.workouts = workouts;
+  }
+
   String getFirstName(String fullName) {
     return fullName.split(' ')[0];
   }
@@ -182,7 +216,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              widget.user.workouts = workouts;
+              _saveAllWorkouts();
               Navigator.pop(context, widget.user);
             },
           ),

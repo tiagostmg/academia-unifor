@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:convert';
+import 'package:academia_unifor/services/users_service.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
@@ -65,12 +65,8 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
     String password = _passwordController.text.trim();
 
     try {
-      final String response = await DefaultAssetBundle.of(
-        context,
-      ).loadString('assets/mocks/users.json');
-      final List<dynamic> usersJson = json.decode(response);
-      List<Users> usersList =
-          usersJson.map((user) => Users.fromJson(user)).toList();
+
+      List<Users> usersList = await UsersService().loadUsers();
 
       Users? foundUser = usersList.firstWhereOrNull(
         (user) => user.email == email && user.password == password,
