@@ -40,10 +40,10 @@ class EquipmentCategory {
 
   factory EquipmentCategory.fromJson(Map<String, dynamic> json) {
     return EquipmentCategory(
-      category: json['category'],
+      category: json['category_name'] ?? '',
       total: json['total'],
       items:
-          (json['items'] as List)
+          (json['equipments'] as List)
               .map((item) => EquipmentItem.fromJson(item))
               .toList(),
     );
