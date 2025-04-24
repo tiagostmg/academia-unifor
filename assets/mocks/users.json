@@ -6,39 +6,97 @@
     "password": "senha123",
     "phone": "85999502195",
     "address": "Fortaleza, CE",
-    "birthDate": "03/10/1987",
+    "birthDate": "1987-03-10",
     "avatarUrl": "https://avatars.githubusercontent.com/u/85801709?s=400&u=01cce0318ea853ce1a133699bc6b2af1919094d6&v=4",
     "workouts": [
       {
+        "id": 1,
+        "userId": 1,
         "name": "Treino A",
         "description": "Peitoral, Pernas, Ombros e Bíceps",
         "exercises": [
           {
+            "id": 1,
             "name": "Supino Reto com Barra",
             "reps": "4x12",
-            "notes": "Manter as escápulas contraídas e controle na descida"
+            "notes": "Manter as escápulas contraídas e controle na descida",
+            "workoutId": 1
           },
           {
+            "id": 2,
             "name": "Agachamento Livre",
             "reps": "4x10",
-            "notes": "Descer até o paralelo e manter a postura"
+            "notes": "Descer até o paralelo e manter a postura",
+            "workoutId": 1
           },
-          { "name": "Desenvolvimento com Halteres", "reps": "4x12" },
-          { "name": "Rosca Direta", "reps": "3x15" },
-          { "name": "Abdominal Supra", "reps": "3x20" },
-          { "name": "Leg Press 45º", "reps": "4x10" }
+          {
+            "id": 3,
+            "name": "Desenvolvimento com Halteres",
+            "reps": "4x12",
+            "workoutId": 1
+          },
+          {
+            "id": 4,
+            "name": "Rosca Direta",
+            "reps": "3x15",
+            "workoutId": 1
+          },
+          {
+            "id": 5,
+            "name": "Abdominal Supra",
+            "reps": "3x20",
+            "workoutId": 1
+          },
+          {
+            "id": 6,
+            "name": "Leg Press 45º",
+            "reps": "4x10",
+            "workoutId": 1
+          }
         ]
       },
       {
+        "id": 2,
+        "userId": 1,
         "name": "Treino B",
         "description": "Costas, Peitoral, Ombros, Tríceps e Pernas",
         "exercises": [
-          { "name": "Puxada na Frente na Polia Alta", "reps": "3x12" },
-          { "name": "Leg Press 45º", "reps": "4x10" },
-          { "name": "Supino Inclinado com Halteres", "reps": "4x10" },
-          { "name": "Desenvolvimento Militar", "reps": "3x12" },
-          { "name": "Tríceps Testa", "reps": "4x12" },
-          { "name": "Flexão de Braços", "reps": "3x15" }
+          {
+            "id": 7,
+            "name": "Puxada na Frente na Polia Alta",
+            "reps": "3x12",
+            "workoutId": 2
+          },
+          {
+            "id": 8,
+            "name": "Leg Press 45º",
+            "reps": "4x10",
+            "workoutId": 2
+          },
+          {
+            "id": 9,
+            "name": "Supino Inclinado com Halteres",
+            "reps": "4x10",
+            "workoutId": 2
+          },
+          {
+            "id": 10,
+            "name": "Desenvolvimento Militar",
+            "reps": "3x12",
+            "workoutId": 2
+          },
+          {
+            "id": 11,
+            "name": "Tríceps Testa",
+            "reps": "4x12",
+            "workoutId": 2
+          },
+          {
+            "id": 12,
+            "name": "Flexão de Braços",
+            "reps": "3x15",
+            "workoutId": 2
+          }
         ]
       }
     ]
@@ -50,61 +108,15 @@
     "password": "senha123",
     "phone": "85997766609",
     "address": "Fortaleza, CE",
-    "birthDate": "15/06/1992",
+    "birthDate": "2006-07-04",
     "avatarUrl": "https://avatars.githubusercontent.com/u/191243359?v=4",
     "workouts": [
       {
-        "name": "Treino A",
-        "description": "Peitoral, Pernas e Bíceps",
-        "exercises": [
-          {
-            "name": "Supino Inclinado com Halteres",
-            "reps": "4x10",
-            "notes": "Manter os cotovelos levemente flexionados"
-          },
-          {
-            "name": "Agachamento Livre",
-            "reps": "4x12",
-            "notes": "Descer até o paralelo e manter a postura"
-          },
-          { "name": "Rosca Direta", "reps": "4x12" },
-          { "name": "Extensora", "reps": "4x10" },
-          { "name": "Flexora deitado", "reps": "4x10" }
-        ]
-      },
-      {
-        "name": "Treino B",
-        "description": "Costas, Peitoral, Ombros, Tríceps e Abdômen",
-        "exercises": [
-          { "name": "Remada Curvada", "reps": "4x12" },
-          { "name": "Supino Inclinado", "reps": "4x10" },
-          { "name": "Tríceps Testa", "reps": "4x12" },
-          { "name": "Desenvolvimento Militar", "reps": "3x12" },
-          { "name": "Abdominal Infra", "reps": "3x20" }
-        ]
-      },
-      {
-        "name": "Treino C",
-        "description": "Cardio",
-        "exercises": [
-          {
-            "name": "Esteira",
-            "reps": "30 minutos",
-            "notes": "Corrida leve a moderada"
-          },
-          {
-            "name": "Bicicleta Ergométrica",
-            "reps": "20 minutos",
-            "notes": "Ritmo constante, resistência média"
-          },
-          {
-            "name": "Elíptico",
-            "reps": "15 minutos",
-            "notes": "Intensidade moderada"
-          },
-          { "name": "Burpees", "reps": "3x15" },
-          { "name": "Polichinelos", "reps": "3x20" }
-        ]
+        "id": 4,
+        "userId": 2,
+        "name": "treino lindo",
+        "description": "tiago é lindo",
+        "exercises": []
       }
     ]
   },
@@ -115,7 +127,7 @@
     "password": "senha123",
     "phone": "85988194598",
     "address": "Fortaleza, CE",
-    "birthDate": "22/11/1990",
+    "birthDate": "2005-12-27",
     "avatarUrl": "https://img.deliverydireto.com.br/unsafe/origxorig/https://duisktnou8b89.cloudfront.net/img/brands/64c7b58022923.png",
     "isAdmin": true,
     "workouts": []
@@ -127,40 +139,15 @@
     "password": "senha123",
     "phone": "85988292191",
     "address": "Fortaleza, CE",
-    "birthDate": "22/11/1990",
+    "birthDate": "2006-06-05",
     "avatarUrl": "https://avatars.githubusercontent.com/u/165815345?v=4",
     "workouts": [
       {
-        "name": "Treino A",
-        "description": "Peitoral, Pernas, Bíceps e Costas",
-        "exercises": [
-          {
-            "name": "Supino Inclinado com Halteres",
-            "reps": "4x10",
-            "notes": "Manter os cotovelos levemente flexionados"
-          },
-          {
-            "name": "Agachamento Livre",
-            "reps": "4x12",
-            "notes": "Descer até o paralelo e manter a postura"
-          },
-          { "name": "Rosca Direta", "reps": "4x12" },
-          { "name": "Remada Curvada", "reps": "4x12" },
-          { "name": "Extensora", "reps": "4x10" },
-          { "name": "Flexora deitado", "reps": "4x10" }
-        ]
-      },
-      {
-        "name": "Treino B",
-        "description": "Costas, Pernas, Ombros, Peitoral, Tríceps e Abdômen",
-        "exercises": [
-          { "name": "Remada Curvada", "reps": "4x12" },
-          { "name": "Leg Press 45º", "reps": "4x10" },
-          { "name": "Supino Inclinado", "reps": "4x10" },
-          { "name": "Tríceps Testa", "reps": "4x12" },
-          { "name": "Desenvolvimento Militar", "reps": "3x12" },
-          { "name": "Abdominal Infra", "reps": "3x20" }
-        ]
+        "id": 7,
+        "userId": 4,
+        "name": "Novo Treino",
+        "description": "Descrição do Treino",
+        "exercises": []
       }
     ]
   }

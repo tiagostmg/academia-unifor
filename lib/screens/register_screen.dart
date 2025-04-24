@@ -30,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else if (password != confirmPassword) {
       _showMessage("As senhas não coincidem");
     } else {
+      // TODO : Implementar a lógica de registro
       context.go('/home');
     }
   }
