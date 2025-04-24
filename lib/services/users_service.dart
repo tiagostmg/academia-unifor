@@ -1,3 +1,4 @@
+import 'package:academia_unifor/models/exercise.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/models/workout.dart';
 import 'package:dio/dio.dart';
@@ -93,5 +94,33 @@ class UsersService {
       rethrow;
     }
   }
+  Future<Exercise> postExercise(Exercise exercise) async {
+    try {
+      final response = await _dio.post('/api/Exercise', data: exercise.toJson());
+      return Exercise.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+  Future<Exercise> putExercise(Exercise exercise) async {
+    try {
+      final response = await _dio.put('/api/Exercise/${exercise.id}', data: exercise.toJson());
+      return Exercise.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+  Future<Exercise> deleteExercise(int id) async {
+    try {
+      final response = await _dio.delete('/api/Exercise/$id');
+      return Exercise.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+
 
 }

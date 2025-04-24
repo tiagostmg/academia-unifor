@@ -134,20 +134,25 @@ class EditWorkoutsScreen extends StatefulWidget {
   EditWorkoutsScreenState createState() => EditWorkoutsScreenState();
 }
 
-//TODO aqui
 class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   late List<Workout> workouts;
-
-  // [1, 2, 3, 4]
-  // [1, 2, -0-]
-  // [3, 4, 0]
-
   late List<int> workoutsToDelete = [];
+  late List<int> exercisesToDelete = [];
+
+  Future<void> _loadWorkouts() async {
+    workouts = widget.user.workouts;
+    final newWorkouts = await UsersService().getWorkoutsByUserId(
+      widget.user.id,
+    );
+    setState(() {
+      workouts = newWorkouts;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    workouts = List<Workout>.from(widget.user.workouts);
+    _loadWorkouts();
   }
 
   void _addWorkout() {
@@ -168,55 +173,75 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     }
   }
 
-//TODO DELETAR WORKOUT DA LISTA
+  // TODO: REMOCAO DE TREINOS
   void _removeWorkout(int index) {
-    setState(() {
+    if (workouts[index].id != 0) {
       workoutsToDelete.add(workouts[index].id);
+    }
+    setState(() {
       workouts.removeAt(index);
     });
   }
 
+  //TODO ADICIONAR NOVO EXERCICIO
   void _addExercise(Workout workout) {
     setState(() {
       workout.exercises.add(
-        Exercise(name: 'Novo Exercício', reps: '3x10', notes: ''),
+        Exercise(
+          id: 0, // significa que o exercicio ainda nao foi salvo no banco
+          workoutId: workout.id,
+          name: 'Novo Exercício',
+          reps: '3x10',
+          notes: '',
+        ),
       );
     });
   }
 
-  void _saveAllWorkouts()  {
-    // Deletar os treinos que foram removidos da lista
-    for (int id in workoutsToDelete) {
-      if(id != 0){
-        UsersService().deleteWorkout(id); 
-      }
+  void _removeExercise(Workout workout, int index) {
+    if (workout.exercises[index].id != 0) {
+      exercisesToDelete.add(workout.exercises[index].id);
     }
-    for(Workout workout in workouts) {
-      if (workout.id == 0) {
-        // Se o id do treino for 0, significa que é um novo treino
-        // e deve ser adicionado ao banco de dados
-        UsersService().postWorkout(workout); 
-      }
-      else {
-        
-        //ja existe na lista
-        // 1- put -> existe esse id no banco
-        // 2- delete -> quando existe no bancoe nao existe na lista
+    setState(() {
+      workout.exercises.removeAt(index);
+    });
+  }
 
-        // Se o id do treino não for 0, significa que é um treino existente
-        // e deve ser atualizado no banco de dados
-        Workout newWorkout = Workout(
-          id: workout.id,
-          userId: widget.user.id,
-          name: workout.name,
-          description: workout.description,
-          exercises: workout.exercises,
-        );
-        //put -> atualizar o treino existente
-           UsersService().putWorkout(newWorkout); 
+  void postOrPutExercise(Workout workout) {
+    for (Exercise exercise in workout.exercises) {
+      if (exercise.id == 0) {
+        UsersService().postExercise(exercise);
+      } else {
+        UsersService().putExercise(exercise);
       }
     }
-    widget.user.workouts = workouts; 
+  }
+
+  void postOrPurWorkout() {
+    for (Workout workout in workouts) {
+      //post
+      if (workout.id == 0) {
+        UsersService().postWorkout(workout);
+        postOrPutExercise(workout);
+      }
+      //put
+      else {
+        UsersService().putWorkout(workout);
+        postOrPutExercise(workout);
+      }
+    }
+  }
+
+  void _saveAllWorkouts() async {
+    //delete
+    for (int id in workoutsToDelete) {
+      UsersService().deleteWorkout(id);
+    }
+    for (int id in exercisesToDelete) {
+      UsersService().deleteExercise(id);
+    }
+    postOrPurWorkout();
+    widget.user.workouts = workouts;
   }
 
   String getFirstName(String fullName) {
@@ -266,6 +291,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                       onChanged: (value) => workout.description = value,
                     ),
                     const SizedBox(height: 8),
+                    // TODO ADICIONAR LOGICA PARA EXERCICIOS
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -302,10 +328,9 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                                         Icons.delete,
                                         color: Colors.red,
                                       ),
+                                      //TODO ADICIONAR FUNCAO DE REMOVER EXERCICIO
                                       onPressed: () {
-                                        setState(() {
-                                          workout.exercises.removeAt(exIndex);
-                                        });
+                                        _removeExercise(workout, exIndex);
                                       },
                                     ),
                                   ],
