@@ -1,5 +1,6 @@
 import 'package:academia_unifor/services/gym_data_service.dart';
 import 'package:academia_unifor/services/users_service.dart';
+import 'package:academia_unifor/services/notifications_service.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,7 @@ class AdminScreenBody extends StatefulWidget {
 class _AdminScreenBodyState extends State<AdminScreenBody> {
   int totalUsers = 0;
   int totalEquipments = 0;
+  int totalNotifications = 0;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
     try {
       final users = await UsersService().loadStudents();
       final equipmentCategories = await loadGymEquipment(); 
+      final notifications = await NotificationService().loadNotifications();
 
       final total = equipmentCategories.fold<int>(0, (sum, e) => sum + e.total);
 
@@ -57,6 +60,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
       setState(() {
         totalUsers = users.length;
         totalEquipments = total;
+        totalNotifications = notifications.length;
       });
     } catch (e) {
       debugPrint('Erro ao carregar dados: $e');
@@ -120,7 +124,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 context,
                 Icons.notifications,
                 'Gerenciar avisos',
-                '312',
+                '$totalNotifications',
                 onTap: () => context.go('/admin/notifications'),
               ),
 

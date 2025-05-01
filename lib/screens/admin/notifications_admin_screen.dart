@@ -1,6 +1,5 @@
+import 'package:academia_unifor/services/notifications_service.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:academia_unifor/models/notifications.dart';
 import 'package:academia_unifor/widgets.dart';
 
@@ -40,70 +39,50 @@ class _NotificationAdminBodyState extends State<NotificationAdminBody> {
     _loadNotifications();
   }
 
+  final NotificationService _notificationService = NotificationService();
+
   Future<void> _loadNotifications() async {
-    final jsonStr = await rootBundle.loadString(
-      'assets/mocks/notification.json',
-    );
-    final List<dynamic> data = json.decode(jsonStr);
-    final loaded = data.map((e) => Notifications.fromJson(e)).toList();
+    final loaded = await _notificationService.loadNotifications();
+    loaded.sort(
+      (a, b) => b.createdAt.compareTo(a.createdAt),
+    ); // ordenação por data decrescente
 
     setState(() {
-      allNotifications = loaded;
-      filteredNotifications = loaded;
+      allNotifications = filteredNotifications = loaded;
     });
   }
 
   void _filter(String query) {
     setState(() {
-      filteredNotifications = allNotifications
-          .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredNotifications =
+          allNotifications
+              .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchAppBar(
-        onSearchChanged: _filter,
-        showChatIcon: false,
-      ),
+      appBar: SearchAppBar(onSearchChanged: _filter, showChatIcon: false),
       body: Column(
         children: [
           Expanded(
-            child: filteredNotifications.isEmpty
-                ? const Center(child: Text('Nenhuma notificação encontrada.'))
-                : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filteredNotifications.length,
-                  itemBuilder: (context, index) {
-                    final notif = filteredNotifications[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: ListTile(
-                        title: Text(notif.title),
-                        subtitle: Text(notif.description),
-                        trailing: Text(
-                          _formatDate(notif.createdAt),
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+            child:
+                filteredNotifications.isEmpty
+                    ? const Center(
+                      child: Text('Nenhuma notificação encontrada.'),
+                    )
+                    : ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: filteredNotifications.length,
+                      itemBuilder: (context, index) {
+                        return NotificationCard(filteredNotifications[index]);
+                      },
+                    ),
           ),
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/"
-        "${date.month.toString().padLeft(2, '0')}/"
-        "${date.year}";
   }
 }

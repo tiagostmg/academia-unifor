@@ -8,3 +8,4 @@ export 'package:academia_unifor/widgets/contact_widget.dart';
 
 // admin
 export 'package:academia_unifor/widgets/admin/admin_convex_bottom_bar.dart';
+export 'package:academia_unifor/widgets/admin/notification_card.dart';

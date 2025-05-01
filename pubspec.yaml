@@ -35,3 +35,4 @@ flutter:
     - .env
     - assets/mocks/equipment.json
     - assets/mocks/users.json
+    - assets/mocks/notification.json
