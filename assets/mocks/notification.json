@@ -2,19 +2,19 @@
   {
     "id": 1,
     "title": "Aviso 1",
-    "description": "Este es el aviso 1",
+    "description": "Descrição do aviso 1",
     "createdAt": "2023-10-01T12:00:00Z"
   },
   {
     "id": 2,
     "title": "Aviso 2",
-    "description": "Este es el aviso 2",
+    "description": "Descrição do aviso 2",
     "createdAt": "2023-10-02T12:00:00Z"
   },
   {
     "id": 3,
     "title": "Aviso 3",
-    "description": "Este es el aviso 3",
+    "description": "Descrição do aviso 3",
     "createdAt": "2023-10-03T12:00:00Z"
   }
 ]

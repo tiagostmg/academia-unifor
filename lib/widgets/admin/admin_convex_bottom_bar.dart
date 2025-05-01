@@ -42,6 +42,9 @@ class AdminConvexBottomBar extends StatelessWidget {
             case 3:
               context.go('/admin/students');
               break;
+            case 4:
+              context.go('/admin/notifications');
+              break;
           }
         },
         items: const [
@@ -49,6 +52,7 @@ class AdminConvexBottomBar extends StatelessWidget {
           TabItem(icon: Icons.fitness_center, title: 'Aparelhos'),
           TabItem(icon: Icons.description, title: 'Treinos'),
           TabItem(icon: Icons.school, title: 'Alunos'),
+          TabItem(icon: Icons.notifications, title: 'Avisos'),
         ],
       ),
     );

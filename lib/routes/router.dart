@@ -59,5 +59,9 @@ final GoRouter router = GoRouter(
       pageBuilder:
           (context, state) => NoTransitionPage(child: StudentsScreen()),
     ),
+    GoRoute(
+      path: '/admin/notifications',
+      builder: (context, state) => const NotificationAdminScreen(),
+    ),
   ],
 );

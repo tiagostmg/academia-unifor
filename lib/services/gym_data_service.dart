@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../models/equipment.dart';
 
 final Dio _dio = Dio(BaseOptions(
-  baseUrl: 'https://localhost:7349', // altere para a URL da sua API
+  baseUrl: 'http://localhost:5404', // altere para a URL da sua API
   connectTimeout: Duration(seconds: 5),
   receiveTimeout: Duration(seconds: 5),
 ));

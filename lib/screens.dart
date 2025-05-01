@@ -11,3 +11,4 @@ export 'package:academia_unifor/screens/admin/admin_screen.dart';
 export 'package:academia_unifor/screens/admin/equipments_screen.dart';
 export 'package:academia_unifor/screens/admin/exercises_screen.dart';
 export 'package:academia_unifor/screens/admin/students_screen.dart';
+export 'package:academia_unifor/screens/admin/notifications_admin_screen.dart';

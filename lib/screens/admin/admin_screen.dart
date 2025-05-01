@@ -116,6 +116,14 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 '$totalUsers',
                 onTap: () => context.go('/admin/exercises'),
               ),
+                _buildCard(
+                context,
+                Icons.notifications,
+                'Gerenciar avisos',
+                '312',
+                onTap: () => context.go('/admin/notifications'),
+              ),
+
             ],
           ),
         ],
