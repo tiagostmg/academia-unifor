@@ -30,7 +30,7 @@ class NotificationService {
     }
   }
 
-  Future<Notifications> postWorkout(Notifications notification) async {
+  Future<Notifications> postNotification(Notifications notification) async {
     try {
       final response = await _dio.post('/api/Notification', data: notification.toJson());
       return Notifications.fromJson(response.data);
@@ -41,7 +41,7 @@ class NotificationService {
   
   }
 
-  Future<Notifications> putWorkout(Notifications notification) async {
+  Future<Notifications> putNotification(Notifications notification) async {
     try {
       final response = await _dio.put('/api/Notification/${notification.id}', data: notification.toJson());
       return Notifications.fromJson(response.data);
@@ -51,7 +51,7 @@ class NotificationService {
     }
   }
 
-  Future<Notifications> deleteWorkout(int id) async {
+  Future<Notifications> deleteNotification(int id) async {
     try {
       final response = await _dio.delete('/api/Notification/$id');
       return Notifications.fromJson(response.data);

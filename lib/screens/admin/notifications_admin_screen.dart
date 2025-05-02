@@ -53,7 +53,7 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 4,
+          currentIndex: 3,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: SearchAppBar(
@@ -76,6 +76,7 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
                         description: '',
                         createdAt: DateTime.now(),
                       ),
+                      isEditing: false,
                     ),
                   ),
                 );
@@ -108,7 +109,9 @@ class NotificationsScreenBody extends StatelessWidget {
   String _formatDate(DateTime date) {
     return "${date.day.toString().padLeft(2, '0')}/"
         "${date.month.toString().padLeft(2, '0')}/"
-        "${date.year}";
+        "${date.year}"
+        " - ${date.hour.toString().padLeft(2, '0')}:"
+        "${date.minute.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -128,7 +131,7 @@ class NotificationsScreenBody extends StatelessWidget {
               final updated = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => EditNotificationScreen(notification: notification),
+                  builder: (_) => EditNotificationScreen(notification: notification, isEditing: true,),
                 ),
               );
               if (updated != null && updated is Notifications) {
@@ -144,8 +147,9 @@ class NotificationsScreenBody extends StatelessWidget {
 
 class EditNotificationScreen extends StatefulWidget {
   final Notifications notification;
+  final bool isEditing;
 
-  const EditNotificationScreen({super.key, required this.notification});
+  const EditNotificationScreen({super.key, required this.notification, required this.isEditing});
 
   @override
   State<EditNotificationScreen> createState() => _EditNotificationScreenState();
@@ -154,12 +158,14 @@ class EditNotificationScreen extends StatefulWidget {
 class _EditNotificationScreenState extends State<EditNotificationScreen> {
   late TextEditingController titleController;
   late TextEditingController descController;
+  late bool isEditing;
 
   @override
   void initState() {
     super.initState();
     titleController = TextEditingController(text: widget.notification.title);
     descController = TextEditingController(text: widget.notification.description);
+    isEditing = widget.isEditing;
   }
 
   void _saveChanges() {
@@ -169,10 +175,23 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
       description: descController.text,
       createdAt: widget.notification.createdAt,
     );
+    if(updated.title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('A notificação deve ter um título')),
+      );
+      return;
+    }
+    if (isEditing) {
+      NotificationService().putNotification(updated);
+    } 
+    else {
+      NotificationService().postNotification(updated);
+    }
     Navigator.pop(context, updated);
   }
 
   void _deleteNotification() {
+    NotificationService().deleteNotification(widget.notification.id);
     Navigator.pop(context, null);
   }
 
@@ -180,7 +199,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar Notificação"),
+        title: Text(isEditing ? "Editar Notificação" : "Criar Notificação"),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),

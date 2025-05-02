@@ -217,7 +217,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     }
   }
 
-  void postOrPurWorkout() {
+  void postOrPutWorkout() {
     for (Workout workout in workouts) {
       //post
       if (workout.id == 0) {
@@ -240,7 +240,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     for (int id in exercisesToDelete) {
       UsersService().deleteExercise(id);
     }
-    postOrPurWorkout();
+    postOrPutWorkout();
     widget.user.workouts = workouts;
   }
 
