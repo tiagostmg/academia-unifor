@@ -19,4 +19,45 @@ class NotificationService {
       return [];
     }
   }
+
+  Future<Notifications> getNotificationById(int id) async {
+    try {
+      final response = await _dio.get('/api/Notification/$id');
+      return Notifications.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao buscar usuário: $e');
+      rethrow;
+    }
+  }
+
+  Future<Notifications> postWorkout(Notifications notification) async {
+    try {
+      final response = await _dio.post('/api/Notification', data: notification.toJson());
+      return Notifications.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar treino: $e');
+      rethrow;
+    }
+  
+  }
+
+  Future<Notifications> putWorkout(Notifications notification) async {
+    try {
+      final response = await _dio.put('/api/Notification/${notification.id}', data: notification.toJson());
+      return Notifications.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar treino: $e');
+      rethrow;
+    }
+  }
+
+  Future<Notifications> deleteWorkout(int id) async {
+    try {
+      final response = await _dio.delete('/api/Notification/$id');
+      return Notifications.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar treino: $e');
+      rethrow;
+    }
+  }
 }

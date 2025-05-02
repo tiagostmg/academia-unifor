@@ -3,33 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:academia_unifor/models/notifications.dart';
 import 'package:academia_unifor/widgets.dart';
 
-class NotificationAdminScreen extends StatelessWidget {
+class NotificationAdminScreen extends StatefulWidget {
   const NotificationAdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      backgroundColor: theme.colorScheme.primary,
-      body: SafeArea(
-        child: AdminConvexBottomBar(
-          currentIndex: 4,
-          child: const NotificationAdminBody(),
-        ),
-      ),
-    );
-  }
+  State<NotificationAdminScreen> createState() => _NotificationAdminScreenState();
 }
 
-class NotificationAdminBody extends StatefulWidget {
-  const NotificationAdminBody({super.key});
-
-  @override
-  State<NotificationAdminBody> createState() => _NotificationAdminBodyState();
-}
-
-class _NotificationAdminBodyState extends State<NotificationAdminBody> {
+class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
   List<Notifications> allNotifications = [];
   List<Notifications> filteredNotifications = [];
 
@@ -39,49 +20,211 @@ class _NotificationAdminBodyState extends State<NotificationAdminBody> {
     _loadNotifications();
   }
 
-  final NotificationService _notificationService = NotificationService();
-
   Future<void> _loadNotifications() async {
-    final loaded = await _notificationService.loadNotifications();
-    loaded.sort(
-      (a, b) => b.createdAt.compareTo(a.createdAt),
-    ); // ordenação por data decrescente
-
+    final notifications = await NotificationService().loadNotifications();
     setState(() {
-      allNotifications = filteredNotifications = loaded;
+      allNotifications = notifications;
+      filteredNotifications = notifications;
     });
   }
 
-  void _filter(String query) {
+  void _filterNotifications(String query) {
     setState(() {
-      filteredNotifications =
-          allNotifications
-              .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
-              .toList();
+      filteredNotifications = allNotifications
+          .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void _updateNotification(Notifications updated) {
+    setState(() {
+      final index = allNotifications.indexWhere((n) => n.id == updated.id);
+      if (index != -1) {
+        allNotifications[index] = updated;
+        filteredNotifications = List.from(allNotifications);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SearchAppBar(onSearchChanged: _filter, showChatIcon: false),
-      body: Column(
-        children: [
-          Expanded(
-            child:
-                filteredNotifications.isEmpty
-                    ? const Center(
-                      child: Text('Nenhuma notificação encontrada.'),
-                    )
-                    : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: filteredNotifications.length,
-                      itemBuilder: (context, index) {
-                        return NotificationCard(filteredNotifications[index]);
-                      },
+    final theme = Theme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.colorScheme.primary),
+      child: SafeArea(
+        child: AdminConvexBottomBar(
+          currentIndex: 4,
+          child: Scaffold(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            appBar: SearchAppBar(
+              onSearchChanged: _filterNotifications,
+              showChatIcon: false,
+            ),
+            body: NotificationsScreenBody(
+              notifications: filteredNotifications,
+              onUpdateNotification: _updateNotification,
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                final created = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditNotificationScreen(
+                      notification: Notifications(
+                        id: 0,
+                        title: '',
+                        description: '',
+                        createdAt: DateTime.now(),
+                      ),
                     ),
+                  ),
+                );
+                if (created != null) {
+                  setState(() {
+                    allNotifications.add(created);
+                    filteredNotifications = List.from(allNotifications);
+                  });
+                }
+              },
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NotificationsScreenBody extends StatelessWidget {
+  final List<Notifications> notifications;
+  final Function(Notifications) onUpdateNotification;
+
+  const NotificationsScreenBody({
+    super.key,
+    required this.notifications,
+    required this.onUpdateNotification,
+  });
+
+  String _formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/"
+        "${date.month.toString().padLeft(2, '0')}/"
+        "${date.year}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView.separated(
+        itemCount: notifications.length,
+        separatorBuilder: (_, __) => const Divider(),
+        itemBuilder: (context, index) {
+          final notification = notifications[index];
+          return ListTile(
+            leading: const Icon(Icons.notifications),
+            title: Text(notification.title),
+            subtitle: Text(_formatDate(notification.createdAt)),
+            onTap: () async {
+              final updated = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EditNotificationScreen(notification: notification),
+                ),
+              );
+              if (updated != null && updated is Notifications) {
+                onUpdateNotification(updated);
+              }
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class EditNotificationScreen extends StatefulWidget {
+  final Notifications notification;
+
+  const EditNotificationScreen({super.key, required this.notification});
+
+  @override
+  State<EditNotificationScreen> createState() => _EditNotificationScreenState();
+}
+
+class _EditNotificationScreenState extends State<EditNotificationScreen> {
+  late TextEditingController titleController;
+  late TextEditingController descController;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.notification.title);
+    descController = TextEditingController(text: widget.notification.description);
+  }
+
+  void _saveChanges() {
+    final updated = Notifications(
+      id: widget.notification.id,
+      title: titleController.text,
+      description: descController.text,
+      createdAt: widget.notification.createdAt,
+    );
+    Navigator.pop(context, updated);
+  }
+
+  void _deleteNotification() {
+    Navigator.pop(context, null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Editar Notificação"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _saveChanges,
           ),
         ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Card(
+              color: Theme.of(context).colorScheme.primary,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(labelText: 'Título'),
+                      onChanged: (value) => setState(() {}),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: descController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(labelText: 'Descrição'),
+                      onChanged: (value) => setState(() {}),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _deleteNotification,
+              icon: const Icon(Icons.delete),
+              label: const Text('Apagar Notificação'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
