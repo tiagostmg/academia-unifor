@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:academia_unifor/models/equipment.dart';
-import 'package:academia_unifor/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:academia_unifor/services.dart';
 
 class SelectedCategoryList extends StatelessWidget {
   final String selectedCategory;
@@ -8,20 +8,24 @@ class SelectedCategoryList extends StatelessWidget {
   final VoidCallback onBack;
   final Widget Function() fallbackImage;
   final bool isEditMode;
-  final void Function(EquipmentItem)? onItemTap; 
+  final void Function(EquipmentItem)? onItemTap;
+  final VoidCallback onDataUpdated;
 
   const SelectedCategoryList({
-    super.key, 
+    Key? key,
     required this.selectedCategory,
     required this.items,
     required this.onBack,
     required this.fallbackImage,
     this.isEditMode = true,
     this.onItemTap,
-  });
+    required this.onDataUpdated,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final equipmentService = EquipmentService();
+
     return Column(
       children: [
         ListView.separated(
@@ -39,7 +43,88 @@ class SelectedCategoryList extends StatelessWidget {
                   }
                   return;
                 }
-                editEquipmentDisplay(context, item);
+
+                TextEditingController nameController = TextEditingController(text: item.name);
+                TextEditingController brandController = TextEditingController(text: item.brand);
+                TextEditingController modelController = TextEditingController(text: item.model);
+                TextEditingController quantityController = TextEditingController(text: item.quantity.toString());
+                TextEditingController imageController = TextEditingController(text: item.image);
+                bool operationalValue = item.operational;
+
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return Dialog(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.save),
+                                      onPressed: () async {
+                                        final updatedItem = EquipmentItem(
+                                          id: item.id,
+                                          categoryId: item.categoryId,
+                                          name: nameController.text,
+                                          brand: brandController.text,
+                                          model: modelController.text,
+                                          quantity: int.tryParse(quantityController.text) ?? item.quantity,
+                                          image: imageController.text,
+                                          operational: operationalValue,
+                                        );
+
+                                        try {
+                                          await equipmentService.putEquipment(updatedItem);
+                                          onDataUpdated();
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('Erro ao atualizar: $e')),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                                TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nome')),
+                                TextField(controller: brandController, decoration: const InputDecoration(labelText: 'Marca')),
+                                TextField(controller: modelController, decoration: const InputDecoration(labelText: 'Modelo')),
+                                TextField(
+                                  controller: quantityController,
+                                  decoration: const InputDecoration(labelText: 'Quantidade'),
+                                  keyboardType: TextInputType.number,
+                                ),
+                                TextField(controller: imageController, decoration: const InputDecoration(labelText: 'URL da Imagem')),
+                                const SizedBox(height: 12),
+                                CheckboxListTile(
+                                  title: const Text('Operacional'),
+                                  value: operationalValue,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      setState(() {
+                                        operationalValue = value;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
               },
               child: Card(
                 elevation: 0,

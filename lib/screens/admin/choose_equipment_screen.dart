@@ -62,6 +62,9 @@ class _ChooseEquipmentScreenState extends State<ChooseEquipmentScreen> {
           onItemTap: (equipmentSelecionado) {
             Navigator.pop(context, equipmentSelecionado);
           },
+          onDataUpdated: () => setState(() {
+            filteredItems = widget.categoria.items;
+          }),
         ),
       ),
     );

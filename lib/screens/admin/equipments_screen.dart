@@ -14,7 +14,7 @@ class EquipmentsScreen extends StatelessWidget {
       backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 1, // Índice correspondente ao botão "Aparelhos"
+          currentIndex: 1,
           child: const EquipmentsBody(),
         ),
       ),
@@ -34,31 +34,47 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   List<EquipmentItem> allItems = [];
   List<EquipmentItem> selectedItems = [];
   Map<String, int> categoryCounts = {};
+  final EquipmentService _equipmentService = EquipmentService();
+
+  Future<void> _refreshData() async {
+    try {
+      final categories = await _equipmentService.loadCategories();
+      final items = await _equipmentService.loadEquipment();
+      final counts = {for (var c in categories) c.category: c.total};
+
+      setState(() {
+        allItems = items;
+        categoryCounts = counts;
+        if (selectedCategory != null) {
+          _loadCategory(selectedCategory!);
+        }
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar dados: $e')),
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _loadAllItems();
-  }
-
-  void _loadAllItems() async {
-    final categories = await EquipmentService().loadCategories();
-    final items = await EquipmentService().loadEquipment();
-    final counts = {for (var c in categories) c.category: c.total};
-
-    setState(() {
-      allItems = items;
-      categoryCounts = counts;
-    });
+    _refreshData();
   }
 
   void _loadCategory(String category) async {
-    final categories = await EquipmentService().loadCategories();
-    final selected = categories.firstWhere((c) => c.category == category);
-    setState(() {
-      selectedCategory = category;
-      selectedItems = selected.items;
-    });
+    try {
+      final categories = await _equipmentService.loadCategories();
+      final selected = categories.firstWhere((c) => c.category == category);
+      setState(() {
+        selectedCategory = category;
+        selectedItems = allItems.where((item) => item.categoryId == selected.id).toList();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao carregar categoria: $e')),
+      );
+    }
   }
 
   void _onSearchChanged(String query) {
@@ -70,13 +86,12 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       return;
     }
 
-    final filtered =
-        allItems.where((item) {
-          final lower = query.toLowerCase();
-          return item.name.toLowerCase().contains(lower) ||
-              item.brand.toLowerCase().contains(lower) ||
-              item.model.toLowerCase().contains(lower);
-        }).toList();
+    final filtered = allItems.where((item) {
+      final lower = query.toLowerCase();
+      return item.name.toLowerCase().contains(lower) ||
+          item.brand.toLowerCase().contains(lower) ||
+          item.model.toLowerCase().contains(lower);
+    }).toList();
 
     setState(() {
       selectedCategory = 'Resultados da busca';
@@ -116,40 +131,44 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       appBar: SearchAppBar(
         onSearchChanged: _onSearchChanged,
         showChatIcon: false,
-        onBack:
-            selectedCategory != null
-                ? () {
-                  setState(() {
-                    selectedCategory = null;
-                    selectedItems = [];
-                  });
-                }
-                : null,
+        onBack: selectedCategory != null
+            ? () {
+                setState(() {
+                  selectedCategory = null;
+                  selectedItems = [];
+                });
+              }
+            : null,
       ),
+      floatingActionButton: selectedCategory == null
+          ? FloatingActionButton(
+              onPressed: _refreshData,
+              child: const Icon(Icons.refresh),
+            )
+          : null,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child:
-              selectedCategory == null
-                  ? ListCategories(
-                    categoryCounts: categoryCounts,
-                    chipColor: chipColor,
-                    textColor: textColor,
-                    onChipTap: _loadCategory,
-                  )
-                  : SelectedCategoryList(
-                    selectedCategory: selectedCategory!,
-                    items: selectedItems,
-                    onBack: () {
-                      setState(() {
-                        _loadAllItems();
-                        selectedCategory = null;
-                        selectedItems = [];
-                      });
-                    },
-                    fallbackImage: fallbackImageWithBorder,
-                    isEditMode: true,
-                  ),
+          child: selectedCategory == null
+              ? ListCategories(
+                  categoryCounts: categoryCounts,
+                  chipColor: chipColor,
+                  textColor: textColor,
+                  onChipTap: _loadCategory,
+                )
+              : SelectedCategoryList(
+                  selectedCategory: selectedCategory!,
+                  items: selectedItems,
+                  onBack: () {
+                    setState(() {
+                      selectedCategory = null;
+                      selectedItems = [];
+                    });
+                  },
+                  fallbackImage: fallbackImageWithBorder,
+                  isEditMode: true,
+                  onDataUpdated: _refreshData,
+                ),
         ),
       ),
     );
