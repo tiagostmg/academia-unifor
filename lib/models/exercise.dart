@@ -4,6 +4,7 @@ class Exercise {
   String name;
   String reps;
   String? notes;
+  int? equipmentId;
 
   Exercise({
     required this.id,
@@ -11,7 +12,7 @@ class Exercise {
     required this.name,
     required this.reps,
     this.notes, // Permitir que seja nulo
-
+    this.equipmentId,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,7 @@ class Exercise {
       name: json['name'],
       reps: json['reps'],
       notes: json['notes'],
+      equipmentId: json['equipmentId'],
     );
   }
 
@@ -30,6 +32,7 @@ class Exercise {
       'workoutId': workoutId,
       'name': name, 
       'reps': reps, 
-      if (notes != null) 'notes': notes};
+      if (notes != null) 'notes': notes,
+      if (equipmentId != null) 'equipmentId': equipmentId,};
   }
 }

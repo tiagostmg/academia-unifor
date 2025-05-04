@@ -1,4 +1,5 @@
 class EquipmentItem {
+  int id;
   String name;
   String brand;
   String model;
@@ -7,6 +8,7 @@ class EquipmentItem {
   bool operational;
 
   EquipmentItem({
+    required this.id,
     required this.name,
     required this.brand,
     required this.model,
@@ -17,6 +19,7 @@ class EquipmentItem {
 
   factory EquipmentItem.fromJson(Map<String, dynamic> json) {
     return EquipmentItem(
+      id: json['id'],
       name: json['name'],
       brand: json['brand'],
       model: json['model'],
@@ -28,11 +31,13 @@ class EquipmentItem {
 }
 
 class EquipmentCategory {
+  int id;
   String category;
   int total;
   List<EquipmentItem> items;
 
   EquipmentCategory({
+    required this.id,
     required this.category,
     required this.total,
     required this.items,
@@ -40,6 +45,7 @@ class EquipmentCategory {
 
   factory EquipmentCategory.fromJson(Map<String, dynamic> json) {
     return EquipmentCategory(
+      id: json['id'],
       category: json['category_name'] ?? '',
       total: json['total'],
       items:
