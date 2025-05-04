@@ -1,5 +1,6 @@
 class EquipmentItem {
   int id;
+  int categoryId;
   String name;
   String brand;
   String model;
@@ -9,6 +10,7 @@ class EquipmentItem {
 
   EquipmentItem({
     required this.id,
+    required this.categoryId,
     required this.name,
     required this.brand,
     required this.model,
@@ -20,6 +22,7 @@ class EquipmentItem {
   factory EquipmentItem.fromJson(Map<String, dynamic> json) {
     return EquipmentItem(
       id: json['id'],
+      categoryId: json['categoryId'],
       name: json['name'],
       brand: json['brand'],
       model: json['model'],
@@ -32,6 +35,7 @@ class EquipmentItem {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'categoryId': categoryId,
       'name': name,
       'brand': brand,
       'model': model,

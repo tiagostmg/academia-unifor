@@ -43,7 +43,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
 
   void _loadAllItems() async {
     final categories = await EquipmentService().loadCategories();
-    final items = categories.expand((c) => c.items).toList();
+    final items = await EquipmentService().loadEquipment();
     final counts = {for (var c in categories) c.category: c.total};
 
     setState(() {
@@ -142,6 +142,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                     items: selectedItems,
                     onBack: () {
                       setState(() {
+                        _loadAllItems();
                         selectedCategory = null;
                         selectedItems = [];
                       });
@@ -154,4 +155,3 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
     );
   }
 }
-

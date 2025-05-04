@@ -8,12 +8,12 @@ class ListCategories extends StatelessWidget {
   final void Function(String) onChipTap;
 
   const ListCategories({
-    Key? key,
+    super.key,
     required this.categoryCounts,
     required this.chipColor,
     required this.textColor,
     required this.onChipTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

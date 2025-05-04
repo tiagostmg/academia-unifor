@@ -8,10 +8,10 @@ class ChooseEquipmentScreen extends StatefulWidget {
   final Widget Function() fallbackImage;
 
   const ChooseEquipmentScreen({
-    Key? key,
+    super.key,
     required this.categoria,
     required this.fallbackImage,
-  }) : super(key: key);
+  });
 
   @override
   State<ChooseEquipmentScreen> createState() => _ChooseEquipmentScreenState();

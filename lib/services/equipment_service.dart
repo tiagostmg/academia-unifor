@@ -22,8 +22,8 @@ class EquipmentService {
     } catch (e) {
       throw Exception('Erro: $e');
     }
-  
   }
+
   Future<EquipmentCategory> getCategoryById(int id) async {
     try {
       final response = await _dio.get('/api/GymEquipmentCategory/$id');
@@ -67,31 +67,21 @@ class EquipmentService {
 
   Future<EquipmentItem> postEquipment(EquipmentItem equipment) async {
     try {
-      final response = await _dio.post('/api/GymEquipment', data: {
-        equipment.toJson(),
-      });
-      if (response.statusCode == 200) {
-        return EquipmentItem.fromJson(response.data);
-      } else {
-        throw Exception('Erro ao buscar dados: ${response.statusCode}');
-      }
+      final response = await _dio.post('/api/GymEquipment', data: equipment.toJson());
+      return EquipmentItem.fromJson(response.data);
     } catch (e) {
-      throw Exception('Erro: $e');
+      print('Erro ao adicionar equipamento: $e');
+      rethrow;
     }
   }
 
   Future<EquipmentItem> putEquipment(EquipmentItem equipment) async {
     try {
-      final response = await _dio.put('/api/GymEquipment/${equipment.id}', data: {
-        equipment.toJson(),
-      });
-      if (response.statusCode == 200) {
-        return EquipmentItem.fromJson(response.data);
-      } else {
-        throw Exception('Erro ao buscar dados: ${response.statusCode}');
-      }
+      final response = await _dio.put('/api/GymEquipment/${equipment.id}', data: equipment.toJson());
+      return EquipmentItem.fromJson(response.data);
     } catch (e) {
-      throw Exception('Erro: $e');
+      print('Erro ao atualizar equipamento: $e');
+      rethrow;
     }
   }
 
