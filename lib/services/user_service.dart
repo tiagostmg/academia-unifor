@@ -1,6 +1,4 @@
-import 'package:academia_unifor/models/exercise.dart';
-import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/models/workout.dart';
+import 'package:academia_unifor/models.dart';
 import 'package:dio/dio.dart';
 
 class UsersService {

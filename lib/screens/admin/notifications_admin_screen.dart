@@ -1,7 +1,7 @@
-import 'package:academia_unifor/services/notifications_service.dart';
 import 'package:flutter/material.dart';
-import 'package:academia_unifor/models/notifications.dart';
+import 'package:academia_unifor/services.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/models.dart';
 
 class NotificationAdminScreen extends StatefulWidget {
   const NotificationAdminScreen({super.key});

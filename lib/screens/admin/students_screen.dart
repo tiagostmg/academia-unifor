@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/services/users_service.dart';
 import 'package:academia_unifor/widgets.dart';
+import 'package:academia_unifor/services/user_service.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});

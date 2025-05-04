@@ -1,8 +1,7 @@
 import 'package:academia_unifor/models.dart';
-import 'package:academia_unifor/screens/admin/choose_equipment.screen.dart';
-import 'package:academia_unifor/services/gym_data_service.dart';
-import 'package:academia_unifor/services/users_service.dart';
-import 'package:academia_unifor/widgets/admin/admin_display_categories.dart';
+import 'package:academia_unifor/screens.dart';
+import 'package:academia_unifor/services.dart';
+import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 
 class EditWorkoutsScreen extends StatefulWidget {
@@ -39,7 +38,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   }
 
   void _loadAllItems() async {
-    final categories = await loadGymEquipment();
+    final categories = await EquipmentService().loadCategories();
     final counts = {for (var c in categories) c.category: c.total};
 
     setState(() {
@@ -282,7 +281,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                                       Colors.blue[800]!,
                                       categoryCounts,
                                       (categoriaSelecionada) async {
-                                        final categorias = await loadGymEquipment();
+                                        final categorias = await EquipmentService().loadCategories();
                                         if (categoriaSelecionada != null) {
                                           final categoria = categorias.firstWhere((c) => c.category == categoriaSelecionada);
 

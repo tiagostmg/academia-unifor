@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
-import 'package:academia_unifor/services/gym_data_service.dart';
-import 'package:academia_unifor/models/equipment.dart';
+import 'package:academia_unifor/services.dart';
+import 'package:academia_unifor/models.dart';
 
 class EquipmentsScreen extends StatelessWidget {
   const EquipmentsScreen({super.key});
@@ -42,7 +42,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   }
 
   void _loadAllItems() async {
-    final categories = await loadGymEquipment();
+    final categories = await EquipmentService().loadCategories();
     final items = categories.expand((c) => c.items).toList();
     final counts = {for (var c in categories) c.category: c.total};
 
@@ -53,7 +53,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   }
 
   void _loadCategory(String category) async {
-    final categories = await loadGymEquipment();
+    final categories = await EquipmentService().loadCategories();
     final selected = categories.firstWhere((c) => c.category == category);
     setState(() {
       selectedCategory = category;

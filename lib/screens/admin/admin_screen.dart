@@ -1,6 +1,4 @@
-import 'package:academia_unifor/services/gym_data_service.dart';
-import 'package:academia_unifor/services/users_service.dart';
-import 'package:academia_unifor/services/notifications_service.dart';
+import 'package:academia_unifor/services.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -50,7 +48,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
   Future<void> _loadData() async {
     try {
       final users = await UsersService().loadStudents();
-      final equipmentCategories = await loadGymEquipment(); 
+      final equipmentCategories = await EquipmentService().loadCategories(); 
       final notifications = await NotificationService().loadNotifications();
 
       final total = equipmentCategories.fold<int>(0, (sum, e) => sum + e.total);

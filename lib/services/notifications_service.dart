@@ -9,7 +9,7 @@ class NotificationService {
     receiveTimeout: Duration(seconds: 5),
   ));
   
-    Future<List<Notifications>> loadNotifications() async {
+  Future<List<Notifications>> loadNotifications() async {
     try {
       final response = await _dio.get('/api/Notification'); 
       final List<dynamic> data = response.data;
