@@ -39,7 +39,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   Future<void> _refreshData() async {
     try {
       final categories = await _equipmentService.loadCategories();
-      final items = await _equipmentService.loadEquipment();
+      final items = await _equipmentService.loadEquipment()..sort((a, b) => a.name.compareTo(b.name));
       final counts = {for (var c in categories) c.category: c.total};
 
       setState(() {
@@ -121,6 +121,118 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
     );
   }
 
+  Future<void> _showAddEquipmentDialog() async {
+    final categories = await _equipmentService.loadCategories();
+    
+    String? selectedCategory;
+    final nameController = TextEditingController();
+    final brandController = TextEditingController();
+    final modelController = TextEditingController();
+    final quantityController = TextEditingController(text: '1');
+    final imageController = TextEditingController();
+    bool operationalValue = true;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Adicionar Novo Equipamento'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(labelText: 'Categoria'),
+                      items: categories.map((category) {
+                        return DropdownMenuItem(
+                          value: category.category,
+                          child: Text(category.category),
+                        );
+                      }).toList(),
+                      onChanged: (value) => setState(() => selectedCategory = value),
+                      hint: const Text('Selecione uma categoria'),
+                    ),
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(labelText: 'Nome'),
+                    ),
+                    TextField(
+                      controller: brandController,
+                      decoration: const InputDecoration(labelText: 'Marca'),
+                    ),
+                    TextField(
+                      controller: modelController,
+                      decoration: const InputDecoration(labelText: 'Modelo'),
+                    ),
+                    TextField(
+                      controller: quantityController,
+                      decoration: const InputDecoration(labelText: 'Quantidade'),
+                      keyboardType: TextInputType.number,
+                    ),
+                    TextField(
+                      controller: imageController,
+                      decoration: const InputDecoration(labelText: 'URL da Imagem'),
+                    ),
+                    CheckboxListTile(
+                      title: const Text('Operacional'),
+                      value: operationalValue,
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => operationalValue = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (selectedCategory == null || nameController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Preencha pelo menos a categoria e o nome')),
+                      );
+                      return;
+                    }
+
+                    final category = categories.firstWhere((c) => c.category == selectedCategory);
+                    final newEquipment = EquipmentItem(
+                      id: 0, // ID será gerado pelo servidor
+                      categoryId: category.id,
+                      name: nameController.text,
+                      brand: brandController.text,
+                      model: modelController.text,
+                      quantity: int.tryParse(quantityController.text) ?? 1,
+                      image: imageController.text,
+                      operational: operationalValue,
+                    );
+
+                    try {
+                      await _equipmentService.postEquipment(newEquipment);
+                      Navigator.pop(context);
+                      await _refreshData(); // Atualiza a lista após adicionar
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Erro ao adicionar equipamento: $e')),
+                      );
+                    }
+                  },
+                  child: const Text('Salvar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -140,12 +252,10 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
               }
             : null,
       ),
-      floatingActionButton: selectedCategory == null
-          ? FloatingActionButton(
-              onPressed: _refreshData,
-              child: const Icon(Icons.refresh),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddEquipmentDialog,
+        child: const Icon(Icons.add),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

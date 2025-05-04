@@ -22,7 +22,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
 
   Future<void> _loadWorkouts() async {
     workouts = widget.user.workouts;
-    final newWorkouts = await UsersService().getWorkoutsByUserId(
+    final newWorkouts = await UserService().getWorkoutsByUserId(
       widget.user.id,
     );
     setState(() {
@@ -102,9 +102,9 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   void postOrPutExercise(Workout workout) {
     for (Exercise exercise in workout.exercises) {
       if (exercise.id == 0) {
-        UsersService().postExercise(exercise);
+        UserService().postExercise(exercise);
       } else {
-        UsersService().putExercise(exercise);
+        UserService().putExercise(exercise);
       }
     }
   }
@@ -113,12 +113,12 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     for (Workout workout in workouts) {
       //post
       if (workout.id == 0) {
-        UsersService().postWorkout(workout);
+        UserService().postWorkout(workout);
         postOrPutExercise(workout);
       }
       //put
       else {
-        UsersService().putWorkout(workout);
+        UserService().putWorkout(workout);
         postOrPutExercise(workout);
       }
     }
@@ -127,10 +127,10 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   void _saveAllWorkouts() async {
     //delete
     for (int id in workoutsToDelete) {
-      UsersService().deleteWorkout(id);
+      UserService().deleteWorkout(id);
     }
     for (int id in exercisesToDelete) {
-      UsersService().deleteExercise(id);
+      UserService().deleteExercise(id);
     }
     postOrPutWorkout();
     widget.user.workouts = workouts;

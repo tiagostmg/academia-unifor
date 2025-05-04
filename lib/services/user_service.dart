@@ -1,7 +1,7 @@
 import 'package:academia_unifor/models.dart';
 import 'package:dio/dio.dart';
 
-class UsersService {
+class UserService {
   final Dio _dio = Dio(BaseOptions(
     baseUrl: 'http://localhost:5404', // altere para a URL da sua API
     connectTimeout: Duration(seconds: 5),
@@ -52,6 +52,37 @@ class UsersService {
       rethrow;
     }
   }
+
+  Future<Users> postUser(Users user) async {
+    try {
+      final response = await _dio.post('/api/User', data: user.toJson());
+      return Users.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+  Future<Users> putUser(Users user) async {
+    try {
+      final response = await _dio.put('/api/User/${user.id}', data: user.toJson());
+      return Users.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+
+  Future<Users> deleteUser(int id) async {
+    try {
+      final response = await _dio.delete('/api/User/$id');
+      return Users.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+
+
 
   Future<List<Workout>> getWorkoutsByUserId(int id) async {
     try {

@@ -66,7 +66,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
 
-      List<Users> usersList = await UsersService().loadUsers();
+      List<Users> usersList = await UserService().loadUsers();
 
       Users? foundUser = usersList.firstWhereOrNull(
         (user) => user.email == email && user.password == password,

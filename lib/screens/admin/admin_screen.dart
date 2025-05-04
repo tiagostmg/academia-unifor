@@ -47,7 +47,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
   //Modifiquei essa parte para ele receber os metodos coretamentes
   Future<void> _loadData() async {
     try {
-      final users = await UsersService().loadStudents();
+      final users = await UserService().loadStudents();
       final equipmentCategories = await EquipmentService().loadCategories(); 
       final notifications = await NotificationService().loadNotifications();
 

@@ -12,7 +12,7 @@ class SelectedCategoryList extends StatelessWidget {
   final VoidCallback onDataUpdated;
 
   const SelectedCategoryList({
-    Key? key,
+    super.key,
     required this.selectedCategory,
     required this.items,
     required this.onBack,
@@ -20,7 +20,41 @@ class SelectedCategoryList extends StatelessWidget {
     this.isEditMode = true,
     this.onItemTap,
     required this.onDataUpdated,
-  }) : super(key: key);
+  });
+
+  Future<void> _showDeleteConfirmation(BuildContext context, EquipmentItem item) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar Exclusão'),
+        content: const Text('Tem certeza que deseja excluir este equipamento?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await EquipmentService().deleteEquipment(item.id);
+        onDataUpdated();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Equipamento excluído com sucesso')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao excluir equipamento: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +150,18 @@ class SelectedCategoryList extends StatelessWidget {
                                       });
                                     }
                                   },
+                                ),
+                                const SizedBox(height: 20),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pop(context); // Fecha o diálogo de edição
+                                    _showDeleteConfirmation(context, item);
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  label: const Text('Excluir Equipamento'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
                                 ),
                               ],
                             ),
