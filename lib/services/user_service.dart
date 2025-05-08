@@ -151,5 +151,15 @@ class UserService {
     }
   }
 
+  Future<Workout> getWorkoutById(int id) async {
+    try {
+      final response = await _dio.get('/api/Workout/$id');
+      return Workout.fromJson(response.data);
+    } catch (e) {
+      print('Erro ao adicionar usuário: $e');
+      rethrow;
+    }
+  }
+
 
 }

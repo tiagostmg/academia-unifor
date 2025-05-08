@@ -16,7 +16,6 @@ class EditWorkoutsScreen extends StatefulWidget {
 class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   late List<Workout> workouts;
   late List<int> workoutsToDelete = [];
-  late List<int> exercisesToDelete = [];
   Map<int, EquipmentItem> equipmentMap = {};
   Map<String, int> categoryCounts = {};
 
@@ -30,7 +29,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
       for (var exercise in workout.exercises) {
         if (exercise.equipmentId != null && !equipmentMap.containsKey(exercise.equipmentId)) {
           final equipment = await EquipmentService().getEquipmentById(exercise.equipmentId!);
-          // ignore: unnecessary_null_comparison
           if (equipment != null) {
             equipmentMap[exercise.equipmentId!] = equipment;
           }
@@ -59,7 +57,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
-  void _addWorkout() {
+  Future<Workout> _addWorkout() async {
     try {
       Workout newWorkout = Workout(
         id: 0,
@@ -69,11 +67,22 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
         exercises: [],
       );
 
-      setState(() {
-        workouts.add(newWorkout);
-      });
+      // Salva o workout imediatamente se for novo
+      if (newWorkout.id == 0) {
+        final savedWorkout = await UserService().postWorkout(newWorkout);
+        setState(() {
+          workouts.add(savedWorkout);
+        });
+        return savedWorkout;
+      } else {
+        setState(() {
+          workouts.add(newWorkout);
+        });
+        return newWorkout;
+      }
     } catch (e) {
       print('Erro ao adicionar treino: $e');
+      throw e;
     }
   }
 
@@ -86,60 +95,22 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
-  void _addExercise(Workout workout) {
-    setState(() {
-      workout.exercises.add(
-        Exercise(
-          id: 0,
-          workoutId: workout.id,
-          name: 'Novo Exercício',
-          reps: '3x10',
-          notes: '',
-        ),
-      );
-    });
-  }
-
-  void _removeExercise(Workout workout, int index) {
-    if (workout.exercises[index].id != 0) {
-      exercisesToDelete.add(workout.exercises[index].id);
+  Future<void> _saveAllWorkouts() async {
+    // Primeiro deleta workouts marcados para remoção
+    for (int id in workoutsToDelete) {
+      await UserService().deleteWorkout(id);
     }
-    setState(() {
-      workout.exercises.removeAt(index);
-    });
-  }
 
-  void postOrPutExercise(Workout workout) {
-    for (Exercise exercise in workout.exercises) {
-      if (exercise.id == 0) {
-        UserService().postExercise(exercise);
-      } else {
-        UserService().putExercise(exercise);
-      }
-    }
-  }
-
-  void postOrPutWorkout() {
+    // Salva/atualiza todos os workouts
     for (Workout workout in workouts) {
       if (workout.id == 0) {
-        UserService().postWorkout(workout);
-        postOrPutExercise(workout);
-      }
-      else {
-        UserService().putWorkout(workout);
-        postOrPutExercise(workout);
+        await UserService().postWorkout(workout);
+      } else {
+        await UserService().putWorkout(workout);
       }
     }
-  }
 
-  void _saveAllWorkouts() async {
-    for (int id in workoutsToDelete) {
-      UserService().deleteWorkout(id);
-    }
-    for (int id in exercisesToDelete) {
-      UserService().deleteExercise(id);
-    }
-    postOrPutWorkout();
+    // Atualiza a lista local
     widget.user.workouts = workouts;
   }
 
@@ -155,8 +126,8 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: () {
-              _saveAllWorkouts();
+            onPressed: () async {
+              await _saveAllWorkouts();
               Navigator.pop(context, widget.user);
             },
           ),
@@ -190,148 +161,47 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                       onChanged: (value) => workout.description = value,
                     ),
                     const SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: workout.exercises.length,
-                      itemBuilder: (context, exIndex) {
-                        final exercise = workout.exercises[exIndex];
-                        return Card(
-                          color: Theme.of(context).colorScheme.primary,
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Exercício ${exIndex + 1}',
-                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => _removeExercise(workout, exIndex),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: TextEditingController(text: exercise.name),
-                                  decoration: const InputDecoration(
-                                    labelText: 'Nome do Exercício',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onChanged: (value) => setState(() => exercise.name = value),
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: TextEditingController(text: exercise.reps),
-                                  decoration: const InputDecoration(
-                                    labelText: 'Repetições',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onChanged: (value) => setState(() => exercise.reps = value),
-                                ),
-                                const SizedBox(height: 8),
-                                TextField(
-                                  controller: TextEditingController(text: exercise.notes ?? ''),
-                                  decoration: const InputDecoration(
-                                    labelText: 'Notas / Observações',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  maxLines: 3,
-                                  onChanged: (value) => setState(() => exercise.notes = value),
-                                ),
-                                const SizedBox(height: 8),
-                                InputDecorator(
-                                  decoration: const InputDecoration(
-                                    labelText: 'Equipamento',
-                                    border: OutlineInputBorder(),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          exercise.equipmentId != null
-                                              ? equipmentMap[exercise.equipmentId]?.name ?? 'Carregando...'
-                                              : 'Nenhum equipamento selecionado',
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          displayCategories(
-                                            context,
-                                            'Categorias de Equipamento',
-                                            Colors.blue[100]!,
-                                            Colors.blue[800]!,
-                                            categoryCounts,
-                                            (categoriaSelecionada) async {
-                                              if (categoriaSelecionada != null) {
-                                                final categorias = await EquipmentService().loadCategories();
-                                                final categoria = categorias.firstWhere((c) => c.category == categoriaSelecionada);
-                                                
-                                                final equipamentoSelecionado = await Navigator.push<EquipmentItem>(
-                                                  // ignore: use_build_context_synchronously
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => ChooseEquipmentScreen(
-                                                      categoria: categoria,
-                                                      fallbackImage: () => const Icon(Icons.fitness_center, size: 64),
-                                                    ),
-                                                  ),
-                                                );
-
-                                                if (equipamentoSelecionado != null) {
-                                                  setState(() {
-                                                    equipmentMap[equipamentoSelecionado.id] = equipamentoSelecionado;
-                                                    exercise.equipmentId = equipamentoSelecionado.id;
-                                                  });
-                                                }
-                                              } else {
-                                                setState(() {
-                                                  exercise.equipmentId = null;
-                                                });
-                                              }
-                                            },
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                        ),
-                                        child: const Text('Selecionar'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+                    Text(
+                      'Exercícios: ${workout.exercises.length}',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          onPressed: () => _addExercise(workout),
+                          onPressed: () async {
+                            // Se for um workout novo, salva primeiro
+                            Workout workoutToEdit = workout;
+                            if (workout.id == 0) {
+                              workoutToEdit = await UserService().postWorkout(workout);
+                              workouts[index] = workoutToEdit;
+                            }
+
+                            final updatedWorkout = await Navigator.push<Workout>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditExerciseScreen(
+                                  workout: workoutToEdit,
+                                  equipmentMap: equipmentMap,
+                                  categoryCounts: categoryCounts,
+                                ),
+                              ),
+                            );
+                            
+                            if (updatedWorkout != null) {
+                              setState(() {
+                                workouts[index] = updatedWorkout;
+                              });
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Adicionar Exercício'),
+                          child: const Text('Editar Exercícios'),
                         ),
                         ElevatedButton(
                           onPressed: () => _removeWorkout(index),

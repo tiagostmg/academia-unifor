@@ -5,14 +5,14 @@ import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models.dart';
 
 
-class ExercisesScreen extends StatefulWidget {
-  const ExercisesScreen({super.key});
+class AdminWorkoutsScreen extends StatefulWidget {
+  const AdminWorkoutsScreen({super.key});
 
   @override
-  State<ExercisesScreen> createState() => _ExercisesScreenState();
+  State<AdminWorkoutsScreen> createState() => _AdminWorkoutsScreenState();
 }
 
-class _ExercisesScreenState extends State<ExercisesScreen> {
+class _AdminWorkoutsScreenState extends State<AdminWorkoutsScreen> {
   List<Users> allUsers = [];
   List<Users> filteredUsers = [];
 

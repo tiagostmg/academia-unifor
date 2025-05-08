@@ -52,7 +52,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/admin/exercises',
       pageBuilder:
-          (context, state) => NoTransitionPage(child: ExercisesScreen()),
+          (context, state) => NoTransitionPage(child: AdminWorkoutsScreen()),
     ),
     GoRoute(
       path: '/admin/students',
