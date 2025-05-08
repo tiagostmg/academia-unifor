@@ -38,22 +38,27 @@ class WorkoutsBody extends ConsumerWidget {
 
     final List<Workout> workouts = user.workouts;
 
-    return Scaffold(
-      appBar: const SearchAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView.builder(
-          itemCount: workouts.length,
-          itemBuilder: (context, index) {
-            final workout = workouts[index];
-            return WorkoutCard(workout: workout);
-          },
+    return Column(
+      children: [
+        Expanded(
+          child: Scaffold(
+            appBar: const SearchAppBar(),
+            body: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.builder(
+                itemCount: workouts.length,
+                itemBuilder: (context, index) {
+                  final workout = workouts[index];
+                  return WorkoutCard(workout: workout);
+                },
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
-
 class WorkoutCard extends StatelessWidget {
   final Workout workout;
 

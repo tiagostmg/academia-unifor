@@ -94,31 +94,12 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
             children: [
               _buildCard(
                 context,
-                Icons.people,
-                'Total de alunos',
-                '$totalUsers',
-                onTap: () => context.go('/admin/students'),
-              ),
-              _buildCard(
-                context,
                 Icons.fitness_center,
                 'Total de aparelhos',
                 '$totalEquipments',
                 onTap: () => context.go('/admin/equipments'),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
               _buildCard(
-                context,
-                Icons.description,
-                'Ver treinos',
-                '$totalUsers',
-                onTap: () => context.go('/admin/exercises'),
-              ),
-                _buildCard(
                 context,
                 Icons.notifications,
                 'Gerenciar avisos',
@@ -126,6 +107,25 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 onTap: () => context.go('/admin/notifications'),
               ),
 
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _buildCard(
+                context,
+                Icons.people,
+                'Total de alunos',
+                '$totalUsers',
+                onTap: () => context.go('/admin/students'),
+              ),
+              _buildCard(
+                context,
+                Icons.description,
+                'Ver treinos',
+                '$totalUsers',
+                onTap: () => context.go('/admin/exercises'),
+              ),
             ],
           ),
         ],

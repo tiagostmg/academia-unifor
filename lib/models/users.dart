@@ -7,7 +7,7 @@ class Users {
   String password;
   String phone;
   String address;
-  String birthDate;
+  DateTime? birthDate;
   String avatarUrl;
   bool isAdmin;
   List<Workout> workouts;
@@ -19,7 +19,7 @@ class Users {
     required this.password,
     required this.phone,
     required this.address,
-    required this.birthDate,
+    this.birthDate,
     required this.avatarUrl,
     required this.isAdmin,
     required this.workouts,
@@ -33,7 +33,9 @@ class Users {
       password: json['password'] ?? '',
       phone: json['phone'],
       address: json['address'],
-      birthDate: json['birthDate'],
+      birthDate: json['birthDate'] != null
+        ? DateTime.parse(json['birthDate'])
+        : null,
       avatarUrl: json['avatarUrl'] ?? '',
       isAdmin: json['isAdmin'] ?? false,
       workouts:
@@ -52,10 +54,15 @@ class Users {
       'password': password,
       'phone': phone,
       'address': address,
-      'birthDate': birthDate,
+      'birthDate': birthDate != null
+        ? birthDate!.toIso8601String().split('T')[0]
+        : null,
       'avatarUrl': avatarUrl,
       'isAdmin': isAdmin,
       'workouts': workouts.map((w) => w.toJson()).toList(),
     };
   }
+
+    
+  
 }

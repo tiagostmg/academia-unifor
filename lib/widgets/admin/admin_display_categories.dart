@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:academia_unifor/widgets.dart';
 
 
-void display_categories(
+void displayCategories(
     BuildContext context,
     String titulo,
     Color chipColor,

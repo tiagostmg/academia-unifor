@@ -1,3 +1,4 @@
+import 'package:academia_unifor/screens/edit_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -107,6 +108,49 @@ class _StudentsScreenState extends State<StudentsScreen> {
     }
   }
 
+  Future<void> _addNewUser() async {
+    final newUser = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditUserScreen(
+          user: Users(
+            id: 0,
+            name: '',
+            email: '',
+            phone: '',
+            address: '',
+            birthDate: null,
+            avatarUrl: '',
+            isAdmin: false,
+            password: '',
+            workouts: [],
+          ),
+        ),
+      ),
+    );
+
+    if (newUser != null && newUser is Users) {
+      try {
+        setState(() => _isLoading = true);
+        final createdUser = await _userService.postUser(newUser);
+        setState(() {
+          allUsers.add(createdUser);
+          allUsers.sort((a, b) => a.name.compareTo(b.name));
+          filteredUsers = List.from(allUsers);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Aluno adicionado com sucesso')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao adicionar aluno: $e')),
+        );
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -115,7 +159,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 4,
+          currentIndex: 3,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: SearchAppBar(
@@ -129,6 +173,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
                     onUpdateUser: _updateUser,
                     onDeleteUser: _deleteUser,
                   ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: _addNewUser,
+              child: const Icon(Icons.add),
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+            ),
           ),
         ),
       ),
@@ -216,155 +266,3 @@ class StudentsScreenBody extends StatelessWidget {
   }
 }
 
-class EditUserScreen extends StatefulWidget {
-  final Users user;
-
-  const EditUserScreen({super.key, required this.user});
-
-  @override
-  State<EditUserScreen> createState() => _EditUserScreenState();
-}
-
-class _EditUserScreenState extends State<EditUserScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _emailController;
-  late TextEditingController _phoneController;
-  late TextEditingController _addressController;
-  late TextEditingController _birthDateController;
-  late TextEditingController _avatarUrlController;
-  late bool _isAdmin;
-  bool _isSaving = false;
-  bool _isDeleting = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.user.name);
-    _emailController = TextEditingController(text: widget.user.email);
-    _phoneController = TextEditingController(text: widget.user.phone);
-    _addressController = TextEditingController(text: widget.user.address);
-    _birthDateController = TextEditingController(text: widget.user.birthDate);
-    _avatarUrlController = TextEditingController(text: widget.user.avatarUrl);
-    _isAdmin = widget.user.isAdmin;
-  }
-
-  Future<void> _deleteUser() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Exclusão'),
-        content: const Text('Tem certeza que deseja excluir este usuário?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      setState(() => _isDeleting = true);
-      try {
-        // Retorna null para indicar que o usuário foi deletado
-        Navigator.pop(context, null);
-      } finally {
-        setState(() => _isDeleting = false);
-      }
-    }
-  }
-
-  Future<void> _saveChanges() async {
-    if (_nameController.text.isEmpty || _emailController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nome e e-mail são obrigatórios')),
-      );
-      return;
-    }
-
-    setState(() => _isSaving = true);
-
-    final updatedUser = Users(
-      id: widget.user.id,
-      name: _nameController.text,
-      email: _emailController.text,
-      phone: _phoneController.text,
-      address: _addressController.text,
-      birthDate: _birthDateController.text,
-      avatarUrl: _avatarUrlController.text,
-      isAdmin: _isAdmin,
-      password: widget.user.password,
-      workouts: widget.user.workouts,
-    );
-
-    Navigator.pop(context, updatedUser);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Usuário'),
-        actions: [
-          IconButton(
-            icon: _isDeleting
-                ? const CircularProgressIndicator()
-                : const Icon(Icons.delete, color: Colors.red),
-            onPressed: _isDeleting ? null : _deleteUser,
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: _isSaving
-                ? const CircularProgressIndicator()
-                : const Icon(Icons.save),
-            onPressed: _isSaving ? null : _saveChanges,
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nome'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'E-mail'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'Telefone'),
-              keyboardType: TextInputType.phone,
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: const InputDecoration(labelText: 'Endereço'),
-            ),
-            TextField(
-              controller: _birthDateController,
-              decoration: const InputDecoration(labelText: 'Data de Nascimento'),
-              keyboardType: TextInputType.datetime,
-            ),
-            TextField(
-              controller: _avatarUrlController,
-              decoration: const InputDecoration(labelText: 'URL da Imagem'),
-              keyboardType: TextInputType.url,
-            ),
-            CheckboxListTile(
-              value: _isAdmin,
-              onChanged: (value) => setState(() => _isAdmin = value ?? false),
-              title: const Text('Administrador'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
