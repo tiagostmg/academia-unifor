@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
 
-Future<bool> confirmationDialog({
-  required BuildContext context,
+Future<bool?> confirmationDialog(
+  BuildContext context, {
   required String title,
   required String message,
-}) async {
-  final result = await showDialog<bool>(
+}) {
+  return showDialog<bool>(
     context: context,
-    barrierDismissible: false, 
-    builder: (context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Não'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Sim'),
-          ),
-        ],
-      );
-    },
+    builder:
+        (context) => AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        ),
   );
-
-  return result ?? false; 
 }

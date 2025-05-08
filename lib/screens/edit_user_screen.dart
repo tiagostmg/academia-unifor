@@ -31,11 +31,13 @@ class EditUserFormState {
 
 class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
   EditUserFormNotifier({required bool isAdminEditing})
-      : super(EditUserFormState(
+    : super(
+        EditUserFormState(
           isValid: false,
           isSaving: false,
           isAdminEditing: isAdminEditing,
-        ));
+        ),
+      );
 
   void setValid(bool isValid) {
     if (state.isValid != isValid) {
@@ -48,13 +50,12 @@ class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
   }
 }
 
-final editUserFormProvider =
-    StateNotifierProvider.autoDispose<EditUserFormNotifier, EditUserFormState>(
-        (ref) {
+final editUserFormProvider = StateNotifierProvider.autoDispose<
+  EditUserFormNotifier,
+  EditUserFormState
+>((ref) {
   final currentUser = ref.watch(userProvider);
-  return EditUserFormNotifier(
-    isAdminEditing: currentUser?.isAdmin ?? false,
-  );
+  return EditUserFormNotifier(isAdminEditing: currentUser?.isAdmin ?? false);
 });
 
 class EditUserScreen extends StatelessWidget {
@@ -64,7 +65,8 @@ class EditUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final GlobalKey<_EditUserFormState> _formKey = GlobalKey<_EditUserFormState>();
+    final GlobalKey<_EditUserFormState> _formKey =
+        GlobalKey<_EditUserFormState>();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -79,18 +81,24 @@ class EditUserScreen extends StatelessWidget {
             builder: (context, ref, child) {
               final formState = ref.watch(editUserFormProvider);
               return IconButton(
-                icon: formState.isSaving
-                    ? const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : const Icon(Icons.save),
-                onPressed: formState.isValid && !formState.isSaving
-                    ? () {
-                        ref.read(editUserFormProvider.notifier).setSaving(true);
-                        _formKey.currentState?._saveChanges();
-                      }
-                    : null,
+                icon:
+                    formState.isSaving
+                        ? const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        )
+                        : const Icon(Icons.save),
+                onPressed:
+                    formState.isValid && !formState.isSaving
+                        ? () {
+                          ref
+                              .read(editUserFormProvider.notifier)
+                              .setSaving(true);
+                          _formKey.currentState?._saveChanges();
+                        }
+                        : null,
               );
             },
           ),
@@ -99,10 +107,7 @@ class EditUserScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: EditUserForm(
-            key: _formKey,
-            user: user,
-          ),
+          child: EditUserForm(key: _formKey, user: user),
         ),
       ),
     );
@@ -135,9 +140,10 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     _phoneController = TextEditingController(text: u.phone);
     _addressController = TextEditingController(text: u.address);
     _birthDateController = TextEditingController(
-      text: u.birthDate != null
-          ? "${u.birthDate!.day.toString().padLeft(2, '0')}/${u.birthDate!.month.toString().padLeft(2, '0')}/${u.birthDate!.year}"
-          : '',
+      text:
+          u.birthDate != null
+              ? "${u.birthDate!.day.toString().padLeft(2, '0')}/${u.birthDate!.month.toString().padLeft(2, '0')}/${u.birthDate!.year}"
+              : '',
     );
     _avatarUrl = u.avatarUrl;
     _isAdmin = u.isAdmin;
@@ -152,7 +158,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   void _checkFormValidity() {
-    final isValid = _nameController.text.isNotEmpty &&
+    final isValid =
+        _nameController.text.isNotEmpty &&
         _emailController.text.isNotEmpty &&
         _birthDateController.text.isNotEmpty;
 
@@ -182,19 +189,22 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         email: _emailController.text,
         phone: _phoneController.text,
         address: _addressController.text,
-        birthDate: _birthDateController.text.isNotEmpty
-            ? DateTime.tryParse(
-                _birthDateController.text.split('/').reversed.join('-'))
-            : null,
+        birthDate:
+            _birthDateController.text.isNotEmpty
+                ? DateTime.tryParse(
+                  _birthDateController.text.split('/').reversed.join('-'),
+                )
+                : null,
         avatarUrl: _avatarUrl,
         isAdmin: _isAdmin,
         password: widget.user.password,
         workouts: widget.user.workouts,
       );
 
-      final savedUser = widget.user.id == 0
-          ? await UserService().postUser(updatedUser)
-          : await UserService().putUser(updatedUser);
+      final savedUser =
+          widget.user.id == 0
+              ? await UserService().postUser(updatedUser)
+              : await UserService().putUser(updatedUser);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -231,7 +241,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final formState = ref.watch(editUserFormProvider);
 
     return Column(
@@ -312,10 +321,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: theme.colorScheme.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
           ),
           filled: true,
           fillColor: theme.colorScheme.primary.withOpacity(0.05),
@@ -351,10 +357,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: theme.colorScheme.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
           ),
           filled: true,
           fillColor: theme.colorScheme.primary.withOpacity(0.05),
@@ -374,9 +377,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   Widget _buildAdminSwitch() {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -389,20 +390,14 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                 children: [
                   const Text(
                     'Privilégios de Administrador',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     _isAdmin
                         ? 'Este usuário tem acesso total ao sistema'
                         : 'Este usuário tem acesso limitado',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
                   ),
                 ],
               ),
