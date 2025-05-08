@@ -45,13 +45,20 @@ class WorkoutsBody extends ConsumerWidget {
             appBar: const SearchAppBar(),
             body: Padding(
               padding: const EdgeInsets.all(16),
-              child: ListView.builder(
-                itemCount: workouts.length,
-                itemBuilder: (context, index) {
-                  final workout = workouts[index];
-                  return WorkoutCard(workout: workout);
-                },
-              ),
+              child: workouts.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Você ainda não tem nenhum treino cadastrado",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: workouts.length,
+                      itemBuilder: (context, index) {
+                        final workout = workouts[index];
+                        return WorkoutCard(workout: workout);
+                      },
+                    ),
             ),
           ),
         ),
@@ -59,6 +66,7 @@ class WorkoutsBody extends ConsumerWidget {
     );
   }
 }
+
 class WorkoutCard extends StatelessWidget {
   final Workout workout;
 
@@ -159,6 +167,16 @@ class ExerciseTile extends ConsumerWidget {
                     color: theme.colorScheme.onSurface.withAlpha(179),
                   ),
                 ),
+                if (exercise.equipmentId != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Equipamento: ${exercise.equipmentId}",
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        color: theme.colorScheme.onSurface.withAlpha(179),
+                      ),
+                    ),
+                  ),
                 if (exercise.notes != null && exercise.notes!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
