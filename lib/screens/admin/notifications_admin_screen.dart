@@ -91,7 +91,7 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 3,
+          currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: SearchAppBar(

@@ -1,37 +1,93 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/assets/unifor_logo.dart';
+import 'package:academia_unifor/services/user_service.dart';
+import 'package:academia_unifor/services/user_provider.dart';
 
-class RegisterScreen extends StatefulWidget {
+
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
-  void _register() {
+  Future<void> _register() async {
+    final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       _showMessage("Preencha todos os campos");
-    } else if (password != confirmPassword) {
+      return;
+    }
+
+    if (password != confirmPassword) {
       _showMessage("As senhas não coincidem");
-    } else {
-      // TODO : Implementar a lógica de registro
-      context.go('/home');
+      return;
+    }
+
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      _showMessage("Digite um e-mail válido");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final newUser = Users(
+        id: 0,
+        workouts: [],
+        name: name,
+        phone: '',
+        address: '',
+        birthDate: null,
+        avatarUrl: '',
+        isAdmin: false,
+        email: email,
+        password: password,
+      );
+
+      // Registrar o usuário
+      final createdUser = await UserService().postUser(newUser);
+      
+      // Atualizar o provider com o usuário logado
+      ref.read(userProvider.notifier).state = createdUser;
+      
+      _showMessage("Cadastro realizado com sucesso!");
+      await Future.delayed(const Duration(seconds: 1));
+      
+      if (mounted) {
+        context.go('/home');
+      }
+    } catch (e) {
+      if (mounted) {
+        _showMessage("Erro ao cadastrar: ${e.toString()}");
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -41,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         content: Text(message),
         behavior: SnackBarBehavior.floating,
         backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -85,23 +142,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                     child: Container(
                       decoration: BoxDecoration(
-                        color:
-                            isDark
-                                ? Colors.black.withAlpha(90)
-                                : Colors.white.withAlpha(180),
+                        color: isDark
+                            ? Colors.black.withAlpha(90)
+                            : Colors.white.withAlpha(180),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color:
-                              isDark
-                                  ? Colors.white.withAlpha(50)
-                                  : Colors.black.withAlpha(50),
+                          color: isDark
+                              ? Colors.white.withAlpha(50)
+                              : Colors.black.withAlpha(50),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color:
-                                isDark
-                                    ? Colors.black.withAlpha(100)
-                                    : Colors.grey.withAlpha(50),
+                            color: isDark
+                                ? Colors.black.withAlpha(100)
+                                : Colors.grey.withAlpha(50),
                             blurRadius: 12,
                             spreadRadius: 2,
                           ),
@@ -132,6 +186,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             const SizedBox(height: 20),
                             _buildTextField(
+                              "Nome Completo",
+                              _nameController,
+                              isDark,
+                              Icons.person,
+                            ),
+                            const SizedBox(height: 15),
+                            _buildTextField(
                               "E-mail",
                               _emailController,
                               isDark,
@@ -153,16 +214,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ElasticIn(
                               child: SizedBox(
                                 width: double.infinity,
-                                child: CustomButton(
-                                  text: "Cadastrar",
-                                  icon: Icons.app_registration,
-                                  onPressed: _register,
-                                ),
+                                child: _isLoading
+                                    ? const Center(child: CircularProgressIndicator())
+                                    : CustomButton(
+                                        text: "Cadastrar",
+                                        icon: Icons.app_registration,
+                                        onPressed: _register,
+                                      ),
                               ),
                             ),
                             const SizedBox(height: 10),
                             TextButton(
-                              onPressed: () => context.go('/'),
+                              onPressed: () => context.go('/login'),
                               style: _linkButtonStyle(isDark),
                               child: const Text(
                                 "Já tem uma conta? Entrar",

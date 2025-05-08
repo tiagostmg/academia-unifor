@@ -59,7 +59,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: AdminConvexBottomBar(
-          currentIndex: 2,
+          currentIndex: 4,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: SearchAppBar(

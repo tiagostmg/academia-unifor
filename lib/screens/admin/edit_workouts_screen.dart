@@ -17,7 +17,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   late List<Workout> workouts;
   late List<int> workoutsToDelete = [];
   late List<int> exercisesToDelete = [];
-  EquipmentItem? equipament;
+  Map<int, EquipmentItem> equipmentMap = {};
   Map<String, int> categoryCounts = {};
 
   Future<void> _loadWorkouts() async {
@@ -25,6 +25,19 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     final newWorkouts = await UserService().getWorkoutsByUserId(
       widget.user.id,
     );
+    
+    for (var workout in newWorkouts) {
+      for (var exercise in workout.exercises) {
+        if (exercise.equipmentId != null && !equipmentMap.containsKey(exercise.equipmentId)) {
+          final equipment = await EquipmentService().getEquipmentById(exercise.equipmentId!);
+          // ignore: unnecessary_null_comparison
+          if (equipment != null) {
+            equipmentMap[exercise.equipmentId!] = equipment;
+          }
+        }
+      }
+    }
+
     setState(() {
       workouts = newWorkouts;
     });
@@ -46,11 +59,10 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
-
   void _addWorkout() {
     try {
       Workout newWorkout = Workout(
-        id: 0, // id será atribuído pelo banco
+        id: 0,
         userId: widget.user.id,
         name: 'Novo Treino',
         description: 'Descrição do Treino',
@@ -65,7 +77,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     }
   }
 
-  // TODO: REMOCAO DE TREINOS
   void _removeWorkout(int index) {
     if (workouts[index].id != 0) {
       workoutsToDelete.add(workouts[index].id);
@@ -75,12 +86,11 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
     });
   }
 
-  //TODO ADICIONAR NOVO EXERCICIO
   void _addExercise(Workout workout) {
     setState(() {
       workout.exercises.add(
         Exercise(
-          id: 0, // significa que o exercicio ainda nao foi salvo no banco
+          id: 0,
           workoutId: workout.id,
           name: 'Novo Exercício',
           reps: '3x10',
@@ -111,12 +121,10 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
 
   void postOrPutWorkout() {
     for (Workout workout in workouts) {
-      //post
       if (workout.id == 0) {
         UserService().postWorkout(workout);
         postOrPutExercise(workout);
       }
-      //put
       else {
         UserService().putWorkout(workout);
         postOrPutExercise(workout);
@@ -125,7 +133,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   }
 
   void _saveAllWorkouts() async {
-    //delete
     for (int id in workoutsToDelete) {
       UserService().deleteWorkout(id);
     }
@@ -139,8 +146,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
   String getFirstName(String fullName) {
     return fullName.split(' ')[0];
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -185,14 +190,12 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                       onChanged: (value) => workout.description = value,
                     ),
                     const SizedBox(height: 8),
-                    // TODO ADICIONAR LOGICA PARA EXERCICIOS
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: workout.exercises.length,
                       itemBuilder: (context, exIndex) {
                         final exercise = workout.exercises[exIndex];
-
                         return Card(
                           color: Theme.of(context).colorScheme.primary,
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -206,118 +209,111 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Exercício ${exIndex + 1}',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleMedium!.copyWith(
+                                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      //TODO ADICIONAR FUNCAO DE REMOVER EXERCICIO
-                                      onPressed: () {
-                                        _removeExercise(workout, exIndex);
-                                      },
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _removeExercise(workout, exIndex),
                                     ),
                                   ],
                                 ),
-
                                 const SizedBox(height: 8),
                                 TextField(
-                                  controller: TextEditingController(
-                                    text: exercise.name,
-                                  ),
+                                  controller: TextEditingController(text: exercise.name),
                                   decoration: const InputDecoration(
                                     labelText: 'Nome do Exercício',
                                     border: OutlineInputBorder(),
                                   ),
-                                  onChanged:
-                                      (value) =>
-                                          setState(() => exercise.name = value),
+                                  onChanged: (value) => setState(() => exercise.name = value),
                                 ),
                                 const SizedBox(height: 8),
                                 TextField(
-                                  controller: TextEditingController(
-                                    text: exercise.reps,
-                                  ),
+                                  controller: TextEditingController(text: exercise.reps),
                                   decoration: const InputDecoration(
                                     labelText: 'Repetições',
                                     border: OutlineInputBorder(),
                                   ),
-                                  onChanged:
-                                      (value) =>
-                                          setState(() => exercise.reps = value),
+                                  onChanged: (value) => setState(() => exercise.reps = value),
                                 ),
                                 const SizedBox(height: 8),
                                 TextField(
-                                  controller: TextEditingController(
-                                    text: exercise.notes ?? '',
-                                  ),
+                                  controller: TextEditingController(text: exercise.notes ?? ''),
                                   decoration: const InputDecoration(
                                     labelText: 'Notas / Observações',
                                     border: OutlineInputBorder(),
                                   ),
                                   maxLines: 3,
-                                  onChanged:
-                                      (value) => setState(
-                                        () => exercise.notes = value,
-                                      ),
+                                  onChanged: (value) => setState(() => exercise.notes = value),
                                 ),
                                 const SizedBox(height: 8),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    display_categories(
-                                      context,
-                                      'Categorias de Equipamento',
-                                      Colors.blue[100]!,
-                                      Colors.blue[800]!,
-                                      categoryCounts,
-                                      (categoriaSelecionada) async {
-                                        final categorias = await EquipmentService().loadCategories();
-                                        if (categoriaSelecionada != null) {
-                                          final categoria = categorias.firstWhere((c) => c.category == categoriaSelecionada);
-
-                                          final equipamentoSelecionado  = await Navigator.push<EquipmentItem>(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ChooseEquipmentScreen(categoria: categoria,fallbackImage: () => const Icon(Icons.fitness_center, size: 64),),
-                                            ),
-                                          );
-
-                                          if (equipamentoSelecionado  != null) {
-                                            setState(() {
-                                              equipament = equipamentoSelecionado;
-                                              exercise.equipmentId = equipament!.id;
-                                            });
-                                          }
-                                        }else {
-                                          setState(() {
-                                            equipament = null;
-                                            exercise.equipmentId = null;
-                                          });
-                                        }
-                                        
-                                      
-                                      },
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                                  child: Text(
-                                    equipament?.name.isNotEmpty == true
-                                      ? equipament!.name
-                                      : "Selecionar Equipamento"
+                                InputDecorator(
+                                  decoration: const InputDecoration(
+                                    labelText: 'Equipamento',
+                                    border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                   ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          exercise.equipmentId != null
+                                              ? equipmentMap[exercise.equipmentId]?.name ?? 'Carregando...'
+                                              : 'Nenhum equipamento selecionado',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          displayCategories(
+                                            context,
+                                            'Categorias de Equipamento',
+                                            Colors.blue[100]!,
+                                            Colors.blue[800]!,
+                                            categoryCounts,
+                                            (categoriaSelecionada) async {
+                                              if (categoriaSelecionada != null) {
+                                                final categorias = await EquipmentService().loadCategories();
+                                                final categoria = categorias.firstWhere((c) => c.category == categoriaSelecionada);
+                                                
+                                                final equipamentoSelecionado = await Navigator.push<EquipmentItem>(
+                                                  // ignore: use_build_context_synchronously
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => ChooseEquipmentScreen(
+                                                      categoria: categoria,
+                                                      fallbackImage: () => const Icon(Icons.fitness_center, size: 64),
+                                                    ),
+                                                  ),
+                                                );
 
+                                                if (equipamentoSelecionado != null) {
+                                                  setState(() {
+                                                    equipmentMap[equipamentoSelecionado.id] = equipamentoSelecionado;
+                                                    exercise.equipmentId = equipamentoSelecionado.id;
+                                                  });
+                                                }
+                                              } else {
+                                                setState(() {
+                                                  exercise.equipmentId = null;
+                                                });
+                                              }
+                                            },
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                        child: const Text('Selecionar'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-
                               ],
                             ),
                           ),
