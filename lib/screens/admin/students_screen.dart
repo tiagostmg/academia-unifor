@@ -26,10 +26,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Future<void> _loadUsers() async {
     setState(() => _isLoading = true);
     try {
-      final users = await _userService.loadStudents()..sort((a, b) => a.name.compareTo(b.name));
+      final users = await _userService.loadUsers()..sort((a, b) => a.name.compareTo(b.name));
       setState(() {
         allUsers = users;
-        filteredUsers = users;
+        filteredUsers = List.from(users); // Cria uma nova lista
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,9 +56,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
         final index = allUsers.indexWhere((u) => u.id == result.id);
         if (index != -1) {
           allUsers[index] = result;
-          filteredUsers = List.from(allUsers);
+          filteredUsers = List.from(allUsers); // Nova instância da lista
         }
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Aluno atualizado com sucesso')),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao atualizar usuário: $e')),
@@ -93,7 +96,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
         await _userService.deleteUser(userId);
         setState(() {
           allUsers.removeWhere((user) => user.id == userId);
-          filteredUsers.removeWhere((user) => user.id == userId);
+          filteredUsers = List.from(allUsers); // Nova instância
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Aluno excluído com sucesso')),
@@ -109,7 +112,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Future<void> _addNewUser() async {
-    final newUser = await Navigator.push(
+    final newUser = await Navigator.push<Users>(
       context,
       MaterialPageRoute(
         builder: (context) => EditUserScreen(
@@ -129,14 +132,14 @@ class _StudentsScreenState extends State<StudentsScreen> {
       ),
     );
 
-    if (newUser != null && newUser is Users) {
+    if (newUser != null) {
       try {
         setState(() => _isLoading = true);
         final createdUser = await _userService.postUser(newUser);
         setState(() {
           allUsers.add(createdUser);
           allUsers.sort((a, b) => a.name.compareTo(b.name));
-          filteredUsers = List.from(allUsers);
+          filteredUsers = List.from(allUsers); // Nova instância
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Aluno adicionado com sucesso')),
@@ -244,18 +247,17 @@ class StudentsScreenBody extends StatelessWidget {
             ),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () async {
-                await onDeleteUser(user.id);
-              },
+              onPressed: () async => await onDeleteUser(user.id),
             ),
             onTap: () async {
-              final updatedUser = await Navigator.push(
+              final updatedUser = await Navigator.push<Users>(
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditUserScreen(user: user),
                 ),
               );
-              if (updatedUser != null && updatedUser is Users) {
+              
+              if (updatedUser != null) {
                 await onUpdateUser(updatedUser);
               }
             },
@@ -265,4 +267,3 @@ class StudentsScreenBody extends StatelessWidget {
     );
   }
 }
-

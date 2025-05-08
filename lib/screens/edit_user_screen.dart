@@ -5,7 +5,6 @@ import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class EditUserFormState {
   final bool isValid;
   final bool isSaving;
@@ -31,12 +30,12 @@ class EditUserFormState {
 }
 
 class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
-  EditUserFormNotifier({required bool isAdminEditing}) 
-    : super(EditUserFormState(
-        isValid: false, 
-        isSaving: false,
-        isAdminEditing: isAdminEditing,
-      ));
+  EditUserFormNotifier({required bool isAdminEditing})
+      : super(EditUserFormState(
+          isValid: false,
+          isSaving: false,
+          isAdminEditing: isAdminEditing,
+        ));
 
   void setValid(bool isValid) {
     if (state.isValid != isValid) {
@@ -49,7 +48,9 @@ class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
   }
 }
 
-final editUserFormProvider = StateNotifierProvider.autoDispose<EditUserFormNotifier, EditUserFormState>((ref) {
+final editUserFormProvider =
+    StateNotifierProvider.autoDispose<EditUserFormNotifier, EditUserFormState>(
+        (ref) {
   final currentUser = ref.watch(userProvider);
   return EditUserFormNotifier(
     isAdminEditing: currentUser?.isAdmin ?? false,
@@ -63,11 +64,12 @@ class EditUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final GlobalKey<_EditUserFormState> _formKey = GlobalKey<_EditUserFormState>();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Editar Perfil'),
+        title: Text(user.id == 0 ? 'Novo Aluno' : 'Editar Aluno'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -77,11 +79,16 @@ class EditUserScreen extends StatelessWidget {
             builder: (context, ref, child) {
               final formState = ref.watch(editUserFormProvider);
               return IconButton(
-                icon: const Icon(Icons.save),
+                icon: formState.isSaving
+                    ? const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : const Icon(Icons.save),
                 onPressed: formState.isValid && !formState.isSaving
                     ? () {
-                        final form = context.findAncestorStateOfType<_EditUserFormState>();
-                        form?._saveChanges();
+                        ref.read(editUserFormProvider.notifier).setSaving(true);
+                        _formKey.currentState?._saveChanges();
                       }
                     : null,
               );
@@ -92,7 +99,10 @@ class EditUserScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: EditUserForm(user: user),
+          child: EditUserForm(
+            key: _formKey,
+            user: user,
+          ),
         ),
       ),
     );
@@ -114,9 +124,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   late TextEditingController _addressController;
   late TextEditingController _birthDateController;
   late String _avatarUrl;
-  late String _initialBirthDate;
-  late bool _initialFormValid;
-  late bool _isAdmin; 
+  late bool _isAdmin;
 
   @override
   void initState() {
@@ -132,12 +140,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           : '',
     );
     _avatarUrl = u.avatarUrl;
-    _initialBirthDate = _birthDateController.text;
-    _isAdmin = u.isAdmin; 
-    
-    _initialFormValid = _nameController.text.isNotEmpty && 
-                       _emailController.text.isNotEmpty &&
-                       _birthDateController.text.isNotEmpty;
+    _isAdmin = u.isAdmin;
   }
 
   @override
@@ -149,12 +152,10 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   void _checkFormValidity() {
-    final isValid = _nameController.text.isNotEmpty && 
-                    _emailController.text.isNotEmpty &&
-                    _phoneController.text.isNotEmpty &&
-                    _addressController.text.isNotEmpty &&
-                    _birthDateController.text.isNotEmpty;
-    
+    final isValid = _nameController.text.isNotEmpty &&
+        _emailController.text.isNotEmpty &&
+        _birthDateController.text.isNotEmpty;
+
     ref.read(editUserFormProvider.notifier).setValid(isValid);
   }
 
@@ -171,7 +172,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   Future<void> _saveChanges() async {
     final formState = ref.read(editUserFormProvider);
     if (!formState.isValid) return;
-    
+
     ref.read(editUserFormProvider.notifier).setSaving(true);
 
     try {
@@ -186,28 +187,26 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                 _birthDateController.text.split('/').reversed.join('-'))
             : null,
         avatarUrl: _avatarUrl,
-        isAdmin: _isAdmin, 
+        isAdmin: _isAdmin,
         password: widget.user.password,
         workouts: widget.user.workouts,
       );
 
-      final savedUser = await UserService().putUser(updatedUser);
-      ref.read(userProvider.notifier).state = savedUser;
+      final savedUser = widget.user.id == 0
+          ? await UserService().postUser(updatedUser)
+          : await UserService().putUser(updatedUser);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Perfil atualizado com sucesso!")),
+          const SnackBar(content: Text("Aluno salvo com sucesso!")),
         );
-        Navigator.pop(context);
+        Navigator.pop(context, savedUser); // Retorna o usuário salvo
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erro ao atualizar perfil: ${e.toString()}")),
+          SnackBar(content: Text("Erro ao salvar aluno: ${e.toString()}")),
         );
-      }
-    } finally {
-      if (mounted) {
         ref.read(editUserFormProvider.notifier).setSaving(false);
       }
     }
@@ -223,7 +222,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
     if (picked != null) {
       setState(() {
-        _birthDateController.text = "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+        _birthDateController.text =
+            "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
       });
       _checkFormValidity();
     }
@@ -231,6 +231,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final formState = ref.watch(editUserFormProvider);
 
     return Column(
@@ -272,24 +273,12 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           onChanged: (_) => _checkFormValidity(),
         ),
         _buildDateField(context),
-        
         if (formState.isAdminEditing) ...[
           const SizedBox(height: 16),
           _buildAdminSwitch(),
           const SizedBox(height: 16),
         ],
-        
         const SizedBox(height: 30),
-        formState.isSaving
-            ? const CircularProgressIndicator()
-            : SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: formState.isValid ? _saveChanges : null,
-                  child: const Text('Salvar Alterações'),
-                ),
-              ),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -300,6 +289,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     required TextEditingController controller,
     void Function(String)? onChanged,
   }) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -309,17 +300,36 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           labelText: title,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary.withOpacity(0.5),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary.withOpacity(0.3),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary,
+              width: 2,
+            ),
           ),
           filled: true,
-          fillColor: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withAlpha(30)
-              : Colors.black.withAlpha(10),
+          fillColor: theme.colorScheme.primary.withOpacity(0.05),
+          labelStyle: TextStyle(
+            color: theme.colorScheme.primary.withOpacity(0.8),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildDateField(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -329,13 +339,30 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           labelText: "Data de Nascimento",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary.withOpacity(0.5),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary.withOpacity(0.3),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary,
+              width: 2,
+            ),
           ),
           filled: true,
-          fillColor: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white.withAlpha(30)
-              : Colors.black.withAlpha(10),
+          fillColor: theme.colorScheme.primary.withOpacity(0.05),
+          labelStyle: TextStyle(
+            color: theme.colorScheme.primary.withOpacity(0.8),
+          ),
           suffixIcon: IconButton(
-            icon: const Icon(Icons.calendar_today),
+            icon: Icon(Icons.calendar_today, color: theme.colorScheme.primary),
             onPressed: () => _selectDate(context),
           ),
         ),
@@ -369,7 +396,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _isAdmin 
+                    _isAdmin
                         ? 'Este usuário tem acesso total ao sistema'
                         : 'Este usuário tem acesso limitado',
                     style: TextStyle(

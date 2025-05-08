@@ -1,7 +1,5 @@
-import 'package:academia_unifor/screens/admin/students_screen.dart';
 import 'package:academia_unifor/screens/edit_user_screen.dart';
 import 'package:academia_unifor/services/user_provider.dart';
-import 'package:academia_unifor/widgets/profile_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -47,11 +45,46 @@ class ProfileBody extends ConsumerWidget {
       child: Column(
         children: [
           const SizedBox(height: 40),
-          ProfileAvatar(avatarUrl: user.avatarUrl),
+          // Linha com foto à esquerda e nome/email à direita
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Foto
+                ProfileAvatar(avatarUrl: user.avatarUrl),
+                const SizedBox(width: 20),
+                // Nome e Email
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.name,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.headlineLarge?.color,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        user.email,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ProfileInfo(users: user),
+            child: ProfileInfo(user: user),
           ),
           const SizedBox(height: 60),
         ],
@@ -60,31 +93,32 @@ class ProfileBody extends ConsumerWidget {
   }
 }
 
-
 class ProfileInfo extends ConsumerWidget {
-  final Users users;
-  const ProfileInfo({super.key, required this.users});
+  final Users user;
+  const ProfileInfo({super.key, required this.user});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
-        const SizedBox(height: 20),
-        
-        // Campos de visualização
-        _buildInfoField(context,"Nome:", users.name),
-        _buildInfoField(context,"E-mail:", users.email),
-        _buildInfoField(context,"Telefone:", users.phone),
-        _buildInfoField(context,"Logradouro:", users.address),
-        _buildInfoField(context,
-          "Data de Nascimento:", 
-          users.birthDate != null
-              ? "${users.birthDate!.day.toString().padLeft(2, '0')}/${users.birthDate!.month.toString().padLeft(2, '0')}/${users.birthDate!.year}"
-              : 'Não informada'
+        _buildSimpleInfoField(context, "Data de Nascimento", 
+          user.birthDate != null
+            ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
+            : 'Não informada'
         ),
-        const SizedBox(height: 20),
+        
+        const SizedBox(height: 16),
+        
+        // Logradouro
+        _buildSimpleInfoField(context, "Logradouro", user.address),
+        
+        const SizedBox(height: 16),
+        
+        // Telefone
+        _buildSimpleInfoField(context, "Telefone", user.phone),
+                        
+        const SizedBox(height: 16),
         
         // Configurações
         ListTile(
@@ -96,6 +130,7 @@ class ProfileInfo extends ConsumerWidget {
           trailing: const Icon(Icons.arrow_forward_ios, size: 18),
           onTap: () {},
         ),
+        
         ListTile(
           leading: Icon(
             Icons.share,
@@ -120,77 +155,68 @@ class ProfileInfo extends ConsumerWidget {
             }
           },
         ),
-                const SizedBox(height: 10),
-
+        
+        const SizedBox(height: 20),
+        
+        // Botão Editar Perfil
         SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              text: "Editar Perfil",
-              icon: Icons.save,
-              onPressed: () {
+          width: double.infinity,
+          child: CustomButton(
+            text: "Editar Perfil",
+            icon: Icons.edit,
+            onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditUserScreen(user: users),
+                  builder: (context) => EditUserScreen(user: user),
                 ),
               );
             },
-            ),
           ),
-        // Sair da conta
-        const SizedBox(height: 10),
-        SizedBox(
-           width: double.infinity,
-            child: CustomButton(
-              text: "Sair da Conta",
-              icon: Icons.logout,
-              onPressed: () {
-                ref.read(userProvider.notifier).state = null;
-                context.go('/');
-              },
-            )
         ),
+        
+        const SizedBox(height: 12),
+        
+        // Botão Sair da Conta
+        SizedBox(
+          width: double.infinity,
+          child: CustomButton(
+            text: "Sair da Conta",
+            icon: Icons.logout,
+            onPressed: () {
+              ref.read(userProvider.notifier).state = null;
+              context.go('/');
+            },
+          ),
+        ),
+        
         const SizedBox(height: 20),
       ],
     );
   }
 
-  Widget _buildInfoField(BuildContext context, String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+  Widget _buildSimpleInfoField(BuildContext context, String title, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title.isNotEmpty)
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
             ),
           ),
-          const SizedBox(height: 4),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.white.withAlpha(30)
-                  : Colors.black.withAlpha(10),
-            ),
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
-            ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-

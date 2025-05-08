@@ -90,6 +90,7 @@ class HomeBody extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
         elevation: 4,
+        color: Theme.of(context).colorScheme.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -107,8 +108,7 @@ class HomeBody extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Seu perfil está faltando algumas informações importantes. '
-                'Complete seu perfil para uma melhor experiência.',
+                'Seu perfil está faltando algumas informações importantes. ',
                 style: TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 16),
@@ -116,8 +116,7 @@ class HomeBody extends ConsumerWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
