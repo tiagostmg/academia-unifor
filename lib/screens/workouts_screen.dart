@@ -1,3 +1,5 @@
+import 'package:academia_unifor/models/equipment.dart';
+import 'package:academia_unifor/services/equipment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -45,20 +47,21 @@ class WorkoutsBody extends ConsumerWidget {
             appBar: const SearchAppBar(),
             body: Padding(
               padding: const EdgeInsets.all(16),
-              child: workouts.isEmpty
-                  ? const Center(
-                      child: Text(
-                        "Você ainda não tem nenhum treino cadastrado",
-                        style: TextStyle(fontSize: 16),
+              child:
+                  workouts.isEmpty
+                      ? const Center(
+                        child: Text(
+                          "Você ainda não tem nenhum treino cadastrado",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                      : ListView.builder(
+                        itemCount: workouts.length,
+                        itemBuilder: (context, index) {
+                          final workout = workouts[index];
+                          return WorkoutCard(workout: workout);
+                        },
                       ),
-                    )
-                  : ListView.builder(
-                      itemCount: workouts.length,
-                      itemBuilder: (context, index) {
-                        final workout = workouts[index];
-                        return WorkoutCard(workout: workout);
-                      },
-                    ),
             ),
           ),
         ),
@@ -168,14 +171,33 @@ class ExerciseTile extends ConsumerWidget {
                   ),
                 ),
                 if (exercise.equipmentId != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      "Equipamento: ${exercise.equipmentId}",
-                      style: theme.textTheme.bodyMedium!.copyWith(
-                        color: theme.colorScheme.onSurface.withAlpha(179),
-                      ),
+                  FutureBuilder<EquipmentItem?>(
+                    future: EquipmentService().getEquipmentById(
+                      exercise.equipmentId!,
                     ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 4),
+                          child: Text("Carregando equipamento..."),
+                        );
+                      }
+                      if (snapshot.hasError || !snapshot.hasData) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 4),
+                          child: Text("Equipamento não encontrado"),
+                        );
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          "Equipamento: ${snapshot.data!.name}",
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            color: theme.colorScheme.onSurface.withAlpha(179),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 if (exercise.notes != null && exercise.notes!.isNotEmpty)
                   Padding(

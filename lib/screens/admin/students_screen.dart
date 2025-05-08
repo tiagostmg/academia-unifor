@@ -26,15 +26,19 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Future<void> _loadUsers() async {
     setState(() => _isLoading = true);
     try {
-      final users = await _userService.loadUsers()..sort((a, b) => a.name.compareTo(b.name));
+      final users =
+          await _userService.loadUsers()
+            ..sort(
+              (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+            );
       setState(() {
         allUsers = users;
         filteredUsers = List.from(users); // Cria uma nova lista
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar alunos: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao carregar alunos: $e')));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -42,9 +46,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
   void _filterUsers(String query) {
     setState(() {
-      filteredUsers = allUsers
-          .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredUsers =
+          allUsers
+              .where(
+                (user) => user.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
     });
   }
 
@@ -63,9 +70,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
         const SnackBar(content: Text('Aluno atualizado com sucesso')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao atualizar usuário: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao atualizar usuário: $e')));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -74,20 +81,24 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Future<void> _deleteUser(int userId) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Exclusão'),
-        content: const Text('Tem certeza que deseja excluir este aluno?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Exclusão'),
+            content: const Text('Tem certeza que deseja excluir este aluno?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text(
+                  'Excluir',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
@@ -102,9 +113,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
           const SnackBar(content: Text('Aluno excluído com sucesso')),
         );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao excluir aluno: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro ao excluir aluno: $e')));
       } finally {
         setState(() => _isLoading = false);
       }
@@ -115,20 +126,21 @@ class _StudentsScreenState extends State<StudentsScreen> {
     final newUser = await Navigator.push<Users>(
       context,
       MaterialPageRoute(
-        builder: (context) => EditUserScreen(
-          user: Users(
-            id: 0,
-            name: '',
-            email: '',
-            phone: '',
-            address: '',
-            birthDate: null,
-            avatarUrl: '',
-            isAdmin: false,
-            password: '',
-            workouts: [],
-          ),
-        ),
+        builder:
+            (context) => EditUserScreen(
+              user: Users(
+                id: 0,
+                name: '',
+                email: '',
+                phone: '',
+                address: '',
+                birthDate: null,
+                avatarUrl: '',
+                isAdmin: false,
+                password: '',
+                workouts: [],
+              ),
+            ),
       ),
     );
 
@@ -145,9 +157,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
           const SnackBar(content: Text('Aluno adicionado com sucesso')),
         );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao adicionar aluno: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Erro ao adicionar aluno: $e')));
       } finally {
         setState(() => _isLoading = false);
       }
@@ -169,13 +181,14 @@ class _StudentsScreenState extends State<StudentsScreen> {
               onSearchChanged: _filterUsers,
               showChatIcon: false,
             ),
-            body: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : StudentsScreenBody(
-                    users: filteredUsers,
-                    onUpdateUser: _updateUser,
-                    onDeleteUser: _deleteUser,
-                  ),
+            body:
+                _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : StudentsScreenBody(
+                      users: filteredUsers,
+                      onUpdateUser: _updateUser,
+                      onDeleteUser: _deleteUser,
+                    ),
             floatingActionButton: FloatingActionButton(
               onPressed: _addNewUser,
               child: const Icon(Icons.add),
@@ -222,9 +235,10 @@ class StudentsScreenBody extends StatelessWidget {
           final user = users[index];
           return ListTile(
             leading: CircleAvatar(
-              backgroundImage: user.avatarUrl.isNotEmpty
-                  ? NetworkImage(user.avatarUrl)
-                  : null,
+              backgroundImage:
+                  user.avatarUrl.isNotEmpty
+                      ? NetworkImage(user.avatarUrl)
+                      : null,
               child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
             ),
             title: Text(user.name),
@@ -256,7 +270,7 @@ class StudentsScreenBody extends StatelessWidget {
                   builder: (context) => EditUserScreen(user: user),
                 ),
               );
-              
+
               if (updatedUser != null) {
                 await onUpdateUser(updatedUser);
               }
