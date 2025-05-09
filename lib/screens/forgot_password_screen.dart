@@ -22,7 +22,11 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+  String? _passwordError;
 
   final List<String> imagePaths = [
     'assets/001.jpg',
@@ -60,7 +64,25 @@ class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     });
   }
 
+  void _validatePasswords() {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      setState(() {
+        _passwordError = 'As senhas não coincidem';
+      });
+    } else {
+      setState(() {
+        _passwordError = null;
+      });
+    }
+  }
+
   void _login() async {
+    _validatePasswords();
+
+    if (_passwordError != null) {
+      return;
+    }
+
     String email = _userController.text.trim();
     String password = _passwordController.text.trim();
 
@@ -75,7 +97,6 @@ class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
       if (foundUser != null && password.isNotEmpty) {
         // Salva o E-mail autenticado no Provider
-
         foundUser.password = password;
         foundUser.isAdmin = false;
 
@@ -196,14 +217,27 @@ class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           ForgotPasswordFields(
                             userController: _userController,
                             passwordController: _passwordController,
+                            confirmPasswordController:
+                                _confirmPasswordController,
                             isPasswordVisible: _isPasswordVisible,
+                            isConfirmPasswordVisible: _isConfirmPasswordVisible,
+                            passwordError: _passwordError,
                             togglePasswordVisibility: () {
                               setState(() {
                                 _isPasswordVisible = !_isPasswordVisible;
                               });
                             },
+                            toggleConfirmPasswordVisibility: () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                    !_isConfirmPasswordVisible;
+                              });
+                            },
                             isDarkMode: isDarkMode,
                             onLogin: _login,
+                            onPasswordChanged: (_) => _validatePasswords(),
+                            onConfirmPasswordChanged:
+                                (_) => _validatePasswords(),
                           ),
                           const SizedBox(height: 10),
                         ],
@@ -236,15 +270,25 @@ class ForgotPasswordHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: SvgPicture.string(
-            uniforLogoSVG,
-            fit: BoxFit.contain,
-            colorFilter: ColorFilter.mode(
-              theme.colorScheme.onPrimary,
-              BlendMode.srcIn,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () => {context.go('/')},
+              icon: const Icon(Icons.arrow_back),
             ),
-          ),
+            Center(
+              child: SvgPicture.string(
+                uniforLogoSVG,
+                fit: BoxFit.contain,
+                colorFilter: ColorFilter.mode(
+                  theme.colorScheme.onPrimary,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+            SizedBox(width: 48),
+          ],
         ),
         SizedBox(height: isKeyboardOpen ? 20 : 30),
         if (!isKeyboardOpen)
@@ -272,18 +316,30 @@ class ForgotPasswordHeader extends StatelessWidget {
 class ForgotPasswordFields extends StatelessWidget {
   final TextEditingController userController;
   final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
   final bool isPasswordVisible;
+  final bool isConfirmPasswordVisible;
+  final String? passwordError;
   final VoidCallback togglePasswordVisibility;
+  final VoidCallback toggleConfirmPasswordVisibility;
   final bool isDarkMode;
   final VoidCallback onLogin;
+  final ValueChanged<String> onPasswordChanged;
+  final ValueChanged<String> onConfirmPasswordChanged;
 
   const ForgotPasswordFields({
     required this.userController,
     required this.passwordController,
+    required this.confirmPasswordController,
     required this.isPasswordVisible,
+    required this.isConfirmPasswordVisible,
+    required this.passwordError,
     required this.togglePasswordVisibility,
+    required this.toggleConfirmPasswordVisibility,
     required this.isDarkMode,
     required this.onLogin,
+    required this.onPasswordChanged,
+    required this.onConfirmPasswordChanged,
     super.key,
   });
 
@@ -318,6 +374,7 @@ class ForgotPasswordFields extends StatelessWidget {
         TextField(
           controller: passwordController,
           obscureText: !isPasswordVisible,
+          onChanged: onPasswordChanged,
           decoration: InputDecoration(
             labelText: 'Nova senha',
             labelStyle: TextStyle(
@@ -343,6 +400,42 @@ class ForgotPasswordFields extends StatelessWidget {
               ),
               onPressed: togglePasswordVisibility,
             ),
+          ),
+          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        ),
+        const SizedBox(height: 15),
+        TextField(
+          controller: confirmPasswordController,
+          obscureText: !isConfirmPasswordVisible,
+          onChanged: onConfirmPasswordChanged,
+          decoration: InputDecoration(
+            labelText: 'Confirmar senha',
+            labelStyle: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+            filled: true,
+            fillColor:
+                isDarkMode
+                    ? Colors.white.withAlpha(30)
+                    : Colors.black.withAlpha(20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isConfirmPasswordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+              onPressed: toggleConfirmPasswordVisibility,
+            ),
+            errorText: passwordError,
           ),
           style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
         ),

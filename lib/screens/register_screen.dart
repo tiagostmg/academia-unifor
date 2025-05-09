@@ -10,7 +10,6 @@ import 'package:academia_unifor/assets/unifor_logo.dart';
 import 'package:academia_unifor/services/user_service.dart';
 import 'package:academia_unifor/services/user_provider.dart';
 
-
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -33,7 +32,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       _showMessage("Preencha todos os campos");
       return;
     }
@@ -68,13 +70,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       // Registrar o usuário
       final createdUser = await UserService().postUser(newUser);
-      
+
       // Atualizar o provider com o usuário logado
       ref.read(userProvider.notifier).state = createdUser;
-      
+
       _showMessage("Cadastro realizado com sucesso!");
       await Future.delayed(const Duration(seconds: 1));
-      
+
       if (mounted) {
         context.go('/home');
       }
@@ -142,20 +144,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.black.withAlpha(90)
-                            : Colors.white.withAlpha(180),
+                        color:
+                            isDark
+                                ? Colors.black.withAlpha(90)
+                                : Colors.white.withAlpha(180),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: isDark
-                              ? Colors.white.withAlpha(50)
-                              : Colors.black.withAlpha(50),
+                          color:
+                              isDark
+                                  ? Colors.white.withAlpha(50)
+                                  : Colors.black.withAlpha(50),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: isDark
-                                ? Colors.black.withAlpha(100)
-                                : Colors.grey.withAlpha(50),
+                            color:
+                                isDark
+                                    ? Colors.black.withAlpha(100)
+                                    : Colors.grey.withAlpha(50),
                             blurRadius: 12,
                             spreadRadius: 2,
                           ),
@@ -214,18 +219,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ElasticIn(
                               child: SizedBox(
                                 width: double.infinity,
-                                child: _isLoading
-                                    ? const Center(child: CircularProgressIndicator())
-                                    : CustomButton(
-                                        text: "Cadastrar",
-                                        icon: Icons.app_registration,
-                                        onPressed: _register,
-                                      ),
+                                child:
+                                    _isLoading
+                                        ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                        : CustomButton(
+                                          text: "Cadastrar",
+                                          icon: Icons.app_registration,
+                                          onPressed: _register,
+                                        ),
                               ),
                             ),
                             const SizedBox(height: 10),
                             TextButton(
-                              onPressed: () => context.go('/login'),
+                              onPressed: () => context.go('/'),
                               style: _linkButtonStyle(isDark),
                               child: const Text(
                                 "Já tem uma conta? Entrar",
