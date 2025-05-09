@@ -64,7 +64,8 @@ class ProfileBody extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).textTheme.headlineLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.headlineLarge?.color,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -72,7 +73,9 @@ class ProfileBody extends ConsumerWidget {
                         user.email,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7),
+                          color: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.color?.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -102,63 +105,26 @@ class ProfileInfo extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSimpleInfoField(context, "Data de Nascimento", 
+        _buildSimpleInfoField(
+          context,
+          "Data de Nascimento",
           user.birthDate != null
-            ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
-            : 'Não informada'
+              ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
+              : 'Não informada',
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Logradouro
         _buildSimpleInfoField(context, "Logradouro", user.address),
-        
+
         const SizedBox(height: 16),
-        
+
         // Telefone
         _buildSimpleInfoField(context, "Telefone", user.phone),
-                        
+
         const SizedBox(height: 16),
-        
-        // Configurações
-        ListTile(
-          leading: Icon(
-            Icons.settings,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: const Text("Configurações"),
-          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-          onTap: () {},
-        ),
-        
-        ListTile(
-          leading: Icon(
-            Icons.share,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: const Text("Compartilhar App"),
-          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-          onTap: () async {
-            final Uri url = Uri.parse("https://github.com/carlosxfelipe/academia-unifor");
-            try {
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Não foi possível abrir o link.")),
-                );
-              }
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Erro: ${e.toString()}")),
-              );
-            }
-          },
-        ),
-        
-        const SizedBox(height: 20),
-        
-        // Botão Editar Perfil
+
         SizedBox(
           width: double.infinity,
           child: CustomButton(
@@ -174,28 +140,64 @@ class ProfileInfo extends ConsumerWidget {
             },
           ),
         ),
-        
-        const SizedBox(height: 12),
-        
-        // Botão Sair da Conta
         SizedBox(
           width: double.infinity,
           child: CustomButton(
             text: "Sair da Conta",
             icon: Icons.logout,
+            color1: const Color(0xFFB00020),
+            color2: const Color(0xFFEF5350),
             onPressed: () {
               ref.read(userProvider.notifier).state = null;
               context.go('/');
             },
           ),
         ),
-        
-        const SizedBox(height: 20),
+
+        ListTile(
+          leading: Icon(
+            Icons.settings,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          title: const Text("Configurações"),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+          onTap: () {},
+        ),
+
+        ListTile(
+          leading: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
+          title: const Text("Compartilhar App"),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+          onTap: () async {
+            final Uri url = Uri.parse(
+              "https://github.com/carlosxfelipe/academia-unifor",
+            );
+            try {
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Não foi possível abrir o link."),
+                  ),
+                );
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Erro: ${e.toString()}")));
+            }
+          },
+        ),
       ],
     );
   }
 
-  Widget _buildSimpleInfoField(BuildContext context, String title, String value) {
+  Widget _buildSimpleInfoField(
+    BuildContext context,
+    String title,
+    String value,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -205,7 +207,9 @@ class ProfileInfo extends ConsumerWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.color?.withOpacity(0.6),
             ),
           ),
         const SizedBox(height: 4),

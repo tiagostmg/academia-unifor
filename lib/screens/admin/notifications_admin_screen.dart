@@ -15,7 +15,6 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
   List<Notifications> allNotifications = [];
   List<Notifications> filteredNotifications = [];
   final NotificationService _notificationService = NotificationService();
-  bool _hasUnsavedChanges = false;
 
   Future<void> _loadNotifications() async {
     try {
@@ -47,7 +46,6 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
         setState(() {
           allNotifications.add(created);
           filteredNotifications = List.from(allNotifications);
-          _hasUnsavedChanges = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Notificação criada com sucesso!')),
@@ -59,7 +57,6 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
           if (index != -1) {
             allNotifications[index] = updated;
             filteredNotifications = List.from(allNotifications);
-            _hasUnsavedChanges = false;
           }
         });
         ScaffoldMessenger.of(context).showSnackBar(

@@ -175,12 +175,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
                       onUpdateUser: _updateUser,
                       onDeleteUser: _deleteUser,
                     ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _addNewUser,
-              child: const Icon(Icons.add),
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: _addNewUser,
+            //   child: const Icon(Icons.add),
+            //   backgroundColor: theme.colorScheme.primary,
+            //   foregroundColor: theme.colorScheme.onPrimary,
+            // ),
           ),
         ),
       ),

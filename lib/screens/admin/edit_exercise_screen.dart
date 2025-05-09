@@ -216,6 +216,7 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
               // Seção de edição do Workout
               Card(
                 elevation: 2,
+                color: Theme.of(context).colorScheme.primary,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

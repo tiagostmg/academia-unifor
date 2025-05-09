@@ -4,12 +4,16 @@ class CustomButton extends StatelessWidget {
   final String text;
   final IconData icon;
   final VoidCallback onPressed;
+  final Color color1;
+  final Color color2;
 
   const CustomButton({
     super.key,
     required this.text,
     required this.icon,
     required this.onPressed,
+    this.color1 = const Color(0xFF2196F3),
+    this.color2 = const Color(0xFF6A5ACD),
   });
 
   @override
@@ -27,8 +31,8 @@ class CustomButton extends StatelessWidget {
         onPressed: onPressed,
         child: Ink(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Colors.blue, Color(0xFF6A5ACD)],
+            gradient: LinearGradient(
+              colors: [color1, color2],
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
