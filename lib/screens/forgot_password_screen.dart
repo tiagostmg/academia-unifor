@@ -12,14 +12,14 @@ import 'package:academia_unifor/assets/unifor_logo.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/user_provider.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  LoginScreenState createState() => LoginScreenState();
+  ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-class LoginScreenState extends ConsumerState<LoginScreen> {
+class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -68,13 +68,18 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       List<Users> usersList = await UserService().loadUsers();
 
       Users? foundUser = usersList.firstWhereOrNull(
-        (user) => user.email == email && user.password == password,
+        (user) => user.email == email,
       );
 
       if (!mounted) return;
 
       if (foundUser != null) {
         // Salva o E-mail autenticado no Provider
+
+        foundUser.password = password;
+        foundUser.isAdmin = false;
+
+        UserService().putUser(foundUser);
         ref.read(userProvider.notifier).state = foundUser;
 
         if (foundUser.isAdmin) {
@@ -85,7 +90,7 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('E-mail ou senha incorretos'),
+            content: const Text('E-mail incorreto'),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
@@ -182,13 +187,13 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          LoginHeader(
+                          ForgotPasswordHeader(
                             isKeyboardOpen: isKeyboardOpen,
                             isDarkMode: isDarkMode,
                             theme: theme,
                           ),
                           const SizedBox(height: 20),
-                          LoginFields(
+                          ForgotPasswordFields(
                             userController: _userController,
                             passwordController: _passwordController,
                             isPasswordVisible: _isPasswordVisible,
@@ -201,10 +206,6 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
                             onLogin: _login,
                           ),
                           const SizedBox(height: 10),
-                          LoginFooter(
-                            isKeyboardOpen: isKeyboardOpen,
-                            isDarkMode: isDarkMode,
-                          ),
                         ],
                       ),
                     ),
@@ -219,12 +220,12 @@ class LoginScreenState extends ConsumerState<LoginScreen> {
   }
 }
 
-class LoginHeader extends StatelessWidget {
+class ForgotPasswordHeader extends StatelessWidget {
   final bool isKeyboardOpen;
   final bool isDarkMode;
   final ThemeData theme;
 
-  const LoginHeader({
+  const ForgotPasswordHeader({
     required this.isKeyboardOpen,
     required this.isDarkMode,
     required this.theme,
@@ -248,7 +249,7 @@ class LoginHeader extends StatelessWidget {
         SizedBox(height: isKeyboardOpen ? 20 : 30),
         if (!isKeyboardOpen)
           Text(
-            "Bem-vindo!",
+            "Trocar senha",
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -258,7 +259,7 @@ class LoginHeader extends StatelessWidget {
         if (!isKeyboardOpen) const SizedBox(height: 10),
         if (!isKeyboardOpen)
           Text(
-            "Faça login para continuar",
+            "Insira seu e-mail e nova senha",
             style: TextStyle(
               color: isDarkMode ? Colors.white70 : Colors.black87,
             ),
@@ -268,7 +269,7 @@ class LoginHeader extends StatelessWidget {
   }
 }
 
-class LoginFields extends StatelessWidget {
+class ForgotPasswordFields extends StatelessWidget {
   final TextEditingController userController;
   final TextEditingController passwordController;
   final bool isPasswordVisible;
@@ -276,7 +277,7 @@ class LoginFields extends StatelessWidget {
   final bool isDarkMode;
   final VoidCallback onLogin;
 
-  const LoginFields({
+  const ForgotPasswordFields({
     required this.userController,
     required this.passwordController,
     required this.isPasswordVisible,
@@ -318,7 +319,7 @@ class LoginFields extends StatelessWidget {
           controller: passwordController,
           obscureText: !isPasswordVisible,
           decoration: InputDecoration(
-            labelText: 'Senha',
+            labelText: 'Nova senha',
             labelStyle: TextStyle(
               color: isDarkMode ? Colors.white : Colors.black,
             ),
@@ -346,25 +347,11 @@ class LoginFields extends StatelessWidget {
           style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
         ),
         const SizedBox(height: 10),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {
-              context.go('/forgot-password');
-            },
-            style: _linkButtonStyle(isDarkMode),
-            child: const Text(
-              "Esqueci minha senha",
-              style: TextStyle(fontSize: 13),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
         ElasticIn(
           child: SizedBox(
             width: double.infinity,
             child: CustomButton(
-              text: "Entrar",
+              text: "Atualizar senha e entrar",
               icon: Icons.login,
               onPressed: onLogin,
             ),
@@ -373,44 +360,4 @@ class LoginFields extends StatelessWidget {
       ],
     );
   }
-}
-
-class LoginFooter extends StatelessWidget {
-  final bool isKeyboardOpen;
-  final bool isDarkMode;
-
-  const LoginFooter({
-    required this.isKeyboardOpen,
-    required this.isDarkMode,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (isKeyboardOpen) return const SizedBox.shrink();
-    return Center(
-      child: TextButton(
-        onPressed: () => context.go('/register'),
-        style: _linkButtonStyle(isDarkMode),
-        child: const Text("Não tem uma conta?", style: TextStyle(fontSize: 13)),
-      ),
-    );
-  }
-}
-
-ButtonStyle _linkButtonStyle(bool isDarkMode) {
-  return ButtonStyle(
-    overlayColor: WidgetStateProperty.all(Colors.transparent),
-    foregroundColor: WidgetStateProperty.resolveWith<Color>((
-      Set<WidgetState> states,
-    ) {
-      if (states.contains(WidgetState.pressed)) {
-        return Colors.blue;
-      }
-      return isDarkMode ? Colors.white : Colors.black;
-    }),
-    padding: WidgetStateProperty.all(EdgeInsets.zero),
-    minimumSize: WidgetStateProperty.all(Size.zero),
-    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  );
 }

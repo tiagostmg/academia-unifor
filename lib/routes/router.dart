@@ -25,6 +25,12 @@ final GoRouter router = GoRouter(
           (context, state) => NoTransitionPage(child: const RegisterScreen()),
     ),
     GoRoute(
+      path: '/forgot-password',
+      pageBuilder:
+          (context, state) =>
+              NoTransitionPage(child: const ForgotPasswordScreen()),
+    ),
+    GoRoute(
       path: '/home',
       pageBuilder:
           (context, state) => NoTransitionPage(child: const HomeScreen()),
