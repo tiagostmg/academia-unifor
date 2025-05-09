@@ -73,7 +73,7 @@ class ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
       if (!mounted) return;
 
-      if (foundUser != null) {
+      if (foundUser != null && password.isNotEmpty) {
         // Salva o E-mail autenticado no Provider
 
         foundUser.password = password;
