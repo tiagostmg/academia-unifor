@@ -25,17 +25,20 @@ class EditExerciseScreen extends StatefulWidget {
 class EditExerciseScreenState extends State<EditExerciseScreen> {
   late List<int> exercisesToDelete = [];
   late Workout workout;
-  late List<Exercise>
-  _originalExercises; // Guarda a lista original de exercícios
+  late List<Exercise> _originalExercises;
   late TextEditingController _workoutNameController;
   late TextEditingController _workoutDescController;
   bool _hasChanges = false;
+  final ExerciseValidator _validator = ExerciseValidator();
+  final Map<int, String?> _exerciseErrors = {};
+  late List<TextEditingController> _nameControllers = [];
+  late List<TextEditingController> _repsControllers = [];
+  late List<TextEditingController> _notesControllers = [];
 
   @override
   void initState() {
     super.initState();
     workout = widget.workout;
-    // Guarda a lista original de exercícios
     _originalExercises = List<Exercise>.from(
       workout.exercises.map(
         (e) => Exercise(
@@ -53,8 +56,25 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
     _workoutDescController = TextEditingController(text: workout.description);
     _hasChanges = widget.hasUnsavedChanges;
 
+    _initializeControllers();
+
     _workoutNameController.addListener(_checkForChanges);
     _workoutDescController.addListener(_checkForChanges);
+  }
+
+  void _initializeControllers() {
+    _nameControllers =
+        workout.exercises
+            .map((e) => TextEditingController(text: e.name))
+            .toList();
+    _repsControllers =
+        workout.exercises
+            .map((e) => TextEditingController(text: e.reps))
+            .toList();
+    _notesControllers =
+        workout.exercises
+            .map((e) => TextEditingController(text: e.notes ?? ''))
+            .toList();
   }
 
   void _checkForChanges() {
@@ -70,6 +90,15 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
   void dispose() {
     _workoutNameController.dispose();
     _workoutDescController.dispose();
+    for (var controller in _nameControllers) {
+      controller.dispose();
+    }
+    for (var controller in _repsControllers) {
+      controller.dispose();
+    }
+    for (var controller in _notesControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -84,6 +113,9 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
           notes: '',
         ),
       );
+      _nameControllers.add(TextEditingController(text: 'Novo Exercício'));
+      _repsControllers.add(TextEditingController(text: '3x10'));
+      _notesControllers.add(TextEditingController());
       _hasChanges = true;
     });
   }
@@ -100,7 +132,16 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
         exercisesToDelete.add(workout.exercises[index].id);
       }
       setState(() {
+        _nameControllers[index].dispose();
+        _repsControllers[index].dispose();
+        _notesControllers[index].dispose();
+
+        _nameControllers.removeAt(index);
+        _repsControllers.removeAt(index);
+        _notesControllers.removeAt(index);
+
         workout.exercises.removeAt(index);
+        _exerciseErrors.remove(index);
         _hasChanges = true;
       });
     }
@@ -116,7 +157,6 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
     );
 
     if (confirmed ?? false) {
-      // Restaura os exercícios originais se sair sem salvar
       setState(() {
         workout.exercises = List<Exercise>.from(
           _originalExercises.map(
@@ -131,14 +171,49 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
           ),
         );
         exercisesToDelete.clear();
+        _exerciseErrors.clear();
         _hasChanges = false;
+        _initializeControllers();
       });
       return true;
     }
     return false;
   }
 
+  bool _validateAllExercises() {
+    bool isValid = true;
+    final errors = <int, String?>{};
+
+    for (int i = 0; i < workout.exercises.length; i++) {
+      final exercise = workout.exercises[i];
+      final error = _validator.validateExercise(exercise);
+
+      if (error != null) {
+        errors[i] = error;
+        isValid = false;
+      } else {
+        errors[i] = null;
+      }
+    }
+
+    setState(() {
+      _exerciseErrors.clear();
+      _exerciseErrors.addAll(errors);
+    });
+
+    return isValid;
+  }
+
   Future<void> _saveWorkoutAndExercises() async {
+    if (!_validateAllExercises()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Corrija os erros nos exercícios antes de salvar'),
+        ),
+      );
+      return;
+    }
+
     final confirmed = await confirmationDialog(
       context,
       title: 'Salvar Alterações',
@@ -147,11 +222,9 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
 
     if (confirmed ?? false) {
       try {
-        // 1. Atualiza os dados do Workout
         workout.name = _workoutNameController.text;
         workout.description = _workoutDescController.text;
 
-        // 2. Salva o Workout primeiro
         final savedWorkout =
             workout.id == 0
                 ? await UserService().postWorkout(workout)
@@ -159,16 +232,13 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
 
         if (savedWorkout != null) {
           workout = savedWorkout;
-          // Atualiza a lista original quando salva
           _originalExercises = List<Exercise>.from(workout.exercises);
         }
 
-        // 3. Processa os exercícios marcados para deleção
         for (int id in exercisesToDelete) {
           await UserService().deleteExercise(id);
         }
 
-        // 4. Salva/atualiza os exercícios existentes
         for (Exercise exercise in workout.exercises) {
           exercise.workoutId = workout.id;
 
@@ -179,7 +249,6 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
           }
         }
 
-        // 5. Busca a versão atualizada do servidor
         final updatedWorkout = await UserService().getWorkoutById(workout.id);
         if (mounted) {
           Navigator.pop(context, updatedWorkout ?? workout);
@@ -197,8 +266,16 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _confirmExit,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          final canPop = await _confirmExit();
+          if (canPop && mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text('Editar ${workout.name}'),
@@ -213,7 +290,6 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Seção de edição do Workout
               Card(
                 elevation: 2,
                 color: Theme.of(context).colorScheme.primary,
@@ -248,7 +324,6 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              // Seção de exercícios
               ...workout.exercises.asMap().entries.map((entry) {
                 final exIndex = entry.key;
                 final exercise = entry.value;
@@ -280,45 +355,83 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         ),
                         const SizedBox(height: 8),
                         TextField(
-                          controller: TextEditingController(
-                            text: exercise.name,
-                          ),
-                          decoration: const InputDecoration(
+                          controller: _nameControllers[exIndex],
+                          decoration: InputDecoration(
                             labelText: 'Nome do Exercício',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
+                            errorText:
+                                _exerciseErrors[exIndex]?.contains('nome') ??
+                                        false
+                                    ? _exerciseErrors[exIndex]
+                                    : null,
                           ),
                           onChanged: (value) {
                             exercise.name = value;
                             _hasChanges = true;
+                            final error =
+                                _validator.validateName(value)
+                                    ? null
+                                    : value.isEmpty
+                                    ? 'O nome do exercício é obrigatório'
+                                    : 'O nome deve ter entre 2 e 50 caracteres';
+                            setState(() {
+                              _exerciseErrors[exIndex] = error;
+                            });
                           },
                         ),
                         const SizedBox(height: 8),
                         TextField(
-                          controller: TextEditingController(
-                            text: exercise.reps,
-                          ),
-                          decoration: const InputDecoration(
+                          controller: _repsControllers[exIndex],
+                          decoration: InputDecoration(
                             labelText: 'Repetições',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
+                            errorText:
+                                _exerciseErrors[exIndex]?.contains(
+                                          'repetições',
+                                        ) ??
+                                        false
+                                    ? _exerciseErrors[exIndex]
+                                    : null,
                           ),
                           onChanged: (value) {
                             exercise.reps = value;
                             _hasChanges = true;
+                            final error =
+                                _validator.validateReps(value)
+                                    ? null
+                                    : value.isEmpty
+                                    ? 'As repetições são obrigatórias'
+                                    : 'As repetições devem ter no máximo 20 caracteres';
+                            setState(() {
+                              _exerciseErrors[exIndex] = error;
+                            });
                           },
                         ),
                         const SizedBox(height: 8),
                         TextField(
-                          controller: TextEditingController(
-                            text: exercise.notes ?? '',
-                          ),
-                          decoration: const InputDecoration(
+                          controller: _notesControllers[exIndex],
+                          decoration: InputDecoration(
                             labelText: 'Notas / Observações',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
+                            errorText:
+                                _exerciseErrors[exIndex]?.contains(
+                                          'observações',
+                                        ) ??
+                                        false
+                                    ? _exerciseErrors[exIndex]
+                                    : null,
                           ),
                           maxLines: 3,
                           onChanged: (value) {
                             exercise.notes = value;
                             _hasChanges = true;
+                            final error =
+                                _validator.validateNotes(value)
+                                    ? null
+                                    : 'As observações devem ter no máximo 200 caracteres';
+                            setState(() {
+                              _exerciseErrors[exIndex] = error;
+                            });
                           },
                         ),
                         const SizedBox(height: 8),

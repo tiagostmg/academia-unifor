@@ -243,6 +243,11 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   late TextEditingController _descController;
   bool _isSaving = false;
   bool _hasChanges = false;
+  final NotificationsValidator _validator = NotificationsValidator();
+  final Map<String, String?> _fieldErrors = {
+    'title': null,
+    'description': null,
+  };
 
   @override
   void initState() {
@@ -264,6 +269,37 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
     if (hasChanges != _hasChanges) {
       setState(() => _hasChanges = hasChanges);
     }
+  }
+
+  void _validateField(String fieldName, String value) {
+    String? error;
+
+    switch (fieldName) {
+      case 'title':
+        if (!NotificationsValidator.validateNotificationTitle(value)) {
+          error =
+              value.isEmpty
+                  ? 'O título da notificação é obrigatório'
+                  : 'O título deve ter entre 2 e 50 caracteres';
+        }
+        break;
+      case 'description':
+        if (!NotificationsValidator.validateDescription(value)) {
+          error = 'A descrição deve ter no máximo 200 caracteres';
+        }
+        break;
+    }
+
+    setState(() {
+      _fieldErrors[fieldName] = error;
+    });
+  }
+
+  bool _validateAllFields() {
+    _validateField('title', _titleController.text);
+    _validateField('description', _descController.text);
+
+    return !_fieldErrors.values.any((error) => error != null);
   }
 
   Future<bool> _confirmExit() async {
@@ -294,10 +330,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   }
 
   Future<void> _saveChanges() async {
-    if (_titleController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('A notificação deve ter um título')),
-      );
+    if (!_validateAllFields()) {
       return;
     }
 
@@ -365,6 +398,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return PopScope(
       canPop: !_hasChanges,
       onPopInvoked: (didPop) async {
@@ -395,22 +429,96 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
           child: Column(
             children: [
               Card(
-                color: Theme.of(context).colorScheme.primary,
+                color: theme.colorScheme.primary,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
                       TextField(
                         controller: _titleController,
-                        decoration: const InputDecoration(labelText: 'Título'),
+                        decoration: InputDecoration(
+                          labelText: 'Título*',
+                          errorText: _fieldErrors['title'],
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['title'] != null
+                                      ? Colors.red
+                                      : Colors.grey,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['title'] != null
+                                      ? Colors.red
+                                      : Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['title'] != null
+                                      ? Colors.red
+                                      : theme.colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          errorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          _validateField('title', value);
+                          _checkForChanges();
+                        },
                       ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _descController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Descrição',
+                          errorText: _fieldErrors['description'],
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['description'] != null
+                                      ? Colors.red
+                                      : Colors.grey,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['description'] != null
+                                      ? Colors.red
+                                      : Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  _fieldErrors['description'] != null
+                                      ? Colors.red
+                                      : theme.colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          errorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          ),
                         ),
+                        onChanged: (value) {
+                          _validateField('description', value);
+                          _checkForChanges();
+                        },
                       ),
                     ],
                   ),
