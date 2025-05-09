@@ -79,26 +79,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
   }
 
   Future<void> _deleteUser(int userId) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Confirmar Exclusão'),
-            content: const Text('Tem certeza que deseja excluir este aluno?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancelar'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text(
-                  'Excluir',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
+    final confirmed = await confirmationDialog(
+      context,
+      title: 'Confirmar Exclusão',
+      message: 'Tem certeza que deseja excluir este aluno?',
     );
 
     if (confirmed == true) {
@@ -150,7 +134,9 @@ class _StudentsScreenState extends State<StudentsScreen> {
         final createdUser = await _userService.postUser(newUser);
         setState(() {
           allUsers.add(createdUser);
-          allUsers.sort((a, b) => a.name.compareTo(b.name));
+          allUsers.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+          );
           filteredUsers = List.from(allUsers); // Nova instância
         });
         ScaffoldMessenger.of(context).showSnackBar(

@@ -74,7 +74,22 @@ class EditUserScreen extends StatelessWidget {
         title: Text(user.id == 0 ? 'Novo Aluno' : 'Editar Aluno'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async {
+            if (_formKey.currentState?._hasUnsavedChanges() ?? false) {
+              final shouldExit = await confirmationDialog(
+                context,
+                title: 'Alterações não salvas',
+                message:
+                    'Você tem alterações não salvas. Deseja realmente sair?',
+              );
+
+              if (shouldExit == true && Navigator.canPop(context)) {
+                Navigator.pop(context);
+              }
+            } else {
+              Navigator.pop(context);
+            }
+          },
         ),
         actions: [
           Consumer(
@@ -149,6 +164,19 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     _isAdmin = u.isAdmin;
   }
 
+  bool _hasUnsavedChanges() {
+    return _nameController.text != widget.user.name ||
+        _emailController.text != widget.user.email ||
+        _phoneController.text != widget.user.phone ||
+        _addressController.text != widget.user.address ||
+        _birthDateController.text !=
+            (widget.user.birthDate != null
+                ? "${widget.user.birthDate!.day.toString().padLeft(2, '0')}/${widget.user.birthDate!.month.toString().padLeft(2, '0')}/${widget.user.birthDate!.year}"
+                : '') ||
+        _avatarUrl != widget.user.avatarUrl ||
+        _isAdmin != widget.user.isAdmin;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -180,6 +208,38 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final formState = ref.read(editUserFormProvider);
     if (!formState.isValid) return;
 
+    // Confirmação antes de salvar
+    final confirmSave = await confirmationDialog(
+      context,
+      title: 'Confirmar alterações',
+      message: 'Tem certeza que deseja salvar as alterações deste usuário?',
+    );
+
+    if (confirmSave != true) {
+      ref.read(editUserFormProvider.notifier).setSaving(false);
+      return;
+    }
+
+    // Confirmação adicional se estiver alterando privilégios de admin
+    if (_isAdmin != widget.user.isAdmin) {
+      final adminConfirm = await confirmationDialog(
+        context,
+        title:
+            _isAdmin
+                ? 'Conceder privilégios de admin'
+                : 'Remover privilégios de admin',
+        message:
+            _isAdmin
+                ? 'Tem certeza que deseja tornar este usuário um administrador? Ele terá acesso completo ao sistema.'
+                : 'Tem certeza que deseja remover os privilégios de administrador deste usuário?',
+      );
+
+      if (adminConfirm != true) {
+        ref.read(editUserFormProvider.notifier).setSaving(false);
+        return;
+      }
+    }
+
     ref.read(editUserFormProvider.notifier).setSaving(true);
 
     try {
@@ -210,7 +270,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Aluno salvo com sucesso!")),
         );
-        Navigator.pop(context, savedUser); // Retorna o usuário salvo
+        Navigator.pop(context, savedUser);
       }
     } catch (e) {
       if (mounted) {
@@ -404,7 +464,33 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             ),
             Switch(
               value: _isAdmin,
-              onChanged: (value) {
+              onChanged: (value) async {
+                if (value && !_isAdmin) {
+                  final confirm = await confirmationDialog(
+                    context,
+                    title: 'Conceder privilégios de admin',
+                    message:
+                        'Tem certeza que deseja tornar este usuário um administrador? '
+                        'Ele terá acesso completo ao sistema.',
+                  );
+
+                  if (confirm != true) {
+                    return;
+                  }
+                } else if (!value && _isAdmin) {
+                  final confirm = await confirmationDialog(
+                    context,
+                    title: 'Remover privilégios de admin',
+                    message:
+                        'Tem certeza que deseja remover os privilégios de '
+                        'administrador deste usuário?',
+                  );
+
+                  if (confirm != true) {
+                    return;
+                  }
+                }
+
                 setState(() {
                   _isAdmin = value;
                 });
