@@ -7,13 +7,15 @@ class NotificationAdminScreen extends StatefulWidget {
   const NotificationAdminScreen({super.key});
 
   @override
-  State<NotificationAdminScreen> createState() => _NotificationAdminScreenState();
+  State<NotificationAdminScreen> createState() =>
+      _NotificationAdminScreenState();
 }
 
 class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
   List<Notifications> allNotifications = [];
   List<Notifications> filteredNotifications = [];
   final NotificationService _notificationService = NotificationService();
+  bool _hasUnsavedChanges = false;
 
   Future<void> _loadNotifications() async {
     try {
@@ -31,50 +33,81 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
 
   void _filterNotifications(String query) {
     setState(() {
-      filteredNotifications = allNotifications
-          .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredNotifications =
+          allNotifications
+              .where((n) => n.title.toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 
   Future<void> _updateNotification(Notifications updated) async {
     try {
       if (updated.id == 0) {
-        // Nova notificação
         final created = await _notificationService.postNotification(updated);
         setState(() {
           allNotifications.add(created);
           filteredNotifications = List.from(allNotifications);
+          _hasUnsavedChanges = false;
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notificação criada com sucesso!')),
+        );
       } else {
-        // Notificação existente
         await _notificationService.putNotification(updated);
         setState(() {
           final index = allNotifications.indexWhere((n) => n.id == updated.id);
           if (index != -1) {
             allNotifications[index] = updated;
             filteredNotifications = List.from(allNotifications);
+            _hasUnsavedChanges = false;
           }
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notificação atualizada com sucesso!')),
+        );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao salvar notificação: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao salvar notificação: $e')));
     }
   }
 
   Future<void> _deleteNotification(int id) async {
-    try {
-      await _notificationService.deleteNotification(id);
-      setState(() {
-        allNotifications.removeWhere((n) => n.id == id);
-        filteredNotifications = List.from(allNotifications);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao deletar notificação: $e')),
-      );
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Exclusão'),
+            content: const Text('Deseja realmente excluir esta notificação?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Excluir'),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _notificationService.deleteNotification(id);
+        setState(() {
+          allNotifications.removeWhere((n) => n.id == id);
+          filteredNotifications = List.from(allNotifications);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notificação excluída com sucesso!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao excluir notificação: $e')),
+        );
+      }
     }
   }
 
@@ -108,15 +141,16 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => EditNotificationScreen(
-                      notification: Notifications(
-                        id: 0,
-                        title: '',
-                        description: '',
-                        createdAt: DateTime.now(),
-                      ),
-                      isEditing: false,
-                    ),
+                    builder:
+                        (_) => EditNotificationScreen(
+                          notification: Notifications(
+                            id: 0,
+                            title: '',
+                            description: '',
+                            createdAt: DateTime.now(),
+                          ),
+                          isEditing: false,
+                        ),
                   ),
                 );
                 if (result != null && result is Notifications) {
@@ -169,10 +203,11 @@ class NotificationsScreenBody extends StatelessWidget {
               final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => EditNotificationScreen(
-                    notification: notification,
-                    isEditing: true,
-                  ),
+                  builder:
+                      (_) => EditNotificationScreen(
+                        notification: notification,
+                        isEditing: true,
+                      ),
                 ),
               );
               if (result != null && result is Notifications) {
@@ -180,32 +215,8 @@ class NotificationsScreenBody extends StatelessWidget {
               }
             },
             trailing: IconButton(
-              icon: const Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              onPressed: () async {
-                final confirm = await showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Confirmar exclusão'),
-                    content: const Text('Deseja realmente excluir esta notificação?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Excluir'),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true) {
-                  await onDelete(notification.id);
-                }
-              },
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => onDelete(notification.id),
             ),
           );
         },
@@ -217,11 +228,13 @@ class NotificationsScreenBody extends StatelessWidget {
 class EditNotificationScreen extends StatefulWidget {
   final Notifications notification;
   final bool isEditing;
+  final bool hasUnsavedChanges;
 
   const EditNotificationScreen({
     super.key,
     required this.notification,
     required this.isEditing,
+    this.hasUnsavedChanges = false,
   });
 
   @override
@@ -232,12 +245,55 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   late TextEditingController _titleController;
   late TextEditingController _descController;
   bool _isSaving = false;
+  bool _hasChanges = false;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.notification.title);
-    _descController = TextEditingController(text: widget.notification.description);
+    _descController = TextEditingController(
+      text: widget.notification.description,
+    );
+    _hasChanges = widget.hasUnsavedChanges;
+
+    _titleController.addListener(_checkForChanges);
+    _descController.addListener(_checkForChanges);
+  }
+
+  void _checkForChanges() {
+    final hasChanges =
+        _titleController.text != widget.notification.title ||
+        _descController.text != widget.notification.description;
+    if (hasChanges != _hasChanges) {
+      setState(() => _hasChanges = hasChanges);
+    }
+  }
+
+  Future<bool> _confirmExit() async {
+    if (!_hasChanges) return true;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Alterações não salvas'),
+            content: const Text(
+              'Você tem alterações não salvas. Deseja sair mesmo assim?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Sair'),
+              ),
+            ],
+          ),
+    );
+
+    return confirmed ?? false;
   }
 
   Future<void> _saveChanges() async {
@@ -248,6 +304,29 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
       return;
     }
 
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Salvar alterações'),
+            content: const Text(
+              'Deseja salvar as alterações nesta notificação?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Salvar'),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed != true) return;
+
     setState(() => _isSaving = true);
 
     final updated = Notifications(
@@ -257,62 +336,100 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
       createdAt: widget.notification.createdAt,
     );
 
-    Navigator.pop(context, updated);
+    if (mounted) {
+      Navigator.pop(context, updated);
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar exclusão'),
+            content: const Text('Deseja realmente excluir esta notificação?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Excluir'),
+              ),
+            ],
+          ),
+    );
+
+    if (confirmed == true && mounted) {
+      Navigator.pop(context, null); // Retorna null para indicar exclusão
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? "Editar Notificação" : "Criar Notificação"),
-        actions: [
-          IconButton(
-            icon: _isSaving
-                ? const CircularProgressIndicator()
-                : const Icon(Icons.save),
-            onPressed: _isSaving ? null : _saveChanges,
+    return PopScope(
+      canPop: !_hasChanges,
+      onPopInvoked: (didPop) async {
+        if (!didPop) {
+          final canPop = await _confirmExit();
+          if (canPop && mounted) {
+            Navigator.of(context).pop();
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.isEditing ? "Editar Notificação" : "Criar Notificação",
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Card(
-              color: Theme.of(context).colorScheme.primary,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(labelText: 'Título'),
-                      onChanged: (value) => setState(() {}),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _descController,
-                      maxLines: 3,
-                      decoration: const InputDecoration(labelText: 'Descrição'),
-                    ),
-                  ],
-                ),
-              ),
+          actions: [
+            IconButton(
+              icon:
+                  _isSaving
+                      ? const CircularProgressIndicator()
+                      : const Icon(Icons.save),
+              onPressed: _isSaving ? null : _saveChanges,
             ),
-            if (widget.isEditing) ...[
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context, null); // Retorna null para indicar exclusão
-                },
-                icon: const Icon(Icons.delete),
-                label: const Text('Apagar Notificação'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Card(
+                color: Theme.of(context).colorScheme.primary,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(labelText: 'Título'),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _descController,
+                        maxLines: 3,
+                        decoration: const InputDecoration(
+                          labelText: 'Descrição',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              if (widget.isEditing) ...[
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: _confirmDelete,
+                  icon: const Icon(Icons.delete),
+                  label: const Text('Apagar Notificação'),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

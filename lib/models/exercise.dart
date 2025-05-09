@@ -11,7 +11,7 @@ class Exercise {
     required this.workoutId,
     required this.name,
     required this.reps,
-    this.notes, // Permitir que seja nulo
+    this.notes,
     this.equipmentId,
   });
 
@@ -30,9 +30,10 @@ class Exercise {
     return {
       'id': id,
       'workoutId': workoutId,
-      'name': name, 
-      'reps': reps, 
+      'name': name,
+      'reps': reps,
       if (notes != null) 'notes': notes,
-      if (equipmentId != null) 'equipmentId': equipmentId,};
+      if (equipmentId != null) 'equipmentId': equipmentId,
+    };
   }
 }
