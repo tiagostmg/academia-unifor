@@ -22,23 +22,32 @@ class SelectedCategoryList extends StatelessWidget {
     required this.onDataUpdated,
   });
 
-  Future<void> _showDeleteConfirmation(BuildContext context, EquipmentItem item) async {
+  Future<void> _showDeleteConfirmation(
+    BuildContext context,
+    EquipmentItem item,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Exclusão'),
-        content: const Text('Tem certeza que deseja excluir este equipamento?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Exclusão'),
+            content: const Text(
+              'Tem certeza que deseja excluir este equipamento?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text(
+                  'Excluir',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
@@ -78,11 +87,20 @@ class SelectedCategoryList extends StatelessWidget {
                   return;
                 }
 
-                TextEditingController nameController = TextEditingController(text: item.name);
-                TextEditingController brandController = TextEditingController(text: item.brand);
-                TextEditingController modelController = TextEditingController(text: item.model);
-                TextEditingController quantityController = TextEditingController(text: item.quantity.toString());
-                TextEditingController imageController = TextEditingController(text: item.image);
+                TextEditingController nameController = TextEditingController(
+                  text: item.name,
+                );
+                TextEditingController brandController = TextEditingController(
+                  text: item.brand,
+                );
+                TextEditingController modelController = TextEditingController(
+                  text: item.model,
+                );
+                TextEditingController quantityController =
+                    TextEditingController(text: item.quantity.toString());
+                TextEditingController imageController = TextEditingController(
+                  text: item.image,
+                );
                 bool operationalValue = item.operational;
 
                 showDialog(
@@ -97,7 +115,8 @@ class SelectedCategoryList extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.save),
@@ -108,18 +127,30 @@ class SelectedCategoryList extends StatelessWidget {
                                           name: nameController.text,
                                           brand: brandController.text,
                                           model: modelController.text,
-                                          quantity: int.tryParse(quantityController.text) ?? item.quantity,
+                                          quantity:
+                                              int.tryParse(
+                                                quantityController.text,
+                                              ) ??
+                                              item.quantity,
                                           image: imageController.text,
                                           operational: operationalValue,
                                         );
 
                                         try {
-                                          await equipmentService.putEquipment(updatedItem);
+                                          await equipmentService.putEquipment(
+                                            updatedItem,
+                                          );
                                           onDataUpdated();
                                           Navigator.pop(context);
                                         } catch (e) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(content: Text('Erro ao atualizar: $e')),
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Erro ao atualizar: $e',
+                                              ),
+                                            ),
                                           );
                                         }
                                       },
@@ -130,15 +161,37 @@ class SelectedCategoryList extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nome')),
-                                TextField(controller: brandController, decoration: const InputDecoration(labelText: 'Marca')),
-                                TextField(controller: modelController, decoration: const InputDecoration(labelText: 'Modelo')),
+                                TextField(
+                                  controller: nameController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Nome',
+                                  ),
+                                ),
+                                TextField(
+                                  controller: brandController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Marca',
+                                  ),
+                                ),
+                                TextField(
+                                  controller: modelController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Modelo',
+                                  ),
+                                ),
                                 TextField(
                                   controller: quantityController,
-                                  decoration: const InputDecoration(labelText: 'Quantidade'),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Quantidade',
+                                  ),
                                   keyboardType: TextInputType.number,
                                 ),
-                                TextField(controller: imageController, decoration: const InputDecoration(labelText: 'URL da Imagem')),
+                                TextField(
+                                  controller: imageController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'URL da Imagem',
+                                  ),
+                                ),
                                 const SizedBox(height: 12),
                                 CheckboxListTile(
                                   title: const Text('Operacional'),
@@ -154,7 +207,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 20),
                                 ElevatedButton.icon(
                                   onPressed: () {
-                                    Navigator.pop(context); // Fecha o diálogo de edição
+                                    Navigator.pop(
+                                      context,
+                                    ); // Fecha o diálogo de edição
                                     _showDeleteConfirmation(context, item);
                                   },
                                   icon: const Icon(Icons.delete),
@@ -175,7 +230,9 @@ class SelectedCategoryList extends StatelessWidget {
               child: Card(
                 elevation: 0,
                 color: Theme.of(context).colorScheme.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: SizedBox(
                   height: 150,
@@ -194,7 +251,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -204,21 +262,24 @@ class SelectedCategoryList extends StatelessWidget {
                                 item.brand,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                               ),
                               Text(
                                 item.model,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                               ),
                               Text(
                                 'Qtd: ${item.quantity}',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                 ),
                               ),
                             ],
@@ -229,23 +290,27 @@ class SelectedCategoryList extends StatelessWidget {
                         flex: 1,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
-                          child: item.image.isNotEmpty
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white, width: 4),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      item.image,
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
+                          child:
+                              item.image.isNotEmpty
+                                  ? Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 4,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                  ),
-                                )
-                              : fallbackImage(),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        item.image,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  )
+                                  : fallbackImage(),
                         ),
                       ),
                     ],

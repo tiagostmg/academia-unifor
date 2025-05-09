@@ -9,22 +9,26 @@ class EditUserFormState {
   final bool isValid;
   final bool isSaving;
   final bool isAdminEditing;
+  final Map<String, String?> fieldErrors;
 
   EditUserFormState({
     required this.isValid,
     required this.isSaving,
     required this.isAdminEditing,
+    this.fieldErrors = const {},
   });
 
   EditUserFormState copyWith({
     bool? isValid,
     bool? isSaving,
     bool? isAdminEditing,
+    Map<String, String?>? fieldErrors,
   }) {
     return EditUserFormState(
       isValid: isValid ?? this.isValid,
       isSaving: isSaving ?? this.isSaving,
       isAdminEditing: isAdminEditing ?? this.isAdminEditing,
+      fieldErrors: fieldErrors ?? this.fieldErrors,
     );
   }
 }
@@ -47,6 +51,16 @@ class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
 
   void setSaving(bool isSaving) {
     state = state.copyWith(isSaving: isSaving);
+  }
+
+  void setFieldError(String fieldName, String? error) {
+    final newErrors = Map<String, String?>.from(state.fieldErrors);
+    newErrors[fieldName] = error;
+    state = state.copyWith(fieldErrors: newErrors);
+  }
+
+  void clearFieldErrors() {
+    state = state.copyWith(fieldErrors: {});
   }
 }
 
@@ -145,6 +159,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   late TextEditingController _birthDateController;
   late String _avatarUrl;
   late bool _isAdmin;
+  late ValidatorUser _validator;
 
   @override
   void initState() {
@@ -162,6 +177,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     );
     _avatarUrl = u.avatarUrl;
     _isAdmin = u.isAdmin;
+    _validator = ValidatorUser();
   }
 
   bool _hasUnsavedChanges() {
@@ -177,21 +193,92 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         _isAdmin != widget.user.isAdmin;
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkFormValidity();
-    });
+  void _validateField(String fieldName, String value) {
+    String? error;
+
+    switch (fieldName) {
+      case 'name':
+        if (!ValidatorUser.validateName(value)) {
+          error =
+              value.isEmpty
+                  ? 'O nome é obrigatório'
+                  : 'O nome deve ter entre 3 e 50 caracteres e apenas letras';
+        }
+        break;
+      case 'email':
+        if (!ValidatorUser.validateEmail(value)) {
+          error =
+              value.isEmpty
+                  ? 'O email é obrigatório'
+                  : 'Email inválido. Use o formato exemplo@dominio.com';
+        }
+        break;
+      case 'phone':
+        if (!ValidatorUser.validatePhone(value)) {
+          error =
+              value.isEmpty
+                  ? 'O telefone é obrigatório'
+                  : 'Telefone inválido. Use (DDD) 9XXXX-XXXX ou (DDD) XXXX-XXXX';
+        }
+        break;
+      case 'address':
+        if (!ValidatorUser.validateAddress(value)) {
+          error =
+              value.isEmpty
+                  ? 'O endereço é obrigatório'
+                  : 'O endereço deve ter pelo menos 5 caracteres';
+        }
+        break;
+      case 'birthDate':
+        if (!ValidatorUser.validateBirthDate(
+          _birthDateController.text.isNotEmpty
+              ? DateTime.tryParse(
+                _birthDateController.text.split('/').reversed.join('-'),
+              )
+              : null,
+        )) {
+          error =
+              'Data de nascimento inválida. Você deve ter entre 12 e 120 anos';
+        }
+        break;
+      case 'avatarUrl':
+        if (!ValidatorUser.validateImageUrl(value)) {
+          error = 'URL da imagem inválida (use .jpg, .jpeg, .png ou .gif)';
+        }
+        break;
+    }
+
+    ref.read(editUserFormProvider.notifier).setFieldError(fieldName, error);
+    _checkFormValidity();
   }
 
   void _checkFormValidity() {
     final isValid =
-        _nameController.text.isNotEmpty &&
-        _emailController.text.isNotEmpty &&
-        _birthDateController.text.isNotEmpty;
+        ValidatorUser.validateName(_nameController.text) &&
+        ValidatorUser.validateEmail(_emailController.text) &&
+        ValidatorUser.validateBirthDate(
+          _birthDateController.text.isNotEmpty
+              ? DateTime.tryParse(
+                _birthDateController.text.split('/').reversed.join('-'),
+              )
+              : null,
+        );
 
     ref.read(editUserFormProvider.notifier).setValid(isValid);
+  }
+
+  bool _validateAllFields() {
+    ref.read(editUserFormProvider.notifier).clearFieldErrors();
+
+    _validateField('name', _nameController.text);
+    _validateField('email', _emailController.text);
+    _validateField('phone', _phoneController.text);
+    _validateField('address', _addressController.text);
+    _validateField('birthDate', _birthDateController.text);
+    _validateField('avatarUrl', _avatarUrl);
+
+    final formState = ref.read(editUserFormProvider);
+    return !formState.fieldErrors.values.any((error) => error != null);
   }
 
   @override
@@ -208,7 +295,15 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final formState = ref.read(editUserFormProvider);
     if (!formState.isValid) return;
 
-    // Confirmação antes de salvar
+    ref.read(editUserFormProvider.notifier).setSaving(true);
+
+    // Validate all fields
+    if (!_validateAllFields()) {
+      ref.read(editUserFormProvider.notifier).setSaving(false);
+      return;
+    }
+
+    // Confirmation dialog
     final confirmSave = await confirmationDialog(
       context,
       title: 'Confirmar alterações',
@@ -220,7 +315,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
       return;
     }
 
-    // Confirmação adicional se estiver alterando privilégios de admin
+    // Admin privileges confirmation
     if (_isAdmin != widget.user.isAdmin) {
       final adminConfirm = await confirmationDialog(
         context,
@@ -230,8 +325,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                 : 'Remover privilégios de admin',
         message:
             _isAdmin
-                ? 'Tem certeza que deseja tornar este usuário um administrador? Ele terá acesso completo ao sistema.'
-                : 'Tem certeza que deseja remover os privilégios de administrador deste usuário?',
+                ? 'Tem certeza que deseja tornar este usuário um administrador?'
+                : 'Tem certeza que deseja remover os privilégios de administrador?',
       );
 
       if (adminConfirm != true) {
@@ -240,22 +335,20 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
       }
     }
 
-    ref.read(editUserFormProvider.notifier).setSaving(true);
-
     try {
       final updatedUser = Users(
         id: widget.user.id,
-        name: _nameController.text,
-        email: _emailController.text,
-        phone: _phoneController.text,
-        address: _addressController.text,
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
+        address: _addressController.text.trim(),
         birthDate:
             _birthDateController.text.isNotEmpty
                 ? DateTime.tryParse(
                   _birthDateController.text.split('/').reversed.join('-'),
                 )
                 : null,
-        avatarUrl: _avatarUrl,
+        avatarUrl: _avatarUrl.trim(),
         isAdmin: _isAdmin,
         password: widget.user.password,
         workouts: widget.user.workouts,
@@ -295,13 +388,14 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         _birthDateController.text =
             "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
       });
-      _checkFormValidity();
+      _validateField('birthDate', _birthDateController.text);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(editUserFormProvider);
+    final theme = Theme.of(context);
 
     return Column(
       children: [
@@ -312,34 +406,36 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             setState(() {
               _avatarUrl = newUrl;
             });
-            _checkFormValidity();
+            _validateField('avatarUrl', newUrl);
           },
           isEditing: true,
         ),
         const SizedBox(height: 30),
         _buildEditableField(
           context,
-          title: "Nome",
+          title: "Nome*",
           controller: _nameController,
-          onChanged: (_) => _checkFormValidity(),
+          fieldName: 'name',
         ),
         _buildEditableField(
           context,
-          title: "Email",
+          title: "Email*",
           controller: _emailController,
-          onChanged: (_) => _checkFormValidity(),
+          keyboardType: TextInputType.emailAddress,
+          fieldName: 'email',
         ),
         _buildEditableField(
           context,
           title: "Telefone",
           controller: _phoneController,
-          onChanged: (_) => _checkFormValidity(),
+          keyboardType: TextInputType.phone,
+          fieldName: 'phone',
         ),
         _buildEditableField(
           context,
           title: "Logradouro",
           controller: _addressController,
-          onChanged: (_) => _checkFormValidity(),
+          fieldName: 'address',
         ),
         _buildDateField(context),
         if (formState.isAdminEditing) ...[
@@ -348,6 +444,13 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           const SizedBox(height: 16),
         ],
         const SizedBox(height: 30),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            '* Campos obrigatórios',
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
+          ),
+        ),
       ],
     );
   }
@@ -356,37 +459,60 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     BuildContext context, {
     required String title,
     required TextEditingController controller,
-    void Function(String)? onChanged,
+    required String fieldName,
+    TextInputType? keyboardType,
   }) {
     final theme = Theme.of(context);
+    final errorText = ref.watch(editUserFormProvider).fieldErrors[fieldName];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: controller,
-        onChanged: onChanged,
+        onChanged: (value) => _validateField(fieldName, value),
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: title,
+          errorText: errorText,
+          errorStyle: TextStyle(color: theme.colorScheme.error),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: theme.colorScheme.primary.withOpacity(0.5),
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary.withOpacity(0.5),
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary.withOpacity(0.3),
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+            borderSide: BorderSide(
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary,
+              width: 2,
+            ),
           ),
           filled: true,
-          fillColor: theme.colorScheme.primary.withOpacity(0.05),
+          fillColor:
+              errorText != null
+                  ? theme.colorScheme.errorContainer.withOpacity(0.1)
+                  : theme.colorScheme.primary.withOpacity(0.05),
           labelStyle: TextStyle(
-            color: theme.colorScheme.primary.withOpacity(0.8),
+            color:
+                errorText != null
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.primary.withOpacity(0.8),
           ),
         ),
       ),
@@ -395,6 +521,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
   Widget _buildDateField(BuildContext context) {
     final theme = Theme.of(context);
+    final errorText = ref.watch(editUserFormProvider).fieldErrors['birthDate'];
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -402,30 +529,56 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         controller: _birthDateController,
         readOnly: true,
         decoration: InputDecoration(
-          labelText: "Data de Nascimento",
+          labelText: "Data de Nascimento*",
+          errorText: errorText,
+          errorStyle: TextStyle(color: theme.colorScheme.error),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: theme.colorScheme.primary.withOpacity(0.5),
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary.withOpacity(0.5),
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: theme.colorScheme.primary.withOpacity(0.3),
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary.withOpacity(0.3),
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+            borderSide: BorderSide(
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary,
+              width: 2,
+            ),
           ),
           filled: true,
-          fillColor: theme.colorScheme.primary.withOpacity(0.05),
+          fillColor:
+              errorText != null
+                  ? theme.colorScheme.errorContainer.withOpacity(0.1)
+                  : theme.colorScheme.primary.withOpacity(0.05),
           labelStyle: TextStyle(
-            color: theme.colorScheme.primary.withOpacity(0.8),
+            color:
+                errorText != null
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.primary.withOpacity(0.8),
           ),
           suffixIcon: IconButton(
-            icon: Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+            icon: Icon(
+              Icons.calendar_today,
+              color:
+                  errorText != null
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary,
+            ),
             onPressed: () => _selectDate(context),
           ),
         ),
@@ -435,6 +588,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   Widget _buildAdminSwitch() {
+    final theme = Theme.of(context);
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -442,15 +597,23 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(Icons.admin_panel_settings, size: 24),
+            Icon(
+              Icons.admin_panel_settings,
+              size: 24,
+              color: theme.colorScheme.primary,
+            ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Privilégios de Administrador',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: theme.colorScheme.primary,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -470,32 +633,21 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                     context,
                     title: 'Conceder privilégios de admin',
                     message:
-                        'Tem certeza que deseja tornar este usuário um administrador? '
-                        'Ele terá acesso completo ao sistema.',
+                        'Tem certeza que deseja tornar este usuário um administrador?',
                   );
-
-                  if (confirm != true) {
-                    return;
-                  }
+                  if (confirm != true) return;
                 } else if (!value && _isAdmin) {
                   final confirm = await confirmationDialog(
                     context,
                     title: 'Remover privilégios de admin',
                     message:
-                        'Tem certeza que deseja remover os privilégios de '
-                        'administrador deste usuário?',
+                        'Tem certeza que deseja remover os privilégios de administrador?',
                   );
-
-                  if (confirm != true) {
-                    return;
-                  }
+                  if (confirm != true) return;
                 }
-
-                setState(() {
-                  _isAdmin = value;
-                });
+                setState(() => _isAdmin = value);
               },
-              activeColor: Theme.of(context).colorScheme.primary,
+              activeColor: theme.colorScheme.primary,
             ),
           ],
         ),
