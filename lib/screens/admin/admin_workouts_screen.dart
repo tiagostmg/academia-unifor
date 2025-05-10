@@ -26,9 +26,11 @@ class _AdminWorkoutsScreenState extends State<AdminWorkoutsScreen> {
     setState(() => isLoading = true);
     try {
       final users = await UserService().loadStudents();
-      // Ordena os usuários por nome (ordem alfabética)
-      users.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      
+      // Sort users alphabetically
+      users.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
+
       setState(() {
         allUsers = users;
         filteredUsers = users;
@@ -36,15 +38,18 @@ class _AdminWorkoutsScreenState extends State<AdminWorkoutsScreen> {
       });
     } catch (e) {
       setState(() => isLoading = false);
-      print('Erro ao carregar usuários: $e');
+      print('Error loading users: $e');
     }
   }
 
   void _filterUsers(String query) {
     setState(() {
-      filteredUsers = allUsers
-          .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredUsers =
+          allUsers
+              .where(
+                (user) => user.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
     });
   }
 
@@ -75,10 +80,7 @@ class _AdminWorkoutsScreenState extends State<AdminWorkoutsScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return ExercisesScreenBody(
-      users: filteredUsers,
-      onUserEdited: _loadUsers, // Passa a função para recarregar
-    );
+    return ExercisesScreenBody(users: filteredUsers, onUserEdited: _loadUsers);
   }
 }
 
@@ -94,39 +96,72 @@ class ExercisesScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: RefreshIndicator(
-        onRefresh: () async => onUserEdited(),
-        child: ListView.separated(
-          itemCount: users.length,
-          separatorBuilder: (_, __) => const Divider(),
-          itemBuilder: (context, index) {
-            final user = users[index];
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: user.avatarUrl.isNotEmpty
-                    ? NetworkImage(user.avatarUrl)
-                    : null,
-                child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
+    return
+    // Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 16),
+    //   child:
+    RefreshIndicator(
+      onRefresh: () async => onUserEdited(),
+      child: ListView.separated(
+        itemCount: users.length,
+        separatorBuilder: (_, __) => const Divider(height: 1),
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return ListTile(
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Container(
+                width: 52, // Increased size
+                height: 52, // Increased size
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image:
+                      user.avatarUrl.isNotEmpty
+                          ? DecorationImage(
+                            image: NetworkImage(user.avatarUrl),
+                            fit: BoxFit.cover,
+                          )
+                          : null,
+                ),
+                child:
+                    user.avatarUrl.isEmpty
+                        ? const Icon(Icons.person, size: 28) // Larger icon
+                        : null,
               ),
-              title: Text(user.name),
-              subtitle: Text('${user.workouts.length} Treinos'),
-              onTap: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditWorkoutsScreen(user: user),
-                  ),
-                );
-
-                // Recarrega os dados independentemente de ter atualização
-                onUserEdited();
-              },
-            );
-          },
-        ),
+            ),
+            title: Text(
+              user.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+            subtitle: Row(
+              children: [
+                const Icon(Icons.fitness_center, size: 18), // Dumbbell icon
+                const SizedBox(width: 6),
+                Text(
+                  '${user.workouts.length} treinos',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            contentPadding: const EdgeInsets.only(
+              right: 16,
+              bottom: 10,
+              top: 10,
+            ),
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditWorkoutsScreen(user: user),
+                ),
+              );
+              onUserEdited();
+            },
+          );
+        },
       ),
+      // ),
     );
   }
 }

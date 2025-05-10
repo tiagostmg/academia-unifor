@@ -106,51 +106,51 @@ class _StudentsScreenState extends State<StudentsScreen> {
     }
   }
 
-  Future<void> _addNewUser() async {
-    final newUser = await Navigator.push<Users>(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) => EditUserScreen(
-              user: Users(
-                id: 0,
-                name: '',
-                email: '',
-                phone: '',
-                address: '',
-                birthDate: null,
-                avatarUrl: '',
-                isAdmin: false,
-                password: '',
-                workouts: [],
-              ),
-            ),
-      ),
-    );
+  // Future<void> _addNewUser() async {
+  //   final newUser = await Navigator.push<Users>(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder:
+  //           (context) => EditUserScreen(
+  //             user: Users(
+  //               id: 0,
+  //               name: '',
+  //               email: '',
+  //               phone: '',
+  //               address: '',
+  //               birthDate: null,
+  //               avatarUrl: '',
+  //               isAdmin: false,
+  //               password: '',
+  //               workouts: [],
+  //             ),
+  //           ),
+  //     ),
+  //   );
 
-    if (newUser != null) {
-      try {
-        setState(() => _isLoading = true);
-        final createdUser = await _userService.postUser(newUser);
-        setState(() {
-          allUsers.add(createdUser);
-          allUsers.sort(
-            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-          );
-          filteredUsers = List.from(allUsers); // Nova instância
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Aluno adicionado com sucesso')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro ao adicionar aluno: $e')));
-      } finally {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
+  //   if (newUser != null) {
+  //     try {
+  //       setState(() => _isLoading = true);
+  //       final createdUser = await _userService.postUser(newUser);
+  //       setState(() {
+  //         allUsers.add(createdUser);
+  //         allUsers.sort(
+  //           (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+  //         );
+  //         filteredUsers = List.from(allUsers); // Nova instância
+  //       });
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(content: Text('Aluno adicionado com sucesso')),
+  //       );
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(
+  //         context,
+  //       ).showSnackBar(SnackBar(content: Text('Erro ao adicionar aluno: $e')));
+  //     } finally {
+  //       setState(() => _isLoading = false);
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

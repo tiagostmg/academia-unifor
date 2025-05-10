@@ -243,7 +243,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   late TextEditingController _descController;
   bool _isSaving = false;
   bool _hasChanges = false;
-  final NotificationsValidator _validator = NotificationsValidator();
+  // final NotificationsValidator _validator = NotificationsValidator();
   final Map<String, String?> _fieldErrors = {
     'title': null,
     'description': null,
