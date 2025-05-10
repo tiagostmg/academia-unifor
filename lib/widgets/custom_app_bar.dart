@@ -48,19 +48,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: showNotificationIcon
-          ? [
-              IconButton(
-                icon: Icon(
-                  Icons.notifications,
-                  color: theme.colorScheme.onPrimary,
+      actions:
+          showNotificationIcon
+              ? [
+                IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                  onPressed: () {
+                    _showNotificationsModal(context);
+                  },
                 ),
-                onPressed: () {
-                  _showNotificationsModal(context);
-                },
-              ),
-            ]
-          : null,
+                const SizedBox(width: 8.0), // Adicionamos um SizedBox aqui
+              ]
+              : null,
     );
   }
 

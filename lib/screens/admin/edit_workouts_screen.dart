@@ -33,9 +33,7 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
             final equipment = await EquipmentService().getEquipmentById(
               exercise.equipmentId!,
             );
-            if (equipment != null) {
-              equipmentMap[exercise.equipmentId!] = equipment;
-            }
+            equipmentMap[exercise.equipmentId!] = equipment;
           }
         }
       }

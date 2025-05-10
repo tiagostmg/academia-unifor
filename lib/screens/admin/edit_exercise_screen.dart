@@ -230,10 +230,8 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                 ? await UserService().postWorkout(workout)
                 : await UserService().putWorkout(workout);
 
-        if (savedWorkout != null) {
-          workout = savedWorkout;
-          _originalExercises = List<Exercise>.from(workout.exercises);
-        }
+        workout = savedWorkout;
+        _originalExercises = List<Exercise>.from(workout.exercises);
 
         for (int id in exercisesToDelete) {
           await UserService().deleteExercise(id);
@@ -251,7 +249,7 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
 
         final updatedWorkout = await UserService().getWorkoutById(workout.id);
         if (mounted) {
-          Navigator.pop(context, updatedWorkout ?? workout);
+          Navigator.pop(context, updatedWorkout);
         }
       } catch (e) {
         print('Erro ao salvar: $e');

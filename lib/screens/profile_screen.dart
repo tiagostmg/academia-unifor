@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -42,183 +41,102 @@ class ProfileBody extends ConsumerWidget {
     }
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          const SizedBox(height: 40),
-          // Linha com foto à esquerda e nome/email à direita
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Foto
-                ProfileAvatar(avatarUrl: user.avatarUrl),
-                const SizedBox(width: 20),
-                // Nome e Email
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user.name,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color:
-                              Theme.of(context).textTheme.headlineLarge?.color,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        user.email,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Theme.of(
-                            context,
-                          ).textTheme.bodyLarge?.color?.withOpacity(0.7),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ProfileInfo(user: user),
+          // Foto centralizada
+          Center(child: ProfileAvatar(avatarUrl: user.avatarUrl)),
+          const SizedBox(height: 20),
+
+          // Nome
+          Text(
+            user.name,
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 60),
+          const SizedBox(height: 4),
+
+          // Email
+          Text(
+            user.email,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.color?.withOpacity(0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 30),
+
+          // Informações básicas
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildInfoItem(
+                context,
+                "Data de Nascimento",
+                user.birthDate != null
+                    ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
+                    : 'Não informada',
+              ),
+              const SizedBox(height: 16),
+              _buildInfoItem(context, "Endereço", user.address),
+              const SizedBox(height: 16),
+              _buildInfoItem(context, "Telefone", user.phone),
+            ],
+          ),
+          const SizedBox(height: 30),
+
+          // Botões de ação
+          Column(
+            children: [
+              CustomButton(
+                text: "Editar Perfil",
+                icon: Icons.edit,
+                onPressed:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditUserScreen(user: user),
+                      ),
+                    ),
+              ),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: "Sair da Conta",
+                icon: Icons.logout,
+                color1: const Color(0xFFB00020),
+                color2: const Color(0xFFEF5350),
+                onPressed: () {
+                  ref.read(userProvider.notifier).state = null;
+                  context.go('/');
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
-}
 
-class ProfileInfo extends ConsumerWidget {
-  final Users user;
-  const ProfileInfo({super.key, required this.user});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget _buildInfoItem(BuildContext context, String title, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSimpleInfoField(
-          context,
-          "Data de Nascimento",
-          user.birthDate != null
-              ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
-              : 'Não informada',
-        ),
-
-        const SizedBox(height: 16),
-
-        // Logradouro
-        _buildSimpleInfoField(context, "Logradouro", user.address),
-
-        const SizedBox(height: 16),
-
-        // Telefone
-        _buildSimpleInfoField(context, "Telefone", user.phone),
-
-        const SizedBox(height: 16),
-
-        SizedBox(
-          width: double.infinity,
-          child: CustomButton(
-            text: "Editar Perfil",
-            icon: Icons.edit,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditUserScreen(user: user),
-                ),
-              );
-            },
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withAlpha(80),
           ),
         ),
-        SizedBox(
-          width: double.infinity,
-          child: CustomButton(
-            text: "Sair da Conta",
-            icon: Icons.logout,
-            color1: const Color(0xFFB00020),
-            color2: const Color(0xFFEF5350),
-            onPressed: () {
-              ref.read(userProvider.notifier).state = null;
-              context.go('/');
-            },
-          ),
-        ),
-
-        ListTile(
-          leading: Icon(
-            Icons.settings,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          title: const Text("Configurações"),
-          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-          onTap: () {},
-        ),
-
-        ListTile(
-          leading: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
-          title: const Text("Compartilhar App"),
-          trailing: const Icon(Icons.arrow_forward_ios, size: 18),
-          onTap: () async {
-            final Uri url = Uri.parse(
-              "https://github.com/carlosxfelipe/academia-unifor",
-            );
-            try {
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url, mode: LaunchMode.externalApplication);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Não foi possível abrir o link."),
-                  ),
-                );
-              }
-            } catch (e) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("Erro: ${e.toString()}")));
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSimpleInfoField(
-    BuildContext context,
-    String title,
-    String value,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title.isNotEmpty)
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.color?.withOpacity(0.6),
-            ),
-          ),
         const SizedBox(height: 4),
         Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            color: Theme.of(context).textTheme.bodyLarge?.color,
-          ),
+          value.isNotEmpty ? value : 'Não informado',
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],
     );

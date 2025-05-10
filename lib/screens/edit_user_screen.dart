@@ -159,7 +159,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   late TextEditingController _birthDateController;
   late String _avatarUrl;
   late bool _isAdmin;
-  late ValidatorUser _validator;
+  // late ValidatorUser _validator;
 
   @override
   void initState() {
@@ -177,7 +177,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     );
     _avatarUrl = u.avatarUrl;
     _isAdmin = u.isAdmin;
-    _validator = ValidatorUser();
+    // _validator = ValidatorUser();
   }
 
   bool _hasUnsavedChanges() {
