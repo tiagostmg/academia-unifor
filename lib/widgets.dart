@@ -7,6 +7,7 @@ export 'package:academia_unifor/widgets/confirmation_dialog_widget.dart';
 export 'package:academia_unifor/widgets/schedule_widget.dart';
 export 'package:academia_unifor/widgets/contact_widget.dart';
 export 'package:academia_unifor/widgets/profile_avatar_widget.dart';
+export 'package:academia_unifor/widgets/notification_button.dart';
 
 export 'package:academia_unifor/widgets/validator/validator_user_widget.dart';
 export 'package:academia_unifor/widgets/validator/validator_equipment_widget.dart';
