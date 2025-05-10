@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -132,10 +133,52 @@ class ProfileBody extends ConsumerWidget {
           _buildInfoItem(context, "Endereço", user.address),
           const SizedBox(height: 16),
           _buildInfoItem(context, "Telefone", user.phone),
+          const SizedBox(height: 16),
 
-          const SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  title: const Text("Configurações"),
+                  trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.share,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  title: const Text("Compartilhar App"),
+                  trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                  onTap: () async {
+                    final Uri url = Uri.parse(
+                      "https://github.com/carlosxfelipe/academia-unifor",
+                    );
+                    if (!await launchUrl(
+                      url,
+                      mode: LaunchMode.externalApplication,
+                    )) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Não foi possível abrir o link."),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 CustomButton(
