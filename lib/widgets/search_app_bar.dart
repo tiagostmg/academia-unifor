@@ -68,6 +68,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
                     );
                   },
                 ),
+                SizedBox(width: 8),
               ]
               : null,
     );

@@ -12,15 +12,27 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(color: theme.colorScheme.primary),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 2,
-          child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: CustomAppBar(),
-            body: const ProfileBody(),
+          child: Stack(
+            children: [
+              // Blue background that covers top half
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 286,
+                // MediaQuery.of(context).size.height * 0.3 + 10,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: theme.colorScheme.primary),
+                ),
+              ),
+              // The actual profile content
+              const ProfileBody(),
+            ],
           ),
         ),
       ),
@@ -34,44 +46,81 @@ class ProfileBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    final theme = Theme.of(context);
 
     if (user == null) {
       return const Center(child: Text("Nenhum usuário logado."));
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          const SizedBox(height: 20),
-          // Foto centralizada
-          Center(child: ProfileAvatar(avatarUrl: user.avatarUrl)),
+          // Notification bar with blue background
+          Container(
+            color: theme.colorScheme.primary,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [NotificationButton()],
+              ),
+            ),
+          ),
 
+          const SizedBox(height: 28),
+          Center(
+            child: Stack(children: [ProfileAvatar(avatarUrl: user.avatarUrl)]),
+          ),
           const SizedBox(height: 20),
 
-          // Nome
           Text(
             user.name,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-
-          // Email
-          Text(
-            user.email,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.color?.withOpacity(0.7),
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 30),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     SizedBox(width: 56),
+          //     Text(
+          //       user.name,
+          //       style: theme.textTheme.headlineMedium?.copyWith(
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //       textAlign: TextAlign.center,
+          //     ),
+          //     Row(
+          //       mainAxisAlignment: MainAxisAlignment.end,
+          //       children: [
+          //         IconButton(
+          //           onPressed:
+          //               () => Navigator.push(
+          //                 context,
+          //                 MaterialPageRoute(
+          //                   builder: (context) => EditUserScreen(user: user),
+          //                 ),
+          //               ),
+          //           icon: Icon(Icons.edit, color: theme.colorScheme.onPrimary),
+          //         ),
+          //         SizedBox(width: 8),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          const SizedBox(height: 20),
 
-          // Informações básicas
+          Text(
+            user.email,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.textTheme.bodyLarge?.color?.withAlpha(180),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+
           _buildInfoItem(
             context,
             "Data de Nascimento",
@@ -100,7 +149,6 @@ class ProfileBody extends ConsumerWidget {
                         ),
                       ),
                 ),
-                // const SizedBox(height: 10),
                 CustomButton(
                   text: "Sair da Conta",
                   icon: Icons.logout,
@@ -130,10 +178,9 @@ class ProfileBody extends ConsumerWidget {
             Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
                 color: Theme.of(
                   context,
-                ).textTheme.bodyMedium?.color?.withAlpha(80),
+                ).textTheme.bodyMedium?.color?.withAlpha(180),
               ),
             ),
             const SizedBox(height: 4),
