@@ -96,11 +96,7 @@ class ExercisesScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    // Padding(
-    //   padding: const EdgeInsets.symmetric(horizontal: 16),
-    //   child:
-    RefreshIndicator(
+    return RefreshIndicator(
       onRefresh: () async => onUserEdited(),
       child: ListView.separated(
         itemCount: users.length,
@@ -111,8 +107,8 @@ class ExercisesScreenBody extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Container(
-                width: 52, // Increased size
-                height: 52, // Increased size
+                width: 52,
+                height: 52,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image:
@@ -125,7 +121,7 @@ class ExercisesScreenBody extends StatelessWidget {
                 ),
                 child:
                     user.avatarUrl.isEmpty
-                        ? const Icon(Icons.person, size: 28) // Larger icon
+                        ? const Icon(Icons.person, size: 28)
                         : null,
               ),
             ),
@@ -135,11 +131,11 @@ class ExercisesScreenBody extends StatelessWidget {
             ),
             subtitle: Row(
               children: [
-                const Icon(Icons.fitness_center, size: 18), // Dumbbell icon
-                const SizedBox(width: 6),
+                const Icon(Icons.fitness_center, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
                 Text(
                   '${user.workouts.length} treinos',
-                  style: const TextStyle(fontSize: 14),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -161,7 +157,6 @@ class ExercisesScreenBody extends StatelessWidget {
           );
         },
       ),
-      // ),
     );
   }
 }

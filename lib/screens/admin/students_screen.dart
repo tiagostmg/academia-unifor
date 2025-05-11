@@ -212,22 +212,39 @@ class StudentsScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    return RefreshIndicator(
+      onRefresh: () async {},
       child: ListView.separated(
         itemCount: users.length,
-        separatorBuilder: (_, __) => const Divider(),
+        separatorBuilder: (_, __) => const Divider(height: 1),
         itemBuilder: (context, index) {
           final user = users[index];
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage:
-                  user.avatarUrl.isNotEmpty
-                      ? NetworkImage(user.avatarUrl)
-                      : null,
-              child: user.avatarUrl.isEmpty ? const Icon(Icons.person) : null,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image:
+                      user.avatarUrl.isNotEmpty
+                          ? DecorationImage(
+                            image: NetworkImage(user.avatarUrl),
+                            fit: BoxFit.cover,
+                          )
+                          : null,
+                ),
+                child:
+                    user.avatarUrl.isEmpty
+                        ? const Icon(Icons.person, size: 28)
+                        : null,
+              ),
             ),
-            title: Text(user.name),
+            title: Text(
+              user.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -248,6 +265,11 @@ class StudentsScreenBody extends StatelessWidget {
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () async => await onDeleteUser(user.id),
+            ),
+            contentPadding: const EdgeInsets.only(
+              right: 16,
+              bottom: 10,
+              top: 10,
             ),
             onTap: () async {
               final updatedUser = await Navigator.push<Users>(
