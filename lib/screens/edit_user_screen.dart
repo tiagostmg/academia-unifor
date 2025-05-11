@@ -439,11 +439,9 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ),
         _buildDateField(context),
         if (formState.isAdminEditing) ...[
-          const SizedBox(height: 16),
           _buildAdminSwitch(),
           const SizedBox(height: 16),
         ],
-        const SizedBox(height: 30),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
@@ -507,12 +505,12 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           fillColor:
               errorText != null
                   ? theme.colorScheme.errorContainer.withAlpha(26)
-                  : theme.colorScheme.primary.withAlpha(13),
+                  : theme.colorScheme.primary,
           labelStyle: TextStyle(
             color:
                 errorText != null
                     ? theme.colorScheme.error
-                    : theme.colorScheme.primary.withAlpha(204),
+                    : theme.colorScheme.onPrimary,
           ),
         ),
       ),
@@ -564,12 +562,12 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           fillColor:
               errorText != null
                   ? theme.colorScheme.errorContainer.withAlpha(26)
-                  : theme.colorScheme.primary.withAlpha(13),
+                  : theme.colorScheme.primary,
           labelStyle: TextStyle(
             color:
                 errorText != null
                     ? theme.colorScheme.error
-                    : theme.colorScheme.primary.withAlpha(204),
+                    : theme.colorScheme.onPrimary,
           ),
           suffixIcon: IconButton(
             icon: Icon(
@@ -593,6 +591,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: theme.colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -600,7 +599,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             Icon(
               Icons.admin_panel_settings,
               size: 24,
-              color: theme.colorScheme.primary,
+              color: theme.colorScheme.onPrimary,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -612,7 +611,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: theme.colorScheme.primary,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -620,7 +619,10 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                     _isAdmin
                         ? 'Este usuário tem acesso total ao sistema'
                         : 'Este usuário tem acesso limitado',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
@@ -647,7 +649,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                 }
                 setState(() => _isAdmin = value);
               },
-              activeColor: theme.colorScheme.primary,
+              activeColor: theme.colorScheme.onPrimary,
             ),
           ],
         ),
