@@ -186,7 +186,7 @@ class NotificationsScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: ListView.separated(
         itemCount: notifications.length,
         separatorBuilder: (_, __) => const Divider(),

@@ -39,8 +39,12 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
   Future<void> _refreshData() async {
     try {
       final categories = await _equipmentService.loadCategories();
-      final items = await _equipmentService.loadEquipment()..sort((a, b) => a.name.compareTo(b.name));
-      final counts = {for (var c in categories) c.category: c.total};
+      final items =
+          await _equipmentService.loadEquipment()
+            ..sort((a, b) => a.name.compareTo(b.name));
+      final counts = {
+        for (var c in categories) c.category: c.items.length,
+      }; // Mudei para aparecer a quantidade de itens por categoria
 
       setState(() {
         allItems = items;
@@ -50,9 +54,9 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar dados: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao carregar dados: $e')));
     }
   }
 
@@ -68,12 +72,13 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       final selected = categories.firstWhere((c) => c.category == category);
       setState(() {
         selectedCategory = category;
-        selectedItems = allItems.where((item) => item.categoryId == selected.id).toList();
+        selectedItems =
+            allItems.where((item) => item.categoryId == selected.id).toList();
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar categoria: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao carregar categoria: $e')));
     }
   }
 
@@ -86,12 +91,13 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       return;
     }
 
-    final filtered = allItems.where((item) {
-      final lower = query.toLowerCase();
-      return item.name.toLowerCase().contains(lower) ||
-          item.brand.toLowerCase().contains(lower) ||
-          item.model.toLowerCase().contains(lower);
-    }).toList();
+    final filtered =
+        allItems.where((item) {
+          final lower = query.toLowerCase();
+          return item.name.toLowerCase().contains(lower) ||
+              item.brand.toLowerCase().contains(lower) ||
+              item.model.toLowerCase().contains(lower);
+        }).toList();
 
     setState(() {
       selectedCategory = 'Resultados da busca';
@@ -123,7 +129,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
 
   Future<void> _showAddEquipmentDialog() async {
     final categories = await _equipmentService.loadCategories();
-    
+
     String? selectedCategory;
     final nameController = TextEditingController();
     final brandController = TextEditingController();
@@ -145,13 +151,15 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                   children: [
                     DropdownButtonFormField<String>(
                       decoration: const InputDecoration(labelText: 'Categoria'),
-                      items: categories.map((category) {
-                        return DropdownMenuItem(
-                          value: category.category,
-                          child: Text(category.category),
-                        );
-                      }).toList(),
-                      onChanged: (value) => setState(() => selectedCategory = value),
+                      items:
+                          categories.map((category) {
+                            return DropdownMenuItem(
+                              value: category.category,
+                              child: Text(category.category),
+                            );
+                          }).toList(),
+                      onChanged:
+                          (value) => setState(() => selectedCategory = value),
                       hint: const Text('Selecione uma categoria'),
                     ),
                     TextField(
@@ -168,12 +176,16 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                     ),
                     TextField(
                       controller: quantityController,
-                      decoration: const InputDecoration(labelText: 'Quantidade'),
+                      decoration: const InputDecoration(
+                        labelText: 'Quantidade',
+                      ),
                       keyboardType: TextInputType.number,
                     ),
                     TextField(
                       controller: imageController,
-                      decoration: const InputDecoration(labelText: 'URL da Imagem'),
+                      decoration: const InputDecoration(
+                        labelText: 'URL da Imagem',
+                      ),
                     ),
                     CheckboxListTile(
                       title: const Text('Operacional'),
@@ -194,14 +206,21 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (selectedCategory == null || nameController.text.isEmpty) {
+                    if (selectedCategory == null ||
+                        nameController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Preencha pelo menos a categoria e o nome')),
+                        const SnackBar(
+                          content: Text(
+                            'Preencha pelo menos a categoria e o nome',
+                          ),
+                        ),
                       );
                       return;
                     }
 
-                    final category = categories.firstWhere((c) => c.category == selectedCategory);
+                    final category = categories.firstWhere(
+                      (c) => c.category == selectedCategory,
+                    );
                     final newEquipment = EquipmentItem(
                       id: 0, // ID será gerado pelo servidor
                       categoryId: category.id,
@@ -219,7 +238,9 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       await _refreshData(); // Atualiza a lista após adicionar
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Erro ao adicionar equipamento: $e')),
+                        SnackBar(
+                          content: Text('Erro ao adicionar equipamento: $e'),
+                        ),
                       );
                     }
                   },
@@ -243,14 +264,15 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       appBar: SearchAppBar(
         onSearchChanged: _onSearchChanged,
         showChatIcon: false,
-        onBack: selectedCategory != null
-            ? () {
-                setState(() {
-                  selectedCategory = null;
-                  selectedItems = [];
-                });
-              }
-            : null,
+        onBack:
+            selectedCategory != null
+                ? () {
+                  setState(() {
+                    selectedCategory = null;
+                    selectedItems = [];
+                  });
+                }
+                : null,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddEquipmentDialog,
@@ -259,26 +281,27 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: selectedCategory == null
-              ? ListCategories(
-                  categoryCounts: categoryCounts,
-                  chipColor: chipColor,
-                  textColor: textColor,
-                  onChipTap: _loadCategory,
-                )
-              : SelectedCategoryList(
-                  selectedCategory: selectedCategory!,
-                  items: selectedItems,
-                  onBack: () {
-                    setState(() {
-                      selectedCategory = null;
-                      selectedItems = [];
-                    });
-                  },
-                  fallbackImage: fallbackImageWithBorder,
-                  isEditMode: true,
-                  onDataUpdated: _refreshData,
-                ),
+          child:
+              selectedCategory == null
+                  ? ListCategories(
+                    categoryCounts: categoryCounts,
+                    chipColor: chipColor,
+                    textColor: textColor,
+                    onChipTap: _loadCategory,
+                  )
+                  : SelectedCategoryList(
+                    selectedCategory: selectedCategory!,
+                    items: selectedItems,
+                    onBack: () {
+                      setState(() {
+                        selectedCategory = null;
+                        selectedItems = [];
+                      });
+                    },
+                    fallbackImage: fallbackImageWithBorder,
+                    isEditMode: true,
+                    onDataUpdated: _refreshData,
+                  ),
         ),
       ),
     );

@@ -132,7 +132,7 @@ class ProfileBody extends ConsumerWidget {
           const SizedBox(height: 16),
           _buildInfoItem(context, "Endereço", user.address),
           const SizedBox(height: 16),
-          _buildInfoItem(context, "Telefone", user.phone),
+          _buildInfoItem(context, "Telefone", formatPhoneNumber(user.phone)),
           const SizedBox(height: 16),
 
           Padding(
@@ -236,4 +236,14 @@ class ProfileBody extends ConsumerWidget {
       ),
     );
   }
+}
+
+String formatPhoneNumber(String phone) {
+  final cleaned = phone.replaceAll(RegExp(r'\D'), '');
+  if (cleaned.length == 11) {
+    return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 7)}-${cleaned.substring(7)}';
+  } else if (cleaned.length == 10) {
+    return '(${cleaned.substring(0, 2)}) ${cleaned.substring(2, 6)}-${cleaned.substring(6)}';
+  }
+  return phone;
 }
