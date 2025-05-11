@@ -481,7 +481,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               color:
                   errorText != null
                       ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withOpacity(0.5),
+                      : theme.colorScheme.primary.withAlpha(128),
             ),
           ),
           enabledBorder: OutlineInputBorder(
@@ -490,7 +490,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               color:
                   errorText != null
                       ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withOpacity(0.3),
+                      : theme.colorScheme.primary.withAlpha(77),
             ),
           ),
           focusedBorder: OutlineInputBorder(
@@ -506,13 +506,13 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           filled: true,
           fillColor:
               errorText != null
-                  ? theme.colorScheme.errorContainer.withOpacity(0.1)
-                  : theme.colorScheme.primary.withOpacity(0.05),
+                  ? theme.colorScheme.errorContainer.withAlpha(26)
+                  : theme.colorScheme.primary.withAlpha(13),
           labelStyle: TextStyle(
             color:
                 errorText != null
                     ? theme.colorScheme.error
-                    : theme.colorScheme.primary.withOpacity(0.8),
+                    : theme.colorScheme.primary.withAlpha(204),
           ),
         ),
       ),
@@ -538,7 +538,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               color:
                   errorText != null
                       ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withOpacity(0.5),
+                      : theme.colorScheme.primary.withAlpha(128),
             ),
           ),
           enabledBorder: OutlineInputBorder(
@@ -547,7 +547,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               color:
                   errorText != null
                       ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withOpacity(0.3),
+                      : theme.colorScheme.primary.withAlpha(77),
             ),
           ),
           focusedBorder: OutlineInputBorder(
@@ -563,13 +563,13 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           filled: true,
           fillColor:
               errorText != null
-                  ? theme.colorScheme.errorContainer.withOpacity(0.1)
-                  : theme.colorScheme.primary.withOpacity(0.05),
+                  ? theme.colorScheme.errorContainer.withAlpha(26)
+                  : theme.colorScheme.primary.withAlpha(13),
           labelStyle: TextStyle(
             color:
                 errorText != null
                     ? theme.colorScheme.error
-                    : theme.colorScheme.primary.withOpacity(0.8),
+                    : theme.colorScheme.primary.withAlpha(204),
           ),
           suffixIcon: IconButton(
             icon: Icon(
