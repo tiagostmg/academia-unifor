@@ -14,26 +14,14 @@ class ProfileScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 2,
-          child: Stack(
-            children: [
-              // Blue background that covers top half
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 286,
-                // MediaQuery.of(context).size.height * 0.3 + 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: theme.colorScheme.primary),
-                ),
-              ),
-              // The actual profile content
-              const ProfileBody(),
-            ],
+          child: Scaffold(
+            backgroundColor: theme.scaffoldBackgroundColor,
+            appBar: CustomAppBar(),
+            body: const ProfileBody(),
           ),
         ),
       ),
@@ -54,65 +42,40 @@ class ProfileBody extends ConsumerWidget {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          // Notification bar with blue background
           Container(
             color: theme.colorScheme.primary,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [NotificationButton()],
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                children: [
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.end,
+                  //   children: [NotificationButton()],
+                  // ),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: Stack(
+                      children: [ProfileAvatar(avatarUrl: user.avatarUrl)],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  Text(
+                    user.name,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
             ),
           ),
 
-          const SizedBox(height: 28),
-          Center(
-            child: Stack(children: [ProfileAvatar(avatarUrl: user.avatarUrl)]),
-          ),
-          const SizedBox(height: 20),
-
-          Text(
-            user.name,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     SizedBox(width: 56),
-          //     Text(
-          //       user.name,
-          //       style: theme.textTheme.headlineMedium?.copyWith(
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //       textAlign: TextAlign.center,
-          //     ),
-          //     Row(
-          //       mainAxisAlignment: MainAxisAlignment.end,
-          //       children: [
-          //         IconButton(
-          //           onPressed:
-          //               () => Navigator.push(
-          //                 context,
-          //                 MaterialPageRoute(
-          //                   builder: (context) => EditUserScreen(user: user),
-          //                 ),
-          //               ),
-          //           icon: Icon(Icons.edit, color: theme.colorScheme.onPrimary),
-          //         ),
-          //         SizedBox(width: 8),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-          const SizedBox(height: 20),
-
+          const SizedBox(height: 8),
           Text(
             user.email,
             style: theme.textTheme.bodyLarge?.copyWith(

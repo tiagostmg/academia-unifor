@@ -1,5 +1,4 @@
 import 'package:academia_unifor/models/users.dart';
-import 'package:academia_unifor/screens/edit_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:academia_unifor/widgets.dart';
@@ -19,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
         child: CustomConvexBottomBar(
-          currentIndex: 0, 
+          currentIndex: 0,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(),
@@ -52,12 +51,12 @@ class HomeBody extends ConsumerWidget {
 
   bool _hasMissingFields(Users? user) {
     if (user == null) return true;
-    
-    return user.name.isEmpty || 
-           user.email.isEmpty || 
-           user.phone.isEmpty || 
-           user.address.isEmpty || 
-           user.birthDate == null;
+
+    return user.name.isEmpty ||
+        user.email.isEmpty ||
+        user.phone.isEmpty ||
+        user.address.isEmpty ||
+        user.birthDate == null;
   }
 
   @override
@@ -77,7 +76,7 @@ class HomeBody extends ConsumerWidget {
             const SizedBox(height: 15),
             _buildMissingFieldsCard(context, user!),
           ],
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           const ContactWidget(),
           const SizedBox(height: 100),
         ],
@@ -89,11 +88,9 @@ class HomeBody extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Card(
-        elevation: 4,
+        // elevation: 4,
         color: Theme.of(context).colorScheme.primary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -101,10 +98,7 @@ class HomeBody extends ConsumerWidget {
             children: [
               const Text(
                 'Perfil Incompleto',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const Text(

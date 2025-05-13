@@ -2,18 +2,20 @@ import 'package:academia_unifor/models.dart';
 import 'package:dio/dio.dart';
 
 class UserService {
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://localhost:5404', // altere para a URL da sua API
-    connectTimeout: Duration(seconds: 5),
-    receiveTimeout: Duration(seconds: 5),
-  ));
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://192.168.0.110:5404',
+      connectTimeout: Duration(seconds: 5),
+      receiveTimeout: Duration(seconds: 5),
+    ),
+  );
 
   Future<int> login(String email, String password) async {
     try {
-      final response = await _dio.post('/api/User/login', data: {
-        'email': email,
-        'password': password,
-      });
+      final response = await _dio.post(
+        '/api/User/login',
+        data: {'email': email, 'password': password},
+      );
       return response.statusCode ?? 0;
     } catch (e) {
       print('Erro ao fazer login: $e');
@@ -23,7 +25,7 @@ class UserService {
 
   Future<List<Users>> loadUsers() async {
     try {
-      final response = await _dio.get('/api/User/complete'); 
+      final response = await _dio.get('/api/User/complete');
       final List<dynamic> data = response.data;
       return data.map((e) => Users.fromJson(e)).toList();
     } catch (e) {
@@ -34,7 +36,7 @@ class UserService {
 
   Future<List<Users>> loadStudents() async {
     try {
-      final response = await _dio.get('/api/User/complete/students'); 
+      final response = await _dio.get('/api/User/complete/students');
       final List<dynamic> data = response.data;
       return data.map((e) => Users.fromJson(e)).toList();
     } catch (e) {
@@ -62,9 +64,13 @@ class UserService {
       rethrow;
     }
   }
+
   Future<Users> putUser(Users user) async {
     try {
-      final response = await _dio.put('/api/User/${user.id}', data: user.toJson());
+      final response = await _dio.put(
+        '/api/User/${user.id}',
+        data: user.toJson(),
+      );
       return Users.fromJson(response.data);
     } catch (e) {
       print('Erro ao adicionar usuário: $e');
@@ -81,8 +87,6 @@ class UserService {
       rethrow;
     }
   }
-
-
 
   Future<List<Workout>> getWorkoutsByUserId(int id) async {
     try {
@@ -103,17 +107,21 @@ class UserService {
       print('Erro ao adicionar treino: $e');
       rethrow;
     }
-  
   }
+
   Future<Workout> putWorkout(Workout workout) async {
     try {
-      final response = await _dio.put('/api/Workout/${workout.id}', data: workout.toJson());
+      final response = await _dio.put(
+        '/api/Workout/${workout.id}',
+        data: workout.toJson(),
+      );
       return Workout.fromJson(response.data);
     } catch (e) {
       print('Erro ao adicionar treino: $e');
       rethrow;
     }
   }
+
   Future<Workout> deleteWorkout(int id) async {
     try {
       final response = await _dio.delete('/api/Workout/$id');
@@ -123,24 +131,33 @@ class UserService {
       rethrow;
     }
   }
+
   Future<Exercise> postExercise(Exercise exercise) async {
     try {
-      final response = await _dio.post('/api/Exercise', data: exercise.toJson());
+      final response = await _dio.post(
+        '/api/Exercise',
+        data: exercise.toJson(),
+      );
       return Exercise.fromJson(response.data);
     } catch (e) {
       print('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
+
   Future<Exercise> putExercise(Exercise exercise) async {
     try {
-      final response = await _dio.put('/api/Exercise/${exercise.id}', data: exercise.toJson());
+      final response = await _dio.put(
+        '/api/Exercise/${exercise.id}',
+        data: exercise.toJson(),
+      );
       return Exercise.fromJson(response.data);
     } catch (e) {
       print('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
+
   Future<Exercise> deleteExercise(int id) async {
     try {
       final response = await _dio.delete('/api/Exercise/$id');
@@ -160,6 +177,4 @@ class UserService {
       rethrow;
     }
   }
-
-
 }
