@@ -230,6 +230,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       quantity: int.tryParse(quantityController.text) ?? 1,
                       image: imageController.text,
                       operational: operationalValue,
+                      quantityInUse: 0,
                     );
 
                     try {

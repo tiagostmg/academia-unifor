@@ -37,6 +37,19 @@ class EquipmentService {
     }
   }
 
+  Future<int> getExerciseCount(int id) async {
+    try {
+      final response = await _dio.get('/api/Exercise/count/{$id}');
+      if (response.statusCode == 200) {
+        return response.data['count'];
+      } else {
+        throw Exception('Erro ao buscar dados: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Erro: $e');
+    }
+  }
+
   Future<List<EquipmentItem>> loadEquipment() async {
     try {
       final response = await _dio.get('/api/GymEquipment');

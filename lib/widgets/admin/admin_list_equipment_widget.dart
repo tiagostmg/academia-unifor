@@ -134,6 +134,7 @@ class SelectedCategoryList extends StatelessWidget {
                                               item.quantity,
                                           image: imageController.text,
                                           operational: operationalValue,
+                                          quantityInUse: item.quantityInUse,
                                         );
 
                                         try {
@@ -235,7 +236,7 @@ class SelectedCategoryList extends StatelessWidget {
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: SizedBox(
-                  height: 150,
+                  height: 170,
                   child: Row(
                     children: [
                       Expanded(
@@ -276,6 +277,14 @@ class SelectedCategoryList extends StatelessWidget {
                               ),
                               Text(
                                 'Qtd: ${item.quantity}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                ),
+                              ),
+                              Text(
+                                'Exercícios usando: ${item.quantityInUse}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color:

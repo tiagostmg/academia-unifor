@@ -7,6 +7,7 @@ class EquipmentItem {
   int quantity;
   String image;
   bool operational;
+  int quantityInUse;
 
   EquipmentItem({
     required this.id,
@@ -17,6 +18,7 @@ class EquipmentItem {
     required this.quantity,
     required this.image,
     required this.operational,
+    required this.quantityInUse,
   });
 
   factory EquipmentItem.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class EquipmentItem {
       quantity: json['quantity'],
       image: json['image'] ?? '',
       operational: json['operational'] ?? true,
+      quantityInUse: json['quantityInUse'] ?? 0,
     );
   }
 
@@ -42,6 +45,7 @@ class EquipmentItem {
       'quantity': quantity,
       'image': image,
       'operational': operational,
+      'quantityInUse': quantityInUse,
     };
   }
 }
