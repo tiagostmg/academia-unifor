@@ -145,58 +145,75 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
           builder: (context, setState) {
             return AlertDialog(
               title: const Text('Adicionar Novo Equipamento'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(labelText: 'Categoria'),
-                      items:
-                          categories.map((category) {
-                            return DropdownMenuItem(
-                              value: category.category,
-                              child: Text(category.category),
-                            );
-                          }).toList(),
-                      onChanged:
-                          (value) => setState(() => selectedCategory = value),
-                      hint: const Text('Selecione uma categoria'),
-                    ),
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(labelText: 'Nome'),
-                    ),
-                    TextField(
-                      controller: brandController,
-                      decoration: const InputDecoration(labelText: 'Marca'),
-                    ),
-                    TextField(
-                      controller: modelController,
-                      decoration: const InputDecoration(labelText: 'Modelo'),
-                    ),
-                    TextField(
-                      controller: quantityController,
-                      decoration: const InputDecoration(
-                        labelText: 'Quantidade',
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DropdownButtonFormField<String>(
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Categoria',
+                        ),
+                        items:
+                            categories.map((category) {
+                              return DropdownMenuItem(
+                                value: category.category,
+                                child: Text(
+                                  category.category,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                        onChanged:
+                            (value) => setState(() => selectedCategory = value),
+                        hint: const Text('Selecione uma categoria'),
                       ),
-                      keyboardType: TextInputType.number,
-                    ),
-                    TextField(
-                      controller: imageController,
-                      decoration: const InputDecoration(
-                        labelText: 'URL da Imagem',
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(labelText: 'Nome'),
                       ),
-                    ),
-                    CheckboxListTile(
-                      title: const Text('Operacional'),
-                      value: operationalValue,
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => operationalValue = value);
-                        }
-                      },
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: brandController,
+                        decoration: const InputDecoration(labelText: 'Marca'),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: modelController,
+                        decoration: const InputDecoration(labelText: 'Modelo'),
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: quantityController,
+                        decoration: const InputDecoration(
+                          labelText: 'Quantidade',
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: imageController,
+                        decoration: const InputDecoration(
+                          labelText: 'URL da Imagem',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      CheckboxListTile(
+                        title: const Text('Operacional'),
+                        value: operationalValue,
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => operationalValue = value);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: [
