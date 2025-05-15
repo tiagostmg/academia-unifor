@@ -315,10 +315,27 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
             ),
             actions: [
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Sair'),
               ),
@@ -344,10 +361,26 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
             ),
             actions: [
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Salvar'),
               ),
@@ -380,10 +413,28 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
             content: const Text('Deseja realmente excluir esta notificação?'),
             actions: [
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Excluir'),
               ),
@@ -399,6 +450,15 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    // Variáveis para cores
+    final cardColor = theme.colorScheme.primary;
+    final textColor = theme.colorScheme.onPrimary;
+    final borderColor = textColor.withOpacity(0.7);
+    final focusedBorderColor = textColor.withOpacity(0.3);
+    final errorColor = Colors.red;
+    final cursorColor = textColor;
+
     return PopScope(
       canPop: !_hasChanges,
       onPopInvoked: (didPop) async {
@@ -429,46 +489,50 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
           child: Column(
             children: [
               Card(
-                color: theme.colorScheme.primary,
+                color: cardColor,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
                       TextField(
                         controller: _titleController,
+                        style: TextStyle(color: textColor),
+                        cursorColor: cursorColor, // Configura cor do cursor
                         decoration: InputDecoration(
                           labelText: 'Título*',
+                          labelStyle: TextStyle(color: textColor),
                           errorText: _fieldErrors['title'],
+                          errorStyle: TextStyle(color: errorColor),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['title'] != null
-                                      ? Colors.red
-                                      : Colors.grey,
+                                      ? errorColor
+                                      : borderColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['title'] != null
-                                      ? Colors.red
-                                      : Colors.grey,
+                                      ? errorColor
+                                      : borderColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['title'] != null
-                                      ? Colors.red
-                                      : theme.colorScheme.primary,
+                                      ? errorColor
+                                      : focusedBorderColor,
                               width: 2,
                             ),
                           ),
-                          errorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: errorColor, width: 2),
                           ),
-                          focusedErrorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: errorColor, width: 2),
                           ),
                         ),
                         onChanged: (value) {
@@ -479,40 +543,44 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
                       const SizedBox(height: 8),
                       TextField(
                         controller: _descController,
+                        style: TextStyle(color: textColor),
+                        cursorColor: cursorColor, // Configura cor do cursor
                         maxLines: 3,
                         decoration: InputDecoration(
                           labelText: 'Descrição',
+                          labelStyle: TextStyle(color: textColor),
                           errorText: _fieldErrors['description'],
+                          errorStyle: TextStyle(color: errorColor),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['description'] != null
-                                      ? Colors.red
-                                      : Colors.grey,
+                                      ? errorColor
+                                      : borderColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['description'] != null
-                                      ? Colors.red
-                                      : Colors.grey,
+                                      ? errorColor
+                                      : borderColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color:
                                   _fieldErrors['description'] != null
-                                      ? Colors.red
-                                      : theme.colorScheme.primary,
+                                      ? errorColor
+                                      : focusedBorderColor,
                               width: 2,
                             ),
                           ),
-                          errorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: errorColor, width: 2),
                           ),
-                          focusedErrorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: errorColor, width: 2),
                           ),
                         ),
                         onChanged: (value) {
@@ -530,7 +598,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
                   onPressed: _confirmDelete,
                   icon: const Icon(Icons.delete),
                   label: const Text('Apagar Notificação'),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(backgroundColor: errorColor),
                 ),
               ],
             ],
