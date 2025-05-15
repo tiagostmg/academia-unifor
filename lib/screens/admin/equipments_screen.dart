@@ -129,6 +129,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
 
   Future<void> _showAddEquipmentDialog() async {
     final categories = await _equipmentService.loadCategories();
+    final validator = EquipmentValidator();
 
     String? selectedCategory;
     final nameController = TextEditingController();
@@ -138,11 +139,86 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
     final imageController = TextEditingController();
     bool operationalValue = true;
 
+    // Variáveis para controlar os erros
+    final Map<String, String?> fieldErrors = {
+      'category': null,
+      'name': null,
+      'brand': null,
+      'model': null,
+      'quantity': null,
+      'image': null,
+    };
+
     await showDialog(
       context: context,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            void validateField(String field, String value) {
+              String? error;
+              switch (field) {
+                case 'category':
+                  error =
+                      selectedCategory == null
+                          ? 'Selecione uma categoria'
+                          : null;
+                  break;
+                case 'name':
+                  error =
+                      validator.validateName(value)
+                          ? null
+                          : value.isEmpty
+                          ? 'O nome é obrigatório'
+                          : 'Nome deve ter 2-50 caracteres';
+                  break;
+                case 'brand':
+                  error =
+                      validator.validateBrand(value)
+                          ? null
+                          : value.isEmpty
+                          ? 'A marca é obrigatória'
+                          : 'Marca deve ter 2-30 caracteres';
+                  break;
+                case 'model':
+                  error =
+                      validator.validateModel(value)
+                          ? null
+                          : value.isEmpty
+                          ? 'O modelo é obrigatório'
+                          : 'Modelo deve ter 2-30 caracteres';
+                  break;
+                case 'quantity':
+                  final quantity = int.tryParse(value) ?? 0;
+                  error =
+                      validator.validateQuantity(quantity)
+                          ? null
+                          : 'Quantidade deve ser entre 0 e 999';
+                  break;
+                case 'image':
+                  if (value.isNotEmpty) {
+                    error =
+                        validator.validateImageUrl(value)
+                            ? null
+                            : 'URL da imagem inválida';
+                  }
+                  break;
+              }
+              setState(() {
+                fieldErrors[field] = error;
+              });
+            }
+
+            bool validateAllFields() {
+              validateField('category', '');
+              validateField('name', nameController.text);
+              validateField('brand', brandController.text);
+              validateField('model', modelController.text);
+              validateField('quantity', quantityController.text);
+              validateField('image', imageController.text);
+
+              return !fieldErrors.values.any((error) => error != null);
+            }
+
             return AlertDialog(
               title: const Text('Adicionar Novo Equipamento'),
               content: ConstrainedBox(
@@ -155,8 +231,9 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                     children: [
                       DropdownButtonFormField<String>(
                         isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Categoria',
+                        decoration: InputDecoration(
+                          labelText: 'Categoria*',
+                          errorText: fieldErrors['category'],
                         ),
                         items:
                             categories.map((category) {
@@ -168,39 +245,59 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                                 ),
                               );
                             }).toList(),
-                        onChanged:
-                            (value) => setState(() => selectedCategory = value),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCategory = value;
+                            validateField('category', '');
+                          });
+                        },
                         hint: const Text('Selecione uma categoria'),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: nameController,
-                        decoration: const InputDecoration(labelText: 'Nome'),
+                        decoration: InputDecoration(
+                          labelText: 'Nome*',
+                          errorText: fieldErrors['name'],
+                        ),
+                        onChanged: (value) => validateField('name', value),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: brandController,
-                        decoration: const InputDecoration(labelText: 'Marca'),
+                        decoration: InputDecoration(
+                          labelText: 'Marca*',
+                          errorText: fieldErrors['brand'],
+                        ),
+                        onChanged: (value) => validateField('brand', value),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: modelController,
-                        decoration: const InputDecoration(labelText: 'Modelo'),
+                        decoration: InputDecoration(
+                          labelText: 'Modelo*',
+                          errorText: fieldErrors['model'],
+                        ),
+                        onChanged: (value) => validateField('model', value),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: quantityController,
-                        decoration: const InputDecoration(
-                          labelText: 'Quantidade',
+                        decoration: InputDecoration(
+                          labelText: 'Quantidade*',
+                          errorText: fieldErrors['quantity'],
                         ),
                         keyboardType: TextInputType.number,
+                        onChanged: (value) => validateField('quantity', value),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: imageController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'URL da Imagem',
+                          errorText: fieldErrors['image'],
                         ),
+                        onChanged: (value) => validateField('image', value),
                       ),
                       const SizedBox(height: 16),
                       CheckboxListTile(
@@ -223,13 +320,10 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (selectedCategory == null ||
-                        nameController.text.isEmpty) {
+                    if (!validateAllFields()) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text(
-                            'Preencha pelo menos a categoria e o nome',
-                          ),
+                          content: Text('Corrija os erros antes de salvar'),
                         ),
                       );
                       return;
@@ -239,7 +333,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       (c) => c.category == selectedCategory,
                     );
                     final newEquipment = EquipmentItem(
-                      id: 0, // ID será gerado pelo servidor
+                      id: 0,
                       categoryId: category.id,
                       name: nameController.text,
                       brand: brandController.text,
@@ -253,7 +347,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                     try {
                       await _equipmentService.postEquipment(newEquipment);
                       Navigator.pop(context);
-                      await _refreshData(); // Atualiza a lista após adicionar
+                      await _refreshData();
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
