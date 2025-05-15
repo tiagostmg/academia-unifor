@@ -7,26 +7,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EditUserFormState {
   final bool isValid;
-  final bool isSaving;
   final bool isAdminEditing;
   final Map<String, String?> fieldErrors;
 
   EditUserFormState({
     required this.isValid,
-    required this.isSaving,
     required this.isAdminEditing,
     this.fieldErrors = const {},
   });
 
   EditUserFormState copyWith({
     bool? isValid,
-    bool? isSaving,
     bool? isAdminEditing,
     Map<String, String?>? fieldErrors,
   }) {
     return EditUserFormState(
       isValid: isValid ?? this.isValid,
-      isSaving: isSaving ?? this.isSaving,
       isAdminEditing: isAdminEditing ?? this.isAdminEditing,
       fieldErrors: fieldErrors ?? this.fieldErrors,
     );
@@ -35,22 +31,12 @@ class EditUserFormState {
 
 class EditUserFormNotifier extends StateNotifier<EditUserFormState> {
   EditUserFormNotifier({required bool isAdminEditing})
-    : super(
-        EditUserFormState(
-          isValid: false,
-          isSaving: false,
-          isAdminEditing: isAdminEditing,
-        ),
-      );
+    : super(EditUserFormState(isValid: false, isAdminEditing: isAdminEditing));
 
   void setValid(bool isValid) {
     if (state.isValid != isValid) {
       state = state.copyWith(isValid: isValid);
     }
-  }
-
-  void setSaving(bool isSaving) {
-    state = state.copyWith(isSaving: isSaving);
   }
 
   void setFieldError(String fieldName, String? error) {
@@ -79,8 +65,7 @@ class EditUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final GlobalKey<_EditUserFormState> _formKey =
-        GlobalKey<_EditUserFormState>();
+    final _formKey = GlobalKey<_EditUserFormState>();
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -108,26 +93,10 @@ class EditUserScreen extends StatelessWidget {
         actions: [
           Consumer(
             builder: (context, ref, child) {
-              final formState = ref.watch(editUserFormProvider);
+              ref.watch(editUserFormProvider);
               return IconButton(
-                icon:
-                    formState.isSaving
-                        ? const CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
-                        )
-                        : const Icon(Icons.save),
-                onPressed:
-                    formState.isValid && !formState.isSaving
-                        ? () {
-                          ref
-                              .read(editUserFormProvider.notifier)
-                              .setSaving(true);
-                          _formKey.currentState?._saveChanges();
-                        }
-                        : null,
+                icon: const Icon(Icons.save),
+                onPressed: () => _formKey.currentState?._saveChanges(),
               );
             },
           ),
@@ -159,7 +128,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   late TextEditingController _birthDateController;
   late String _avatarUrl;
   late bool _isAdmin;
-  // late ValidatorUser _validator;
 
   @override
   void initState() {
@@ -177,7 +145,10 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     );
     _avatarUrl = u.avatarUrl;
     _isAdmin = u.isAdmin;
-    // _validator = ValidatorUser();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFormValidity();
+    });
   }
 
   bool _hasUnsavedChanges() {
@@ -292,47 +263,67 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   Future<void> _saveChanges() async {
-    final formState = ref.read(editUserFormProvider);
-    if (!formState.isValid) return;
-
-    ref.read(editUserFormProvider.notifier).setSaving(true);
-
-    // Validate all fields
     if (!_validateAllFields()) {
-      ref.read(editUserFormProvider.notifier).setSaving(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Corrija os erros antes de salvar')),
+      );
       return;
     }
 
-    // Confirmation dialog
-    final confirmSave = await confirmationDialog(
-      context,
-      title: 'Confirmar alterações',
-      message: 'Tem certeza que deseja salvar as alterações deste usuário?',
+    final confirmSave = await showDialog<bool>(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar alterações'),
+            content: const Text(
+              'Tem certeza que deseja salvar as alterações deste usuário?',
+            ),
+            actions: [
+              //TODO ajeitar as cores
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Salvar'),
+              ),
+            ],
+          ),
     );
 
-    if (confirmSave != true) {
-      ref.read(editUserFormProvider.notifier).setSaving(false);
-      return;
-    }
+    if (confirmSave != true) return;
 
-    // Admin privileges confirmation
     if (_isAdmin != widget.user.isAdmin) {
-      final adminConfirm = await confirmationDialog(
-        context,
-        title:
-            _isAdmin
-                ? 'Conceder privilégios de admin'
-                : 'Remover privilégios de admin',
-        message:
-            _isAdmin
-                ? 'Tem certeza que deseja tornar este usuário um administrador?'
-                : 'Tem certeza que deseja remover os privilégios de administrador?',
+      final adminConfirm = await showDialog<bool>(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              title: Text(
+                _isAdmin
+                    ? 'Conceder privilégios de admin'
+                    : 'Remover privilégios de admin',
+              ),
+              content: Text(
+                _isAdmin
+                    ? 'Tem certeza que deseja tornar este usuário um administrador?'
+                    : 'Tem certeza que deseja remover os privilégios de administrador?',
+              ),
+              actions: [
+                //TODO ajeitar as cores
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Confirmar'),
+                ),
+              ],
+            ),
       );
 
-      if (adminConfirm != true) {
-        ref.read(editUserFormProvider.notifier).setSaving(false);
-        return;
-      }
+      if (adminConfirm != true) return;
     }
 
     try {
@@ -370,7 +361,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erro ao salvar aluno: ${e.toString()}")),
         );
-        ref.read(editUserFormProvider.notifier).setSaving(false);
       }
     }
   }
