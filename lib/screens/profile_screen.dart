@@ -155,6 +155,7 @@ class ProfileBody extends ConsumerWidget {
                         ),
                       ),
                 ),
+                SizedBox(height: 10),
                 CustomButton(
                   text: "Sair da Conta",
                   icon: Icons.logout,
