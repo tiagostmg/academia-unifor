@@ -5,6 +5,8 @@ Future<bool?> confirmationDialog(
   required String title,
   required String message,
 }) {
+  final theme = Theme.of(context);
+
   return showDialog<bool>(
     context: context,
     builder:
@@ -13,10 +15,18 @@ Future<bool?> confirmationDialog(
           content: Text(message),
           actions: [
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary, // Cor de fundo
+                foregroundColor: theme.colorScheme.onPrimary, // Cor do texto
+              ),
               onPressed: () => Navigator.pop(context, false),
               child: const Text('Cancelar'),
             ),
             TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary, // Cor de fundo
+                foregroundColor: theme.colorScheme.onPrimary, // Cor do texto
+              ),
               onPressed: () => Navigator.pop(context, true),
               child: const Text('Confirmar'),
             ),

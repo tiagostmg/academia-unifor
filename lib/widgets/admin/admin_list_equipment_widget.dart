@@ -312,10 +312,30 @@ class SelectedCategoryList extends StatelessWidget {
                                     Navigator.pop(context);
                                     _showDeleteConfirmation(context, item);
                                   },
-                                  icon: const Icon(Icons.delete),
-                                  label: const Text('Excluir Equipamento'),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                  label: Text(
+                                    'Excluir Equipamento',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimary,
+                                    ),
+                                  ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor:
+                                        Colors.red, // Ou Colors.red
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
                                 ),
                               ],

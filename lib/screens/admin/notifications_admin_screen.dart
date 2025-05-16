@@ -451,12 +451,11 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Variáveis para cores
     final cardColor = theme.colorScheme.primary;
     final textColor = theme.colorScheme.onPrimary;
-    final borderColor = textColor.withOpacity(0.7);
-    final focusedBorderColor = textColor.withOpacity(0.3);
-    final errorColor = Colors.red;
+    final borderColor = textColor.withAlpha(178);
+    final focusedBorderColor = textColor.withAlpha(76);
+    final errorColor = theme.colorScheme.error;
     final cursorColor = textColor;
 
     return PopScope(
@@ -595,10 +594,30 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
               if (widget.isEditing) ...[
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: _confirmDelete,
-                  icon: const Icon(Icons.delete),
-                  label: const Text('Apagar Notificação'),
-                  style: ElevatedButton.styleFrom(backgroundColor: errorColor),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _confirmDelete();
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  label: Text(
+                    'Excluir Equipamento',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Ou Colors.red
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 ),
               ],
             ],

@@ -1,10 +1,11 @@
+import 'package:academia_unifor/config/enviroment.dart';
 import 'package:academia_unifor/models.dart';
 import 'package:dio/dio.dart';
 
 class UserService {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'http://192.168.0.110:5404',
+      baseUrl: Environment.apiBaseUrl,
       connectTimeout: Duration(seconds: 5),
       receiveTimeout: Duration(seconds: 5),
     ),

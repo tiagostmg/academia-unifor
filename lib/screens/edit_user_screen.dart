@@ -453,55 +453,56 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final theme = Theme.of(context);
     final errorText = ref.watch(editUserFormProvider).fieldErrors[fieldName];
 
+    // Definindo variáveis de cor dentro da função
+    final borderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(128);
+    final enabledBorderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(77);
+    final focusedBorderColor =
+        errorText != null ? theme.colorScheme.error : theme.colorScheme.primary;
+    final fillColor =
+        errorText != null
+            ? theme.colorScheme.errorContainer.withAlpha(26)
+            : theme.colorScheme.primary;
+    final labelColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.onPrimary;
+    final textColor = theme.colorScheme.onPrimary;
+    final cursorColor = theme.colorScheme.onPrimary;
+    final errorTextColor = theme.colorScheme.error;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: controller,
         onChanged: (value) => _validateField(fieldName, value),
         keyboardType: keyboardType,
+        cursorColor: cursorColor,
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           labelText: title,
           errorText: errorText,
-          errorStyle: TextStyle(color: theme.colorScheme.error),
+          errorStyle: TextStyle(color: errorTextColor),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withAlpha(128),
-            ),
+            borderSide: BorderSide(color: borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withAlpha(77),
-            ),
+            borderSide: BorderSide(color: enabledBorderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: focusedBorderColor, width: 2),
           ),
           filled: true,
-          fillColor:
-              errorText != null
-                  ? theme.colorScheme.errorContainer.withAlpha(26)
-                  : theme.colorScheme.primary,
-          labelStyle: TextStyle(
-            color:
-                errorText != null
-                    ? theme.colorScheme.error
-                    : theme.colorScheme.onPrimary,
-          ),
+          fillColor: fillColor,
+          labelStyle: TextStyle(color: labelColor),
         ),
       ),
     );
@@ -511,62 +512,57 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final theme = Theme.of(context);
     final errorText = ref.watch(editUserFormProvider).fieldErrors['birthDate'];
 
+    // Definindo variáveis de cor dentro da função
+    final borderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(128);
+    final enabledBorderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(77);
+    final focusedBorderColor =
+        errorText != null ? theme.colorScheme.error : theme.colorScheme.primary;
+    final fillColor =
+        errorText != null
+            ? theme.colorScheme.errorContainer.withAlpha(26)
+            : theme.colorScheme.primary;
+    final labelColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.onPrimary;
+    final textColor = theme.colorScheme.onPrimary;
+    final errorTextColor = theme.colorScheme.error;
+    final iconColor =
+        errorText != null ? theme.colorScheme.error : theme.colorScheme.primary;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: _birthDateController,
         readOnly: true,
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           labelText: "Data de Nascimento*",
           errorText: errorText,
-          errorStyle: TextStyle(color: theme.colorScheme.error),
+          errorStyle: TextStyle(color: errorTextColor),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withAlpha(128),
-            ),
+            borderSide: BorderSide(color: borderColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary.withAlpha(77),
-            ),
+            borderSide: BorderSide(color: enabledBorderColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: focusedBorderColor, width: 2),
           ),
           filled: true,
-          fillColor:
-              errorText != null
-                  ? theme.colorScheme.errorContainer.withAlpha(26)
-                  : theme.colorScheme.primary,
-          labelStyle: TextStyle(
-            color:
-                errorText != null
-                    ? theme.colorScheme.error
-                    : theme.colorScheme.onPrimary,
-          ),
+          fillColor: fillColor,
+          labelStyle: TextStyle(color: labelColor),
           suffixIcon: IconButton(
-            icon: Icon(
-              Icons.calendar_today,
-              color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary,
-            ),
+            icon: Icon(Icons.calendar_today, color: iconColor),
             onPressed: () => _selectDate(context),
           ),
         ),

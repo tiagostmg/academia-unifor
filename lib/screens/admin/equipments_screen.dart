@@ -315,10 +315,20 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
               ),
               actions: [
                 TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancelar'),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary, // Cor de fundo
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                  ),
                   onPressed: () async {
                     if (!validateAllFields()) {
                       ScaffoldMessenger.of(context).showSnackBar(

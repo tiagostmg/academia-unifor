@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:academia_unifor/config/enviroment.dart';
 import 'package:http/http.dart' as http;
 
 class GeminiService {
-  final String baseUrl = "https://academia-unifor-fastapi.onrender.com";
+  final String baseUrl = Environment.geminiApiUrl;
 
   Future<String> getResponse(String question) async {
     final response = await http.post(

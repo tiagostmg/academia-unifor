@@ -1,14 +1,14 @@
+import 'package:academia_unifor/config/enviroment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:academia_unifor/theme/theme.dart';
 import 'package:academia_unifor/routes/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  debugPrint("GEMINI_API_KEY => ${dotenv.env['GEMINI_API_KEY']}");
+  await Environment.init();
+  debugPrint("GEMINI_API_KEY => ${Environment.geminiApiUrl}");
   runApp(const ProviderScope(child: MainApp()));
 }
 
