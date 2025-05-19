@@ -26,27 +26,64 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
+  // Estados de erro para cada campo
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _confirmPasswordError;
+
   Future<void> _register() async {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (name.isEmpty ||
-        email.isEmpty ||
-        password.isEmpty ||
-        confirmPassword.isEmpty) {
-      _showMessage("Preencha todos os campos");
-      return;
+    setState(() {
+      _nameError = null;
+      _emailError = null;
+      _passwordError = null;
+      _confirmPasswordError = null;
+    });
+
+    bool hasError = false;
+
+    if (name.isEmpty) {
+      setState(() => _nameError = 'O nome é obrigatório');
+      hasError = true;
+    } else if (!ValidatorUser.validateName(email)) {
+      setState(() => _nameError = 'O nome deve ter entre 3 e 50 letras');
+      hasError = true;
     }
 
-    if (password != confirmPassword) {
-      _showMessage("As senhas não coincidem");
-      return;
+    if (email.isEmpty) {
+      setState(() => _emailError = 'O email é obrigatório');
+      hasError = true;
+    } else if (!ValidatorUser.validateEmail(email)) {
+      setState(
+        () => _emailError = 'Email inválido. Use o formato exemplo@dominio.com',
+      );
+      hasError = true;
     }
 
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-      _showMessage("Digite um e-mail válido");
+    if (password.isEmpty) {
+      setState(() => _passwordError = 'A senha é obrigatória');
+      hasError = true;
+    } else if (!ValidatorUser.validatePassword(password)) {
+      setState(
+        () => _passwordError = 'A senha deve ter entre 4 e 20 caracteres',
+      );
+      hasError = true;
+    }
+
+    if (confirmPassword.isEmpty) {
+      setState(() => _confirmPasswordError = 'Confirme sua senha');
+      hasError = true;
+    } else if (password != confirmPassword) {
+      setState(() => _confirmPasswordError = 'As senhas não coincidem');
+      hasError = true;
+    }
+
+    if (hasError) {
       return;
     }
 
@@ -68,21 +105,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         password: password,
       );
 
-      // Registrar o usuário
       final createdUser = await UserService().postUser(newUser);
-
-      // Atualizar o provider com o usuário logado
       ref.read(userProvider.notifier).state = createdUser;
 
-      _showMessage("Cadastro realizado com sucesso!");
-      await Future.delayed(const Duration(seconds: 1));
-
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Cadastro realizado com sucesso!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 1));
         context.go('/home');
       }
     } catch (e) {
       if (mounted) {
-        _showMessage("Erro ao cadastrar: ${e.toString()}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Erro ao cadastrar: ${e.toString()}"),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -91,17 +134,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         });
       }
     }
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        duration: const Duration(seconds: 3),
-      ),
-    );
   }
 
   @override
@@ -195,6 +227,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               _nameController,
                               isDark,
                               Icons.person,
+                              errorText: _nameError,
                             ),
                             const SizedBox(height: 15),
                             _buildTextField(
@@ -202,18 +235,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               _emailController,
                               isDark,
                               Icons.email,
+                              errorText: _emailError,
                             ),
                             const SizedBox(height: 15),
                             _buildPasswordField(
                               "Senha",
                               _passwordController,
                               isDark,
+                              errorText: _passwordError,
                             ),
                             const SizedBox(height: 15),
                             _buildPasswordField(
                               "Confirmar Senha",
                               _confirmPasswordController,
                               isDark,
+                              errorText: _confirmPasswordError,
                             ),
                             const SizedBox(height: 20),
                             ElasticIn(
@@ -258,24 +294,71 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     String label,
     TextEditingController controller,
     bool isDark,
-    IconData icon,
-  ) {
+    IconData icon, {
+    String? errorText,
+  }) {
+    final hasError = errorText != null;
+
     return TextField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
-        floatingLabelStyle: TextStyle(
-          color: isDark ? Colors.white : Colors.black,
+        labelStyle: TextStyle(
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
         ),
-        prefixIcon: Icon(icon, color: isDark ? Colors.white : Colors.black),
+        floatingLabelStyle: TextStyle(
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
+        ),
+        prefixIcon: Icon(
+          icon,
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
+        ),
         filled: true,
         fillColor:
-            isDark ? Colors.white.withAlpha(30) : Colors.black.withAlpha(20),
+            hasError
+                ? Theme.of(context).colorScheme.errorContainer.withAlpha(26)
+                : (isDark
+                    ? Colors.white.withAlpha(30)
+                    : Colors.black.withAlpha(20)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+          ),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        errorText: errorText,
+        errorStyle: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
       style: TextStyle(color: isDark ? Colors.white : Colors.black),
     );
@@ -284,36 +367,83 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget _buildPasswordField(
     String label,
     TextEditingController controller,
-    bool isDark,
-  ) {
+    bool isDark, {
+    String? errorText,
+  }) {
+    final hasError = errorText != null;
+
     return TextField(
       controller: controller,
       obscureText: !_isPasswordVisible,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: isDark ? Colors.white : Colors.black),
+        labelStyle: TextStyle(
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
+        ),
         floatingLabelStyle: TextStyle(
-          color: isDark ? Colors.white : Colors.black,
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
         ),
         prefixIcon: Icon(
           Icons.lock,
-          color: isDark ? Colors.white : Colors.black,
+          color:
+              hasError
+                  ? Theme.of(context).colorScheme.error
+                  : (isDark ? Colors.white : Colors.black),
         ),
         suffixIcon: IconButton(
           icon: Icon(
             _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: isDark ? Colors.white : Colors.black,
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : (isDark ? Colors.white : Colors.black),
           ),
           onPressed:
               () => setState(() => _isPasswordVisible = !_isPasswordVisible),
         ),
         filled: true,
         fillColor:
-            isDark ? Colors.white.withAlpha(30) : Colors.black.withAlpha(20),
+            hasError
+                ? Theme.of(context).colorScheme.errorContainer.withAlpha(26)
+                : (isDark
+                    ? Colors.white.withAlpha(30)
+                    : Colors.black.withAlpha(20)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+          ),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color:
+                hasError
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        errorText: errorText,
+        errorStyle: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
       style: TextStyle(color: isDark ? Colors.white : Colors.black),
     );

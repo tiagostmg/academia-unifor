@@ -189,6 +189,14 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   : 'Email inválido. Use o formato exemplo@dominio.com';
         }
         break;
+      case 'password':
+        if (!ValidatorUser.validatePassword(value)) {
+          error =
+              value.isEmpty
+                  ? 'A senha é obrigatória'
+                  : 'A senha deve ter entre 4 e 20 caracteres';
+        }
+        break;
       case 'phone':
         if (!ValidatorUser.validatePhone(value)) {
           error =
@@ -232,6 +240,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final isValid =
         ValidatorUser.validateName(_nameController.text) &&
         ValidatorUser.validateEmail(_emailController.text) &&
+        ValidatorUser.validatePassword(_passwordController.text) &&
         ValidatorUser.validateBirthDate(
           _birthDateController.text.isNotEmpty
               ? DateTime.tryParse(
@@ -248,6 +257,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
     _validateField('name', _nameController.text);
     _validateField('email', _emailController.text);
+    _validateField('password', _passwordController.text);
     _validateField('phone', _phoneController.text);
     _validateField('address', _addressController.text);
     _validateField('birthDate', _birthDateController.text);
@@ -261,6 +271,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _passwordController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
     _birthDateController.dispose();
@@ -422,7 +433,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
         _buildPasswordField(
           context,
-          title: "Senha",
+          title: "Senha*",
           controller: _passwordController,
           fieldName: 'password',
         ),

@@ -75,6 +75,19 @@ class ValidatorUser {
     return true;
   }
 
+  static bool validatePassword(String password) {
+    if (password.isEmpty) {
+      return false;
+    }
+    if (password.length < 4) {
+      return false;
+    }
+    if (password.length > 20) {
+      return false;
+    }
+    return true;
+  }
+
   static bool validateBirthDate(DateTime? date) {
     if (date == null) {
       return false;
@@ -112,6 +125,11 @@ class ValidatorUser {
       return user.email.isEmpty
           ? 'O email é obrigatório'
           : 'Email inválido. Use o formato exemplo@dominio.com';
+    }
+    if (!validatePassword(user.password)) {
+      return user.password.isEmpty
+          ? 'A senha é obrigatória'
+          : 'A senha deve ter entre 4 e 20 caracteres';
     }
     if (!validateBirthDate(user.birthDate)) {
       return user.birthDate == null
