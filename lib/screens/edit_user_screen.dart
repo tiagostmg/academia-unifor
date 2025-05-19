@@ -123,6 +123,7 @@ class EditUserForm extends ConsumerStatefulWidget {
 class _EditUserFormState extends ConsumerState<EditUserForm> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
+  late TextEditingController _passwordController;
   late TextEditingController _phoneController;
   late TextEditingController _addressController;
   late TextEditingController _birthDateController;
@@ -135,6 +136,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final u = widget.user;
     _nameController = TextEditingController(text: u.name);
     _emailController = TextEditingController(text: u.email);
+    _passwordController = TextEditingController(text: u.password);
     _phoneController = TextEditingController(text: u.phone);
     _addressController = TextEditingController(text: u.address);
     _birthDateController = TextEditingController(
@@ -154,6 +156,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   bool _hasUnsavedChanges() {
     return _nameController.text != widget.user.name ||
         _emailController.text != widget.user.email ||
+        _passwordController.text != widget.user.password ||
         _phoneController.text != widget.user.phone ||
         _addressController.text != widget.user.address ||
         _birthDateController.text !=
@@ -414,6 +417,16 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           keyboardType: TextInputType.emailAddress,
           fieldName: 'email',
         ),
+
+        _buildPasswordField(
+          context,
+          title: "Senha",
+          controller: _emailController,
+          fieldName: 'password',
+          isPasswordVisible: true,
+          togglePasswordVisibility: () {},
+        ),
+
         _buildEditableField(
           context,
           title: "Telefone",
@@ -503,6 +516,81 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           filled: true,
           fillColor: fillColor,
           labelStyle: TextStyle(color: labelColor),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(
+    BuildContext context, {
+    required String title,
+    required TextEditingController controller,
+    required String fieldName,
+    required bool isPasswordVisible,
+    required VoidCallback togglePasswordVisibility,
+  }) {
+    final theme = Theme.of(context);
+    final errorText = ref.watch(editUserFormProvider).fieldErrors[fieldName];
+
+    // Definindo variáveis de cor dentro da função
+    final borderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(128);
+    final enabledBorderColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.primary.withAlpha(77);
+    final focusedBorderColor =
+        errorText != null ? theme.colorScheme.error : theme.colorScheme.primary;
+    final fillColor =
+        errorText != null
+            ? theme.colorScheme.errorContainer.withAlpha(26)
+            : theme.colorScheme.primary;
+    final labelColor =
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.onPrimary;
+    final textColor = theme.colorScheme.onPrimary;
+    final cursorColor = theme.colorScheme.onPrimary;
+    final errorTextColor = theme.colorScheme.error;
+    final iconColor = theme.colorScheme.onPrimary;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        obscureText: !isPasswordVisible,
+        onChanged: (value) => _validateField(fieldName, value),
+        cursorColor: cursorColor,
+        style: TextStyle(color: textColor),
+        decoration: InputDecoration(
+          labelText: title,
+          errorText: errorText,
+          errorStyle: TextStyle(color: errorTextColor),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: borderColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: enabledBorderColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: focusedBorderColor, width: 2),
+          ),
+          filled: true,
+          fillColor: fillColor,
+          labelStyle: TextStyle(color: labelColor),
+          prefixIcon: Icon(Icons.lock, color: iconColor),
+          suffixIcon: IconButton(
+            icon: Icon(
+              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: iconColor,
+            ),
+            onPressed: togglePasswordVisibility,
+          ),
         ),
       ),
     );
