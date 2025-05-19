@@ -5,6 +5,8 @@ import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final passwordVisibilityProvider = StateProvider<bool>((ref) => false);
+
 class EditUserFormState {
   final bool isValid;
   final bool isAdminEditing;
@@ -421,10 +423,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         _buildPasswordField(
           context,
           title: "Senha",
-          controller: _emailController,
+          controller: _passwordController,
           fieldName: 'password',
-          isPasswordVisible: true,
-          togglePasswordVisibility: () {},
         ),
 
         _buildEditableField(
@@ -526,13 +526,12 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     required String title,
     required TextEditingController controller,
     required String fieldName,
-    required bool isPasswordVisible,
-    required VoidCallback togglePasswordVisibility,
   }) {
     final theme = Theme.of(context);
     final errorText = ref.watch(editUserFormProvider).fieldErrors[fieldName];
+    final isPasswordVisible = ref.watch(passwordVisibilityProvider);
 
-    // Definindo variáveis de cor dentro da função
+    // Cores e estilos
     final borderColor =
         errorText != null
             ? theme.colorScheme.error
@@ -583,13 +582,15 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           filled: true,
           fillColor: fillColor,
           labelStyle: TextStyle(color: labelColor),
-          prefixIcon: Icon(Icons.lock, color: iconColor),
           suffixIcon: IconButton(
             icon: Icon(
               isPasswordVisible ? Icons.visibility : Icons.visibility_off,
               color: iconColor,
             ),
-            onPressed: togglePasswordVisibility,
+            onPressed: () {
+              ref.read(passwordVisibilityProvider.notifier).state =
+                  !isPasswordVisible;
+            },
           ),
         ),
       ),
