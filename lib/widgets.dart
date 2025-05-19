@@ -11,6 +11,7 @@ export 'package:academia_unifor/widgets/notification_button.dart';
 
 export 'package:academia_unifor/widgets/validator/validator_user_widget.dart';
 export 'package:academia_unifor/widgets/validator/validator_equipment_widget.dart';
+export 'package:academia_unifor/widgets/validator/validator_workout_widget.dart';
 export 'package:academia_unifor/widgets/validator/validator_exercise_widget.dart';
 export 'package:academia_unifor/widgets/validator/validator_notifications_widget.dart';
 

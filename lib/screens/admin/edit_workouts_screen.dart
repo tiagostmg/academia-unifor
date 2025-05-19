@@ -175,36 +175,35 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: [
-            Column(
-              spacing: 8,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  workout.name,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                  // TODO: QUANDO O NOME DO TREINO FOR MUITO GRANDE, ELE TA QUEBRANDO O APP
-                ),
-                Text(
-                  workout.description,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text(
-                  '${workout.exercises.length} exercícios',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    workout.name,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    workout.description,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  Text(
+                    '${workout.exercises.length} exercícios',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 10,
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-
                   onPressed: () async {
                     final updatedWorkout = await Navigator.push<Workout>(
                       context,
@@ -217,7 +216,6 @@ class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
                             ),
                       ),
                     );
-
                     if (updatedWorkout != null) {
                       setState(() {
                         workouts[index] = updatedWorkout;

@@ -634,7 +634,9 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final textColor = theme.colorScheme.onPrimary;
     final errorTextColor = theme.colorScheme.error;
     final iconColor =
-        errorText != null ? theme.colorScheme.error : theme.colorScheme.primary;
+        errorText != null
+            ? theme.colorScheme.error
+            : theme.colorScheme.onPrimary;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),

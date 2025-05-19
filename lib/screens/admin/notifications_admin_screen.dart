@@ -603,7 +603,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   label: Text(
-                    'Excluir Equipamento',
+                    'Excluir Notificação',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
