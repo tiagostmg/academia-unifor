@@ -67,7 +67,7 @@ class ContactWidget extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: _launchPhone,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -84,7 +84,7 @@ class ContactWidget extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: _launchWhatsApp,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -101,7 +101,7 @@ class ContactWidget extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: _launchEmail,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
