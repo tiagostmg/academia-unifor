@@ -33,9 +33,8 @@ class Users {
       password: json['password'] ?? '',
       phone: json['phone'],
       address: json['address'],
-      birthDate: json['birthDate'] != null
-        ? DateTime.parse(json['birthDate'])
-        : null,
+      birthDate:
+          json['birthDate'] != null ? DateTime.parse(json['birthDate']) : null,
       avatarUrl: json['avatarUrl'] ?? '',
       isAdmin: json['isAdmin'] ?? false,
       workouts:
@@ -54,15 +53,13 @@ class Users {
       'password': password,
       'phone': phone,
       'address': address,
-      'birthDate': birthDate != null
-        ? birthDate!.toIso8601String().split('T')[0]
-        : null,
+      'birthDate':
+          birthDate != null
+              ? '${birthDate!.year}-${birthDate!.month.toString().padLeft(2, '0')}-${birthDate!.day.toString().padLeft(2, '0')}'
+              : null,
       'avatarUrl': avatarUrl,
       'isAdmin': isAdmin,
       'workouts': workouts.map((w) => w.toJson()).toList(),
     };
   }
-
-    
-  
 }
