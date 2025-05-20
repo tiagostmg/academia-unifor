@@ -149,7 +149,7 @@ class ExercisesScreenBody extends StatelessWidget {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditWorkoutsScreen(user: user),
+                  builder: (context) => AdminUsersWorkoutsScreen(user: user),
                 ),
               );
               onUserEdited();

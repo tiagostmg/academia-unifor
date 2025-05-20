@@ -4,16 +4,17 @@ import 'package:academia_unifor/services.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:flutter/material.dart';
 
-class EditWorkoutsScreen extends StatefulWidget {
+class AdminUsersWorkoutsScreen extends StatefulWidget {
   final Users user;
 
-  const EditWorkoutsScreen({super.key, required this.user});
+  const AdminUsersWorkoutsScreen({super.key, required this.user});
 
   @override
-  EditWorkoutsScreenState createState() => EditWorkoutsScreenState();
+  AdminUsersWorkoutsScreenState createState() =>
+      AdminUsersWorkoutsScreenState();
 }
 
-class EditWorkoutsScreenState extends State<EditWorkoutsScreen> {
+class AdminUsersWorkoutsScreenState extends State<AdminUsersWorkoutsScreen> {
   late List<Workout> workouts;
   Map<int, EquipmentItem> equipmentMap = {};
   Map<String, int> categoryCounts = {};
