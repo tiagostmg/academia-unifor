@@ -301,19 +301,78 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 16),
+                      //TODO
                       TextField(
                         controller: _workoutNameController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Nome do Treino',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(77),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(77),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              width: 2,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.primary,
+                          labelStyle: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary.withAlpha(200),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _workoutDescController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Descrição',
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(77),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(77),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              width: 2,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.primary,
+                          labelStyle: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimary.withAlpha(200),
+                          ),
                         ),
                         maxLines: 3,
                       ),
@@ -354,14 +413,50 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _nameControllers[exIndex],
+                          cursorColor: Theme.of(context).colorScheme.onPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Nome do Exercício',
-                            border: const OutlineInputBorder(),
                             errorText:
                                 _exerciseErrors[exIndex]?.contains('nome') ??
                                         false
                                     ? _exerciseErrors[exIndex]
                                     : null,
+                            errorStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                width: 2,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.primary,
+                            labelStyle: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(200),
+                            ),
                           ),
                           onChanged: (value) {
                             exercise.name = value;
@@ -380,9 +475,12 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _repsControllers[exIndex],
+                          cursorColor: Theme.of(context).colorScheme.onPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Repetições',
-                            border: const OutlineInputBorder(),
                             errorText:
                                 _exerciseErrors[exIndex]?.contains(
                                           'repetições',
@@ -390,6 +488,39 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                                         false
                                     ? _exerciseErrors[exIndex]
                                     : null,
+                            errorStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                width: 2,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.primary,
+                            labelStyle: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(200),
+                            ),
                           ),
                           onChanged: (value) {
                             exercise.reps = value;
@@ -408,9 +539,13 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         const SizedBox(height: 8),
                         TextField(
                           controller: _notesControllers[exIndex],
+                          cursorColor: Theme.of(context).colorScheme.onPrimary,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          maxLines: 3,
                           decoration: InputDecoration(
                             labelText: 'Notas / Observações',
-                            border: const OutlineInputBorder(),
                             errorText:
                                 _exerciseErrors[exIndex]?.contains(
                                           'observações',
@@ -418,8 +553,40 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                                         false
                                     ? _exerciseErrors[exIndex]
                                     : null,
+                            errorStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                width: 2,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: Theme.of(context).colorScheme.primary,
+                            labelStyle: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary.withAlpha(200),
+                            ),
                           ),
-                          maxLines: 3,
                           onChanged: (value) {
                             exercise.notes = value;
                             _hasChanges = true;
@@ -434,10 +601,17 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                         ),
                         const SizedBox(height: 8),
                         InputDecorator(
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Equipamento',
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 4,
                             ),
@@ -452,7 +626,7 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
                                                   .equipmentId]
                                               ?.name ??
                                           'Carregando...'
-                                      : 'Nenhum equipamento selecionado',
+                                      : 'Nenhum equipamento',
                                   style: const TextStyle(fontSize: 16),
                                 ),
                               ),
