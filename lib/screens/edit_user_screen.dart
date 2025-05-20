@@ -83,7 +83,6 @@ class EditUserScreen extends StatelessWidget {
                 message:
                     'Você tem alterações não salvas. Deseja realmente sair?',
               );
-
               if (shouldExit == true && Navigator.canPop(context)) {
                 Navigator.pop(context);
               }
@@ -357,7 +356,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                 : null,
         avatarUrl: _avatarUrl.trim(),
         isAdmin: _isAdmin,
-        password: widget.user.password,
+        password: _passwordController.text.trim(),
         workouts: widget.user.workouts,
       );
 
