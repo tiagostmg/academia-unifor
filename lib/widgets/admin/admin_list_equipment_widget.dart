@@ -355,7 +355,7 @@ class SelectedCategoryList extends StatelessWidget {
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: SizedBox(
-                  height: 170,
+                  height: 180,
                   child: Row(
                     children: [
                       Expanded(
@@ -384,6 +384,7 @@ class SelectedCategoryList extends StatelessWidget {
                                   fontSize: 14,
                                   color:
                                       Theme.of(context).colorScheme.onPrimary,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Text(
@@ -392,10 +393,11 @@ class SelectedCategoryList extends StatelessWidget {
                                   fontSize: 14,
                                   color:
                                       Theme.of(context).colorScheme.onPrimary,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Text(
-                                'Qtd: ${item.quantity}',
+                                'Quantidade: ${item.quantity}',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color:
