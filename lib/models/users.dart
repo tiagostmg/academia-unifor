@@ -21,9 +21,9 @@ class Users {
     required this.address,
     this.birthDate,
     required this.avatarUrl,
-    required this.isAdmin,
+    required bool? isAdmin,
     required this.workouts,
-  });
+  }) : this.isAdmin = isAdmin ?? false;
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
@@ -53,12 +53,9 @@ class Users {
       'password': password,
       'phone': phone,
       'address': address,
-      'birthDate':
-          birthDate != null
-              ? '${birthDate!.year}-${birthDate!.month.toString().padLeft(2, '0')}-${birthDate!.day.toString().padLeft(2, '0')}'
-              : null,
+      'birthDate': birthDate?.toIso8601String().split('T')[0],
       'avatarUrl': avatarUrl,
-      'isAdmin': isAdmin,
+      'isAdmin': isAdmin ? true : null,
       'workouts': workouts.map((w) => w.toJson()).toList(),
     };
   }
