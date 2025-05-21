@@ -348,11 +348,14 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             _birthDateController.text.isNotEmpty
                 ? _birthDateController.text
                 : null,
-        avatarUrl: _avatarUrl.trim(),
+        avatarUrl: _avatarUrl.trim().isEmpty ? '' : _avatarUrl.trim(),
         isAdmin: _isAdmin,
         password: _passwordController.text.trim(),
         workouts: widget.user.workouts,
       );
+      debugPrint("updatedUser: ${updatedUser.toJson()}");
+
+      debugPrint("widget.user: ${widget.user.toJson()}");
 
       final savedUser =
           widget.user.id == 0

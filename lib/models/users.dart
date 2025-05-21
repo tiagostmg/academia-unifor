@@ -21,9 +21,9 @@ class Users {
     required this.address,
     this.birthDate,
     required this.avatarUrl,
-    required bool? isAdmin,
+    required this.isAdmin,
     required this.workouts,
-  }) : this.isAdmin = isAdmin ?? false;
+  });
 
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
