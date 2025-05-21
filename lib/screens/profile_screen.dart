@@ -88,8 +88,8 @@ class ProfileBody extends ConsumerWidget {
           _buildInfoItem(
             context,
             "Data de Nascimento",
-            user.birthDate != null
-                ? "${user.birthDate!.day.toString().padLeft(2, '0')}/${user.birthDate!.month.toString().padLeft(2, '0')}/${user.birthDate!.year}"
+            user.birthDate != null && user.birthDate!.isNotEmpty
+                ? user.birthDate!
                 : 'Não informada',
           ),
           const SizedBox(height: 16),

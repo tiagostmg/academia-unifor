@@ -88,7 +88,33 @@ class ValidatorUser {
     return true;
   }
 
-  static bool validateBirthDate(DateTime? date) {
+  static bool validateBirthDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) {
+      return false;
+    }
+
+    // Tenta converter a string para DateTime para validação
+    DateTime? date;
+    try {
+      // Assume formato DD/MM/YYYY
+      if (dateStr.contains('/')) {
+        final parts = dateStr.split('/');
+        if (parts.length == 3) {
+          date = DateTime(
+            int.parse(parts[2]), // ano
+            int.parse(parts[1]), // mês
+            int.parse(parts[0]), // dia
+          );
+        }
+      }
+      // Assume formato YYYY-MM-DD
+      else if (dateStr.contains('-')) {
+        date = DateTime.parse(dateStr);
+      }
+    } catch (e) {
+      return false;
+    }
+
     if (date == null) {
       return false;
     }

@@ -140,12 +140,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     _passwordController = TextEditingController(text: u.password);
     _phoneController = TextEditingController(text: u.phone);
     _addressController = TextEditingController(text: u.address);
-    _birthDateController = TextEditingController(
-      text:
-          u.birthDate != null
-              ? "${u.birthDate!.day.toString().padLeft(2, '0')}/${u.birthDate!.month.toString().padLeft(2, '0')}/${u.birthDate!.year}"
-              : '',
-    );
+    _birthDateController = TextEditingController(text: u.birthDate ?? '');
     _avatarUrl = u.avatarUrl;
     _isAdmin = u.isAdmin;
 
@@ -160,10 +155,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         _passwordController.text != widget.user.password ||
         _phoneController.text != widget.user.phone ||
         _addressController.text != widget.user.address ||
-        _birthDateController.text !=
-            (widget.user.birthDate != null
-                ? "${widget.user.birthDate!.day.toString().padLeft(2, '0')}/${widget.user.birthDate!.month.toString().padLeft(2, '0')}/${widget.user.birthDate!.year}"
-                : '') ||
+        _birthDateController.text != (widget.user.birthDate ?? '') ||
         _avatarUrl != widget.user.avatarUrl ||
         _isAdmin != widget.user.isAdmin;
   }
@@ -179,6 +171,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O nome é obrigatório'
                   : 'O nome deve ter entre 3 e 50 caracteres e apenas letras';
         }
+        debugPrint('Erro: $error');
         break;
       case 'email':
         if (!ValidatorUser.validateEmail(value)) {
@@ -187,6 +180,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O email é obrigatório'
                   : 'Email inválido. Use o formato exemplo@dominio.com';
         }
+        debugPrint('Erro: $error');
         break;
       case 'password':
         if (!ValidatorUser.validatePassword(value)) {
@@ -195,6 +189,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'A senha é obrigatória'
                   : 'A senha deve ter entre 4 e 20 caracteres';
         }
+        debugPrint('Erro: $error');
         break;
       case 'phone':
         if (!ValidatorUser.validatePhone(value)) {
@@ -203,6 +198,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O telefone é obrigatório'
                   : 'Telefone inválido. Use (DDD) 9XXXX-XXXX ou (DDD) XXXX-XXXX';
         }
+        debugPrint('Erro: $error');
         break;
       case 'address':
         if (!ValidatorUser.validateAddress(value)) {
@@ -211,18 +207,14 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O endereço é obrigatório'
                   : 'O endereço deve ter pelo menos 5 caracteres';
         }
+        debugPrint('Erro: $error');
         break;
       case 'birthDate':
-        if (!ValidatorUser.validateBirthDate(
-          _birthDateController.text.isNotEmpty
-              ? DateTime.tryParse(
-                _birthDateController.text.split('/').reversed.join('-'),
-              )
-              : null,
-        )) {
+        if (!ValidatorUser.validateBirthDate(value)) {
           error =
               'Data de nascimento inválida. Você deve ter entre 12 e 120 anos';
         }
+        debugPrint('Erro: $error');
         break;
       case 'avatarUrl':
         if (!ValidatorUser.validateImageUrl(value)) {
@@ -240,14 +232,9 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ValidatorUser.validateName(_nameController.text) &&
         ValidatorUser.validateEmail(_emailController.text) &&
         ValidatorUser.validatePassword(_passwordController.text) &&
-        ValidatorUser.validateBirthDate(
-          _birthDateController.text.isNotEmpty
-              ? DateTime.tryParse(
-                _birthDateController.text.split('/').reversed.join('-'),
-              )
-              : null,
-        );
+        ValidatorUser.validateBirthDate(_birthDateController.text);
 
+    debugPrint('isValid: $isValid');
     ref.read(editUserFormProvider.notifier).setValid(isValid);
   }
 
@@ -260,9 +247,15 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     _validateField('phone', _phoneController.text);
     _validateField('address', _addressController.text);
     _validateField('birthDate', _birthDateController.text);
-    _validateField('avatarUrl', _avatarUrl);
+    // _validateField('avatarUrl', _avatarUrl);
 
     final formState = ref.read(editUserFormProvider);
+
+    // Debug: imprima todos os erros
+    formState.fieldErrors.forEach((key, value) {
+      if (value != null) debugPrint('Campo com erro: $key - $value');
+    });
+
     return !formState.fieldErrors.values.any((error) => error != null);
   }
 
@@ -278,6 +271,9 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   Future<void> _saveChanges() async {
+    debugPrint(
+      "_validateAllFields().toString() ${_validateAllFields().toString()}",
+    );
     if (!_validateAllFields()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Corrija os erros antes de salvar')),
@@ -350,9 +346,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         address: _addressController.text.trim(),
         birthDate:
             _birthDateController.text.isNotEmpty
-                ? DateTime.tryParse(
-                  _birthDateController.text.split('/').reversed.join('-'),
-                )
+                ? _birthDateController.text
                 : null,
         avatarUrl: _avatarUrl.trim(),
         isAdmin: _isAdmin,
@@ -381,9 +375,33 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    // Determinar a data inicial para o seletor
+    DateTime initialDate;
+    if (widget.user.birthDate != null && widget.user.birthDate!.isNotEmpty) {
+      try {
+        // Tenta converter a string para DateTime
+        if (widget.user.birthDate!.contains('/')) {
+          final parts = widget.user.birthDate!.split('/');
+          initialDate = DateTime(
+            int.parse(parts[2]), // ano
+            int.parse(parts[1]), // mês
+            int.parse(parts[0]), // dia
+          );
+        } else if (widget.user.birthDate!.contains('-')) {
+          initialDate = DateTime.parse(widget.user.birthDate!);
+        } else {
+          initialDate = DateTime.now();
+        }
+      } catch (e) {
+        initialDate = DateTime.now();
+      }
+    } else {
+      initialDate = DateTime.now();
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: widget.user.birthDate ?? DateTime.now(),
+      initialDate: initialDate,
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
