@@ -204,9 +204,12 @@ class StudentsScreenBody extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {},
       child: ListView.separated(
-        itemCount: users.length,
+        itemCount: users.length + 1,
         separatorBuilder: (_, __) => const Divider(height: 1),
         itemBuilder: (context, index) {
+          if (index == users.length) {
+            return const SizedBox(height: 80);
+          }
           final user = users[index];
           return ListTile(
             leading: Padding(
