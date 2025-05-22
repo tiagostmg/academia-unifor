@@ -38,7 +38,7 @@ class _AdminWorkoutsScreenState extends State<AdminWorkoutsScreen> {
       });
     } catch (e) {
       setState(() => isLoading = false);
-      print('Error loading users: $e');
+      debugPrint('Error loading users: $e');
     }
   }
 

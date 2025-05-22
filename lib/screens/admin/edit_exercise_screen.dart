@@ -252,7 +252,7 @@ class EditExerciseScreenState extends State<EditExerciseScreen> {
           Navigator.pop(context, updatedWorkout);
         }
       } catch (e) {
-        print('Erro ao salvar: $e');
+        debugPrint('Erro ao salvar: $e');
         if (mounted) {
           ScaffoldMessenger.of(
             context,

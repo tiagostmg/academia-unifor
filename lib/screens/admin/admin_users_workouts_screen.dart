@@ -68,7 +68,7 @@ class AdminUsersWorkoutsScreenState extends State<AdminUsersWorkoutsScreen> {
         categoryCounts = counts;
       });
     } catch (e) {
-      print('Erro ao carregar categorias: $e');
+      debugPrint('Erro ao carregar categorias: $e');
     }
   }
 
@@ -88,7 +88,7 @@ class AdminUsersWorkoutsScreenState extends State<AdminUsersWorkoutsScreen> {
       });
       return savedWorkout;
     } catch (e) {
-      print('Erro ao adicionar treino: $e');
+      debugPrint('Erro ao adicionar treino: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro ao adicionar treino: $e')));
@@ -118,7 +118,7 @@ class AdminUsersWorkoutsScreenState extends State<AdminUsersWorkoutsScreen> {
           const SnackBar(content: Text('Treino removido com sucesso')),
         );
       } catch (e) {
-        print('Erro ao remover treino: $e');
+        debugPrint('Erro ao remover treino: $e');
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Erro ao remover treino: $e')));
