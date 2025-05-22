@@ -407,6 +407,29 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
       initialDate: initialDate,
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+      builder: (BuildContext context, Widget? child) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+
+        return Theme(
+          data: theme.copyWith(
+            colorScheme: colorScheme.copyWith(
+              primary: Colors.blue, // Cabeçalho e botão ativo
+              onPrimary: colorScheme.onPrimary, // Texto sobre o cabeçalho
+              surface: colorScheme.surface, // Fundo do calendário
+              onSurface: colorScheme.onSurface, // Texto das datas
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    colorScheme.onPrimary, // Botões "OK" e "Cancelar"
+              ),
+            ),
+            dialogTheme: DialogThemeData(backgroundColor: colorScheme.surface),
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (picked != null) {
