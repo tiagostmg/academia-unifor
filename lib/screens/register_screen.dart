@@ -50,7 +50,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (name.isEmpty) {
       setState(() => _nameError = 'O nome é obrigatório');
       hasError = true;
-    } else if (!ValidatorUser.validateName(email)) {
+    } else if (!ValidatorUser.validateName(name)) {
       setState(() => _nameError = 'O nome deve ter entre 3 e 50 letras');
       hasError = true;
     }

@@ -293,7 +293,9 @@ class ForgotPasswordHeader extends StatelessWidget {
         SizedBox(height: isKeyboardOpen ? 20 : 30),
         if (!isKeyboardOpen)
           Text(
-            "Trocar senha",
+            //TODO
+            "Recuperar senha",
+            // "Trocar senha",
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -303,7 +305,8 @@ class ForgotPasswordHeader extends StatelessWidget {
         if (!isKeyboardOpen) const SizedBox(height: 10),
         if (!isKeyboardOpen)
           Text(
-            "Insira seu e-mail e nova senha",
+            "Contate a recepção para recuperar sua senha",
+            // "Insira seu e-mail e nova senha",
             style: TextStyle(
               color: isDarkMode ? Colors.white70 : Colors.black87,
             ),
@@ -347,109 +350,111 @@ class ForgotPasswordFields extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          controller: userController,
-          decoration: InputDecoration(
-            labelText: 'E-mail',
-            labelStyle: TextStyle(
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            prefixIcon: Icon(
-              Icons.person,
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            filled: true,
-            fillColor:
-                isDarkMode
-                    ? Colors.white.withAlpha(30)
-                    : Colors.black.withAlpha(20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-        ),
-        const SizedBox(height: 15),
-        TextField(
-          controller: passwordController,
-          obscureText: !isPasswordVisible,
-          onChanged: onPasswordChanged,
-          decoration: InputDecoration(
-            labelText: 'Nova senha',
-            labelStyle: TextStyle(
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            prefixIcon: Icon(
-              Icons.lock,
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            filled: true,
-            fillColor:
-                isDarkMode
-                    ? Colors.white.withAlpha(30)
-                    : Colors.black.withAlpha(20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-              onPressed: togglePasswordVisibility,
-            ),
-          ),
-          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-        ),
-        const SizedBox(height: 15),
-        TextField(
-          controller: confirmPasswordController,
-          obscureText: !isConfirmPasswordVisible,
-          onChanged: onConfirmPasswordChanged,
-          decoration: InputDecoration(
-            labelText: 'Confirmar senha',
-            labelStyle: TextStyle(
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            prefixIcon: Icon(
-              Icons.lock,
-              color: isDarkMode ? Colors.white : Colors.black,
-            ),
-            filled: true,
-            fillColor:
-                isDarkMode
-                    ? Colors.white.withAlpha(30)
-                    : Colors.black.withAlpha(20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isConfirmPasswordVisible
-                    ? Icons.visibility
-                    : Icons.visibility_off,
-                color: isDarkMode ? Colors.white : Colors.black,
-              ),
-              onPressed: toggleConfirmPasswordVisibility,
-            ),
-            errorText: passwordError,
-          ),
-          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
-        ),
-        const SizedBox(height: 10),
-        ElasticIn(
-          child: SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              text: "Atualizar senha e entrar",
-              icon: Icons.login,
-              onPressed: onLogin,
-            ),
-          ),
-        ),
+        //TODO
+
+        // TextField(
+        //   controller: userController,
+        //   decoration: InputDecoration(
+        //     labelText: 'E-mail',
+        //     labelStyle: TextStyle(
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     prefixIcon: Icon(
+        //       Icons.person,
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     filled: true,
+        //     fillColor:
+        //         isDarkMode
+        //             ? Colors.white.withAlpha(30)
+        //             : Colors.black.withAlpha(20),
+        //     border: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(12),
+        //       borderSide: BorderSide.none,
+        //     ),
+        //   ),
+        //   style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        // ),
+        // const SizedBox(height: 15),
+        // TextField(
+        //   controller: passwordController,
+        //   obscureText: !isPasswordVisible,
+        //   onChanged: onPasswordChanged,
+        //   decoration: InputDecoration(
+        //     labelText: 'Nova senha',
+        //     labelStyle: TextStyle(
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     prefixIcon: Icon(
+        //       Icons.lock,
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     filled: true,
+        //     fillColor:
+        //         isDarkMode
+        //             ? Colors.white.withAlpha(30)
+        //             : Colors.black.withAlpha(20),
+        //     border: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(12),
+        //       borderSide: BorderSide.none,
+        //     ),
+        //     suffixIcon: IconButton(
+        //       icon: Icon(
+        //         isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+        //         color: isDarkMode ? Colors.white : Colors.black,
+        //       ),
+        //       onPressed: togglePasswordVisibility,
+        //     ),
+        //   ),
+        //   style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        // ),
+        // const SizedBox(height: 15),
+        // TextField(
+        //   controller: confirmPasswordController,
+        //   obscureText: !isConfirmPasswordVisible,
+        //   onChanged: onConfirmPasswordChanged,
+        //   decoration: InputDecoration(
+        //     labelText: 'Confirmar senha',
+        //     labelStyle: TextStyle(
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     prefixIcon: Icon(
+        //       Icons.lock,
+        //       color: isDarkMode ? Colors.white : Colors.black,
+        //     ),
+        //     filled: true,
+        //     fillColor:
+        //         isDarkMode
+        //             ? Colors.white.withAlpha(30)
+        //             : Colors.black.withAlpha(20),
+        //     border: OutlineInputBorder(
+        //       borderRadius: BorderRadius.circular(12),
+        //       borderSide: BorderSide.none,
+        //     ),
+        //     suffixIcon: IconButton(
+        //       icon: Icon(
+        //         isConfirmPasswordVisible
+        //             ? Icons.visibility
+        //             : Icons.visibility_off,
+        //         color: isDarkMode ? Colors.white : Colors.black,
+        //       ),
+        //       onPressed: toggleConfirmPasswordVisibility,
+        //     ),
+        //     errorText: passwordError,
+        //   ),
+        //   style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        // ),
+        // const SizedBox(height: 10),
+        // ElasticIn(
+        //   child: SizedBox(
+        //     width: double.infinity,
+        //     child: CustomButton(
+        //       text: "Atualizar senha e entrar",
+        //       icon: Icons.login,
+        //       onPressed: onLogin,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
