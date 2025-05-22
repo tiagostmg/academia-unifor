@@ -1,6 +1,7 @@
 import 'package:academia_unifor/config/enviroment.dart';
 import 'package:academia_unifor/models.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class UserService {
   final Dio _dio = Dio(
@@ -19,7 +20,7 @@ class UserService {
       );
       return response.statusCode ?? 0;
     } catch (e) {
-      print('Erro ao fazer login: $e');
+      debugPrint('Erro ao fazer login: $e');
       return 0;
     }
   }
@@ -30,7 +31,7 @@ class UserService {
       final List<dynamic> data = response.data;
       return data.map((e) => Users.fromJson(e)).toList();
     } catch (e) {
-      print('Erro ao buscar usuários: $e');
+      debugPrint('Erro ao buscar usuários: $e');
       return [];
     }
   }
@@ -41,7 +42,7 @@ class UserService {
       final List<dynamic> data = response.data;
       return data.map((e) => Users.fromJson(e)).toList();
     } catch (e) {
-      print('Erro ao buscar usuários: $e');
+      debugPrint('Erro ao buscar usuários: $e');
       return [];
     }
   }
@@ -51,7 +52,7 @@ class UserService {
       final response = await _dio.get('/api/User/complete/$id');
       return Users.fromJson(response.data);
     } catch (e) {
-      print('Erro ao buscar usuário: $e');
+      debugPrint('Erro ao buscar usuário: $e');
       rethrow;
     }
   }
@@ -61,7 +62,7 @@ class UserService {
       final response = await _dio.post('/api/User', data: user.toJson());
       return Users.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -74,7 +75,7 @@ class UserService {
       );
       return Users.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class UserService {
       final response = await _dio.delete('/api/User/$id');
       return Users.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -95,7 +96,7 @@ class UserService {
       final List<dynamic> data = response.data;
       return data.map((e) => Workout.fromJson(e)).toList();
     } catch (e) {
-      print('Erro ao buscar treinos: $e');
+      debugPrint('Erro ao buscar treinos: $e');
       return [];
     }
   }
@@ -105,7 +106,7 @@ class UserService {
       final response = await _dio.post('/api/Workout', data: workout.toJson());
       return Workout.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar treino: $e');
+      debugPrint('Erro ao adicionar treino: $e');
       rethrow;
     }
   }
@@ -118,7 +119,7 @@ class UserService {
       );
       return Workout.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar treino: $e');
+      debugPrint('Erro ao adicionar treino: $e');
       rethrow;
     }
   }
@@ -128,7 +129,7 @@ class UserService {
       final response = await _dio.delete('/api/Workout/$id');
       return Workout.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar treino: $e');
+      debugPrint('Erro ao adicionar treino: $e');
       rethrow;
     }
   }
@@ -141,7 +142,7 @@ class UserService {
       );
       return Exercise.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -154,7 +155,7 @@ class UserService {
       );
       return Exercise.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -164,7 +165,7 @@ class UserService {
       final response = await _dio.delete('/api/Exercise/$id');
       return Exercise.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
@@ -174,7 +175,7 @@ class UserService {
       final response = await _dio.get('/api/Workout/$id');
       return Workout.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar usuário: $e');
+      debugPrint('Erro ao adicionar usuário: $e');
       rethrow;
     }
   }
