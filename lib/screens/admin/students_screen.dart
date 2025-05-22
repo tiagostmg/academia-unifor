@@ -129,26 +129,15 @@ class _StudentsScreenState extends State<StudentsScreen> {
     );
 
     if (newUser != null) {
-      try {
-        setState(() => _isLoading = true);
-        final createdUser = await _userService.postUser(newUser);
-        setState(() {
-          allUsers.add(createdUser);
-          allUsers.sort(
-            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-          );
-          filteredUsers = List.from(allUsers); // Nova instância
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Aluno adicionado com sucesso')),
+      setState(() => _isLoading = true);
+      setState(() {
+        allUsers.add(newUser);
+        allUsers.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
         );
-      } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Erro ao adicionar aluno: $e')));
-      } finally {
-        setState(() => _isLoading = false);
-      }
+        filteredUsers = List.from(allUsers); // Nova instância
+      });
+      setState(() => _isLoading = false);
     }
   }
 
