@@ -186,6 +186,43 @@ class SelectedCategoryList extends StatelessWidget {
                           );
                         }
 
+                        InputDecoration customInputDecoration({
+                          required BuildContext context,
+                          required String labelText,
+                          String? errorText,
+                        }) {
+                          final colorScheme = Theme.of(context).colorScheme;
+                          return InputDecoration(
+                            labelText: labelText,
+                            errorText: errorText,
+                            errorStyle: TextStyle(color: colorScheme.error),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: colorScheme.onPrimary.withAlpha(77),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: colorScheme.onPrimary,
+                                width: 2,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: colorScheme.primary,
+                            labelStyle: TextStyle(
+                              color: colorScheme.onPrimary.withAlpha(200),
+                            ),
+                          );
+                        }
+
                         return Dialog(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -248,9 +285,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: nameController,
-                                  decoration: InputDecoration(
+                                  decoration: customInputDecoration(
+                                    context: context,
                                     labelText: 'Nome',
-                                    border: const OutlineInputBorder(),
                                     errorText: fieldErrors['name'],
                                   ),
                                   onChanged:
@@ -259,9 +296,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: brandController,
-                                  decoration: InputDecoration(
+                                  decoration: customInputDecoration(
+                                    context: context,
                                     labelText: 'Marca',
-                                    border: const OutlineInputBorder(),
                                     errorText: fieldErrors['brand'],
                                   ),
                                   onChanged:
@@ -270,9 +307,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: modelController,
-                                  decoration: InputDecoration(
+                                  decoration: customInputDecoration(
+                                    context: context,
                                     labelText: 'Modelo',
-                                    border: const OutlineInputBorder(),
                                     errorText: fieldErrors['model'],
                                   ),
                                   onChanged:
@@ -281,9 +318,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: quantityController,
-                                  decoration: InputDecoration(
+                                  decoration: customInputDecoration(
+                                    context: context,
                                     labelText: 'Quantidade',
-                                    border: const OutlineInputBorder(),
                                     errorText: fieldErrors['quantity'],
                                   ),
                                   keyboardType: TextInputType.number,
@@ -294,9 +331,9 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: imageController,
-                                  decoration: InputDecoration(
+                                  decoration: customInputDecoration(
+                                    context: context,
                                     labelText: 'URL da Imagem',
-                                    border: const OutlineInputBorder(),
                                     errorText: fieldErrors['image'],
                                   ),
                                   onChanged:

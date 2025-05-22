@@ -219,6 +219,43 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
               return !fieldErrors.values.any((error) => error != null);
             }
 
+            InputDecoration customInputDecoration({
+              required BuildContext context,
+              required String labelText,
+              String? errorText,
+            }) {
+              final colorScheme = Theme.of(context).colorScheme;
+              return InputDecoration(
+                labelText: labelText,
+                errorText: errorText,
+                errorStyle: TextStyle(color: colorScheme.error),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: colorScheme.onPrimary.withAlpha(77),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: colorScheme.onPrimary.withAlpha(77),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: colorScheme.onPrimary,
+                    width: 2,
+                  ),
+                ),
+                filled: true,
+                fillColor: colorScheme.primary,
+                labelStyle: TextStyle(
+                  color: colorScheme.onPrimary.withAlpha(200),
+                ),
+              );
+            }
+
             return AlertDialog(
               title: const Text('Adicionar Novo Equipamento'),
               content: ConstrainedBox(
@@ -231,7 +268,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                     children: [
                       DropdownButtonFormField<String>(
                         isExpanded: true,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'Categoria*',
                           errorText: fieldErrors['category'],
                         ),
@@ -256,7 +294,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: nameController,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'Nome*',
                           errorText: fieldErrors['name'],
                         ),
@@ -265,7 +304,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: brandController,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'Marca*',
                           errorText: fieldErrors['brand'],
                         ),
@@ -274,7 +314,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: modelController,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'Modelo*',
                           errorText: fieldErrors['model'],
                         ),
@@ -283,7 +324,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: quantityController,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'Quantidade*',
                           errorText: fieldErrors['quantity'],
                         ),
@@ -293,7 +335,8 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: imageController,
-                        decoration: InputDecoration(
+                        decoration: customInputDecoration(
+                          context: context,
                           labelText: 'URL da Imagem',
                           errorText: fieldErrors['image'],
                         ),
