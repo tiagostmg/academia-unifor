@@ -290,12 +290,23 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               'Tem certeza que deseja salvar as alterações deste usuário?',
             ),
             actions: [
-              //TODO ajeitar as cores
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary, // Cor de fundo
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary, // Cor de fundo
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Salvar'),
               ),
@@ -321,12 +332,23 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                     : 'Tem certeza que deseja remover os privilégios de administrador?',
               ),
               actions: [
-                //TODO ajeitar as cores
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary, // Cor de fundo
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                  ),
                   onPressed: () => Navigator.pop(context, false),
                   child: const Text('Cancelar'),
                 ),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary, // Cor de fundo
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                  ),
                   onPressed: () => Navigator.pop(context, true),
                   child: const Text('Confirmar'),
                 ),

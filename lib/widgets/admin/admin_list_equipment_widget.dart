@@ -37,15 +37,23 @@ class SelectedCategoryList extends StatelessWidget {
             ),
             actions: [
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primary, // Cor de fundo
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text(
-                  'Excluir',
-                  style: TextStyle(color: Colors.red),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red, // Cor de fundo
+                  foregroundColor:
+                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
                 ),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Excluir'),
               ),
             ],
           ),

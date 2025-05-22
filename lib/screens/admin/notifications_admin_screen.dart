@@ -75,14 +75,32 @@ class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Confirmar Exclusão'),
+            title: const Text('Confirmar exclusão'),
             content: const Text('Deseja realmente excluir esta notificação?'),
             actions: [
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ), // Cor de fundo
+
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(
+                    Colors.red,
+                  ), // Cor de fundo
+
+                  foregroundColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.onPrimary,
+                  ), // Cor do texto
+                ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Excluir'),
               ),
@@ -416,8 +434,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.primary,
-                  ), // Cor de fundo
-
+                  ),
                   foregroundColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.onPrimary,
                   ), // Cor do texto
@@ -427,10 +444,7 @@ class _EditNotificationScreenState extends State<EditNotificationScreen> {
               ),
               TextButton(
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primary,
-                  ), // Cor de fundo
-
+                  backgroundColor: WidgetStateProperty.all(Colors.red),
                   foregroundColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.onPrimary,
                   ), // Cor do texto
