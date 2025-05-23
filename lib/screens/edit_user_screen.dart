@@ -242,27 +242,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     ref.read(editUserFormProvider.notifier).setValid(isValid);
   }
 
-  bool _validateAllFields() {
-    ref.read(editUserFormProvider.notifier).clearFieldErrors();
-
-    _validateField('name', _nameController.text);
-    _validateField('email', _emailController.text);
-    _validateField('password', _passwordController.text);
-    _validateField('phone', _phoneController.text);
-    _validateField('address', _addressController.text);
-    _validateField('birthDate', _birthDateController.text);
-    // _validateField('avatarUrl', _avatarUrl);
-
-    final formState = ref.read(editUserFormProvider);
-
-    // Debug: imprima todos os erros
-    formState.fieldErrors.forEach((key, value) {
-      if (value != null) debugPrint('Campo com erro: $key - $value');
-    });
-
-    return !formState.fieldErrors.values.any((error) => error != null);
-  }
-
   @override
   void dispose() {
     _nameController.dispose();
@@ -414,7 +393,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Aluno salvo com sucesso!")),
+          const SnackBar(content: Text("Aluno atualizado com sucesso!")),
         );
         Navigator.pop(context, savedUser);
       }

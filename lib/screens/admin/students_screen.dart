@@ -66,9 +66,6 @@ class _StudentsScreenState extends State<StudentsScreen> {
           filteredUsers = List.from(allUsers); // Nova instância da lista
         }
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Aluno atualizado com sucesso')),
-      );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
