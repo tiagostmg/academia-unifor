@@ -179,4 +179,17 @@ class UserService {
       rethrow;
     }
   }
+
+  Future<bool> isEmailRegistered(String email) async {
+    try {
+      final response = await _dio.post(
+        '/api/User/isemailregistered',
+        data: {'email': email},
+      );
+      return response.data;
+    } catch (e) {
+      debugPrint('Erro ao verificar email: $e');
+      rethrow;
+    }
+  }
 }

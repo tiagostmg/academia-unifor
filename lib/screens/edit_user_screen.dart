@@ -160,7 +160,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         _isAdmin != widget.user.isAdmin;
   }
 
-  void _validateField(String fieldName, String value) {
+  Future<void> _validateField(String fieldName, String value) async {
     String? error;
 
     switch (fieldName) {
@@ -179,6 +179,9 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               value.isEmpty
                   ? 'O email é obrigatório'
                   : 'Email inválido. Use o formato exemplo@dominio.com';
+        }
+        if (await UserService().isEmailRegistered(value)) {
+          error = 'Email já cadastrado';
         }
         debugPrint('Erro: $error');
         break;

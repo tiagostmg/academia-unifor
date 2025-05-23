@@ -63,6 +63,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         () => _emailError = 'Email inválido. Use o formato exemplo@dominio.com',
       );
       hasError = true;
+    } else if (await UserService().isEmailRegistered(email)) {
+      setState(() => _emailError = 'Email já cadastrado');
+      hasError = true;
     }
 
     if (password.isEmpty) {

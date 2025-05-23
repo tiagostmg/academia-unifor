@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/assets/unifor_logo.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/user_provider.dart';
