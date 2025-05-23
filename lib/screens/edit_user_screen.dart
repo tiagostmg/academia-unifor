@@ -180,7 +180,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O email é obrigatório'
                   : 'Email inválido. Use o formato exemplo@dominio.com';
         }
-        if (await UserService().isEmailRegistered(value)) {
+        if (await UserService().isEmailRegistered(value) &&
+            value != widget.user.email) {
           error = 'Email já cadastrado';
         }
         debugPrint('Erro: $error');
@@ -274,10 +275,45 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
   }
 
   Future<void> _saveChanges() async {
-    debugPrint(
-      "_validateAllFields().toString() ${_validateAllFields().toString()}",
-    );
-    if (!_validateAllFields()) {
+    // Primeiro valida todos os campos síncronos
+    ref.read(editUserFormProvider.notifier).clearFieldErrors();
+
+    _validateField('name', _nameController.text);
+    _validateField('password', _passwordController.text);
+    _validateField('phone', _phoneController.text);
+    _validateField('address', _addressController.text);
+    _validateField('birthDate', _birthDateController.text);
+    // _validateField('avatarUrl', _avatarUrl);
+
+    // Validação especial para o email (assíncrona)
+    final email = _emailController.text.trim();
+    if (!ValidatorUser.validateEmail(email)) {
+      ref
+          .read(editUserFormProvider.notifier)
+          .setFieldError(
+            'email',
+            email.isEmpty
+                ? 'O email é obrigatório'
+                : 'Email inválido. Use o formato exemplo@dominio.com',
+          );
+    } else if (email != widget.user.email) {
+      try {
+        final isEmailRegistered = await UserService().isEmailRegistered(email);
+        if (isEmailRegistered) {
+          ref
+              .read(editUserFormProvider.notifier)
+              .setFieldError('email', 'Email já cadastrado');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erro ao verificar email: ${e.toString()}")),
+        );
+        return;
+      }
+    }
+
+    final formState = ref.read(editUserFormProvider);
+    if (formState.fieldErrors.values.any((error) => error != null)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Corrija os erros antes de salvar')),
       );
@@ -295,20 +331,16 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             actions: [
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primary, // Cor de fundo
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () => Navigator.pop(context, false),
                 child: const Text('Cancelar'),
               ),
               TextButton(
                 style: TextButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primary, // Cor de fundo
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () => Navigator.pop(context, true),
                 child: const Text('Salvar'),
@@ -337,20 +369,16 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
               actions: [
                 TextButton(
                   style: TextButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primary, // Cor de fundo
-                    foregroundColor:
-                        Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () => Navigator.pop(context, false),
                   child: const Text('Cancelar'),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primary, // Cor de fundo
-                    foregroundColor:
-                        Theme.of(context).colorScheme.onPrimary, // Cor do texto
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () => Navigator.pop(context, true),
                   child: const Text('Confirmar'),
@@ -378,9 +406,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         password: _passwordController.text.trim(),
         workouts: widget.user.workouts,
       );
-      debugPrint("updatedUser: ${updatedUser.toJson()}");
-
-      debugPrint("widget.user: ${widget.user.toJson()}");
 
       final savedUser =
           widget.user.id == 0

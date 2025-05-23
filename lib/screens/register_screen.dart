@@ -45,6 +45,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       _confirmPasswordError = null;
     });
 
+    // Validações síncronas primeiro
     bool hasError = false;
 
     if (name.isEmpty) {
@@ -62,9 +63,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       setState(
         () => _emailError = 'Email inválido. Use o formato exemplo@dominio.com',
       );
-      hasError = true;
-    } else if (await UserService().isEmailRegistered(email)) {
-      setState(() => _emailError = 'Email já cadastrado');
       hasError = true;
     }
 
@@ -90,11 +88,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       return;
     }
 
+    // Validação assíncrona do email
     setState(() {
       _isLoading = true;
     });
 
     try {
+      // Verifica se o email já está cadastrado
+      final isEmailRegistered = await UserService().isEmailRegistered(email);
+      if (isEmailRegistered) {
+        setState(() {
+          _emailError = 'Email já cadastrado';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      // Se todas as validações passarem, prossegue com o cadastro
       final newUser = Users(
         id: 0,
         workouts: [],
@@ -114,7 +124,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Cadastro realizado com sucesso!"),
+            content: Text(
+              "Cadastro realizado com sucesso!",
+              style: TextStyle(color: Colors.white),
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -129,9 +142,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
-      }
-    } finally {
-      if (mounted) {
         setState(() {
           _isLoading = false;
         });
