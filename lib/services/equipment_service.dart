@@ -5,7 +5,7 @@ import '../models.dart';
 class EquipmentService {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: Environment.apiBaseUrl, // altere para a URL da sua API
+      baseUrl: Environment.apiBaseUrl,
       connectTimeout: Duration(seconds: 5),
       receiveTimeout: Duration(seconds: 5),
     ),
@@ -87,8 +87,7 @@ class EquipmentService {
       );
       return EquipmentItem.fromJson(response.data);
     } catch (e) {
-      print('Erro ao adicionar equipamento: $e');
-      rethrow;
+      throw Exception('Erro ao adicionar equipamento: $e');
     }
   }
 
@@ -100,8 +99,7 @@ class EquipmentService {
       );
       return EquipmentItem.fromJson(response.data);
     } catch (e) {
-      print('Erro ao atualizar equipamento: $e');
-      rethrow;
+      throw Exception('Erro ao atualizar equipamento: $e');
     }
   }
 

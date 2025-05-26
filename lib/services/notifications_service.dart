@@ -5,7 +5,7 @@ import 'package:academia_unifor/models/notifications.dart';
 class NotificationService {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: Environment.apiBaseUrl, // altere para a URL da sua API
+      baseUrl: Environment.apiBaseUrl,
       connectTimeout: Duration(seconds: 5),
       receiveTimeout: Duration(seconds: 5),
     ),
