@@ -24,28 +24,28 @@ class Classes {
   factory Classes.fromJson(Map<String, dynamic> json) {
     return Classes(
       id: json['id'],
-      name: json['class_name'],
-      type: json['class_type'],
-      date: json['class_date'],
-      time: json['class_time'],
-      duration: json['class_duration'],
-      capacity: json['class_capacity'],
-      teacherId: json['class_teacherId'],
-      studentIds: List<int>.from(json['class_list_users_id'] ?? []),
+      name: json['className'],
+      type: json['classType'],
+      date: json['classDate'],
+      time: json['classTime'],
+      duration: json['classDuration'],
+      capacity: json['classCapacity'],
+      teacherId: json['teacherId'],
+      studentIds: List<int>.from(json['userIds'] ?? []),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'class_name': name,
-      'class_type': type,
-      'class_date': date,
-      'class_time': time,
-      'class_duration': duration,
-      'class_capacity': capacity,
-      'class_teacherId': teacherId,
-      'class_list_users_id': studentIds,
+      'className': name,
+      'classType': type,
+      'classDate': date,
+      'classTime': time,
+      'classDuration': duration,
+      'classCapacity': capacity,
+      'teacherId': teacherId,
+      'userIds': studentIds,
     };
   }
 }

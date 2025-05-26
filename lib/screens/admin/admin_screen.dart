@@ -37,6 +37,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
   int totalUsers = 0;
   int totalEquipments = 0;
   int totalNotifications = 0;
+  int totalClasses = 0;
 
   @override
   void initState() {
@@ -44,12 +45,13 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
     _loadData();
   }
 
-  //Modifiquei essa parte para ele receber os metodos coretamentes
   Future<void> _loadData() async {
     try {
       final users = await UserService().loadStudents();
-      final equipmentCategories = await EquipmentService().loadCategories(); 
+      final equipmentCategories = await EquipmentService().loadCategories();
       final notifications = await NotificationService().loadNotifications();
+      final classes = await ClassesService().loadClasses();
+      debugPrint(users.length.toString());
 
       final total = equipmentCategories.fold<int>(0, (sum, e) => sum + e.total);
 
@@ -59,6 +61,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
         totalUsers = users.length;
         totalEquipments = total;
         totalNotifications = notifications.length;
+        totalClasses = classes.length;
       });
     } catch (e) {
       debugPrint('Erro ao carregar dados: $e');
@@ -106,7 +109,6 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 '$totalNotifications',
                 onTap: () => context.go('/admin/notifications'),
               ),
-
             ],
           ),
           const SizedBox(height: 8),
@@ -125,6 +127,18 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 'Ver treinos',
                 '$totalUsers',
                 onTap: () => context.go('/admin/exercises'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _buildCard(
+                context,
+                Icons.class_,
+                'Aulas',
+                '$totalClasses',
+                onTap: () => context.go('/admin/students'),
               ),
             ],
           ),
