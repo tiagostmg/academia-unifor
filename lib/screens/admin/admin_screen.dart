@@ -138,7 +138,7 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
                 Icons.class_,
                 'Aulas',
                 '$totalClasses',
-                onTap: () => context.go('/admin/students'),
+                onTap: () => context.go('/admin/classes'),
               ),
             ],
           ),
