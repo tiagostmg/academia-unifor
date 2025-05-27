@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: theme.colorScheme.primary,
       body: SafeArea(
         child: CustomConvexBottomBar(
-          currentIndex: 2,
+          currentIndex: 3,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
             appBar: CustomAppBar(),

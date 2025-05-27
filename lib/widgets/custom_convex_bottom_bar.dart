@@ -37,6 +37,9 @@ class CustomConvexBottomBar extends StatelessWidget {
               context.go('/workouts');
               break;
             case 2:
+              context.go('/classes');
+              break;
+            case 3:
               context.go('/profile');
               break;
           }
@@ -44,6 +47,7 @@ class CustomConvexBottomBar extends StatelessWidget {
         items: const [
           TabItem(icon: Icons.home, title: 'Início'),
           TabItem(icon: Icons.fitness_center, title: 'Treinos'),
+          TabItem(icon: Icons.class_, title: 'Aulas'),
           TabItem(icon: Icons.person, title: 'Perfil'),
         ],
       ),

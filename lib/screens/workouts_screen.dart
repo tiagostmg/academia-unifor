@@ -22,6 +22,7 @@ class WorkoutsScreen extends StatelessWidget {
           currentIndex: 1,
           child: Scaffold(
             backgroundColor: theme.colorScheme.surface,
+            appBar: CustomAppBar(),
             body: const WorkoutsBody(),
           ),
         ),
@@ -48,7 +49,6 @@ class WorkoutsBody extends ConsumerWidget {
 
     return Column(
       children: [
-        const SearchAppBar(),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(16),

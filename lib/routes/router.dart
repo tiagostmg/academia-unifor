@@ -1,3 +1,4 @@
+import 'package:academia_unifor/screens/class_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:academia_unifor/screens.dart';
 
@@ -39,6 +40,11 @@ final GoRouter router = GoRouter(
       path: '/workouts',
       pageBuilder:
           (context, state) => NoTransitionPage(child: const WorkoutsScreen()),
+    ),
+    GoRoute(
+      path: '/classes',
+      pageBuilder:
+          (context, state) => NoTransitionPage(child: const ClassScreen()),
     ),
     GoRoute(
       path: '/profile',
