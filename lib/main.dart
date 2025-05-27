@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Environment.init();
-  debugPrint("GEMINI_API_URL => ${Environment.geminiApiUrl}");
+  // debugPrint("GEMINI_API_URL => ${Environment.geminiApiUrl}");
   debugPrint("API_BASE_URL => ${Environment.apiBaseUrl}");
   runApp(const ProviderScope(child: MainApp()));
 }
