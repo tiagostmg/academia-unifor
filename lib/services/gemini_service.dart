@@ -1,14 +1,15 @@
 import 'dart:convert';
-import 'package:academia_unifor/config/enviroment.dart';
 import 'package:http/http.dart' as http;
 
 class GeminiService {
-  final String baseUrl = Environment.geminiApiUrl;
+  final String baseUrl = 'https://gemini-chat-7d5w.onrender.com';
 
   Future<String> getResponse(String question) async {
+    final url = Uri.parse('$baseUrl/gemini/chat/fitness-instructor');
+
     final response = await http.post(
-      Uri.parse("$baseUrl/gemini/chat"),
-      headers: {"Content-Type": "application/json"},
+      url,
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         "contents": [
           {
@@ -22,10 +23,10 @@ class GeminiService {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
       return data["candidates"][0]["content"]["parts"][0]["text"];
     } else {
-      return "Erro ao obter resposta da IA (${response.statusCode}): ${response.body}";
+      return "Erro ao obter resposta da IA.";
     }
   }
 }
