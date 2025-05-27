@@ -27,13 +27,10 @@ class ClassesService {
 
   Future<Classes> postClass(Classes classes) async {
     try {
-      final response = await _dio.post(
-        '/api/GymEquipment',
-        data: classes.toJson(),
-      );
+      final response = await _dio.post('/api/class', data: classes.toJson());
       return Classes.fromJson(response.data);
     } catch (e) {
-      throw Exception('Erro ao adicionar equipamento: $e');
+      throw Exception('Erro ao adicionar aula: $e');
     }
   }
 
@@ -45,7 +42,7 @@ class ClassesService {
       );
       return Classes.fromJson(response.data);
     } catch (e) {
-      throw Exception('Erro ao atualizar equipamento: $e');
+      throw Exception('Erro ao atualizar aula: $e');
     }
   }
 
