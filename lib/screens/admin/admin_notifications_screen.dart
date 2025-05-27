@@ -3,15 +3,15 @@ import 'package:academia_unifor/services.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models.dart';
 
-class NotificationAdminScreen extends StatefulWidget {
-  const NotificationAdminScreen({super.key});
+class AdminNotificationScreen extends StatefulWidget {
+  const AdminNotificationScreen({super.key});
 
   @override
-  State<NotificationAdminScreen> createState() =>
-      _NotificationAdminScreenState();
+  State<AdminNotificationScreen> createState() =>
+      _AdminNotificationScreenState();
 }
 
-class _NotificationAdminScreenState extends State<NotificationAdminScreen> {
+class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
   List<Notifications> allNotifications = [];
   List<Notifications> filteredNotifications = [];
   final NotificationService _notificationService = NotificationService();

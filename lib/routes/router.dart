@@ -67,7 +67,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/admin/notifications',
-      builder: (context, state) => const NotificationAdminScreen(),
+      builder: (context, state) => const AdminNotificationScreen(),
     ),
     GoRoute(
       path: '/admin/classes',
