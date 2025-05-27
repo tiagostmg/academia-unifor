@@ -71,7 +71,7 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/admin/classes',
-      builder: (context, state) => const ClassAdminScreen(),
+      builder: (context, state) => const AdminClassScreen(),
     ),
   ],
 );

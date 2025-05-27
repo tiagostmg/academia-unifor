@@ -4,14 +4,14 @@ import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models.dart';
 import 'package:go_router/go_router.dart';
 
-class ClassAdminScreen extends StatefulWidget {
-  const ClassAdminScreen({super.key});
+class AdminClassScreen extends StatefulWidget {
+  const AdminClassScreen({super.key});
 
   @override
-  State<ClassAdminScreen> createState() => _ClassAdminScreenState();
+  State<AdminClassScreen> createState() => _AdminClassScreenState();
 }
 
-class _ClassAdminScreenState extends State<ClassAdminScreen> {
+class _AdminClassScreenState extends State<AdminClassScreen> {
   List<Classes> allClasses = [];
   List<Classes> filteredClasses = [];
   final ClassesService _classService = ClassesService();
