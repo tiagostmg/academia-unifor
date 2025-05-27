@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:academia_unifor/services.dart';
 import 'package:academia_unifor/widgets.dart';
 import 'package:academia_unifor/models.dart';
+import 'package:go_router/go_router.dart';
 
 class AdminNotificationScreen extends StatefulWidget {
   const AdminNotificationScreen({super.key});
@@ -138,42 +139,40 @@ class _AdminNotificationScreenState extends State<AdminNotificationScreen> {
     return DecoratedBox(
       decoration: BoxDecoration(color: theme.colorScheme.primary),
       child: SafeArea(
-        child: AdminConvexBottomBar(
-          currentIndex: 2,
-          child: Scaffold(
-            backgroundColor: theme.scaffoldBackgroundColor,
-            appBar: SearchAppBar(
-              onSearchChanged: _filterNotifications,
-              showChatIcon: false,
-            ),
-            body: NotificationsScreenBody(
-              notifications: filteredNotifications,
-              onUpdate: _updateNotification,
-              onDelete: _deleteNotification,
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => EditNotificationScreen(
-                          notification: Notifications(
-                            id: 0,
-                            title: '',
-                            description: '',
-                            createdAt: DateTime.now(),
-                          ),
-                          isEditing: false,
+        child: Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          appBar: SearchAppBar(
+            onBack: () => context.go('/admin/'),
+            onSearchChanged: _filterNotifications,
+            showChatIcon: false,
+          ),
+          body: NotificationsScreenBody(
+            notifications: filteredNotifications,
+            onUpdate: _updateNotification,
+            onDelete: _deleteNotification,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => EditNotificationScreen(
+                        notification: Notifications(
+                          id: 0,
+                          title: '',
+                          description: '',
+                          createdAt: DateTime.now(),
                         ),
-                  ),
-                );
-                if (result != null && result is Notifications) {
-                  await _updateNotification(result);
-                }
-              },
-              child: const Icon(Icons.add),
-            ),
+                        isEditing: false,
+                      ),
+                ),
+              );
+              if (result != null && result is Notifications) {
+                await _updateNotification(result);
+              }
+            },
+            child: const Icon(Icons.add),
           ),
         ),
       ),

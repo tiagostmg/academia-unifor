@@ -104,35 +104,23 @@ class _AdminScreenBodyState extends State<AdminScreenBody> {
               ),
               _buildCard(
                 context,
-                Icons.notifications,
-                'Gerenciar avisos',
-                '$totalNotifications',
-                onTap: () => context.go('/admin/notifications'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _buildCard(
-                context,
                 Icons.people,
                 'Total de alunos',
                 '$totalUsers',
                 onTap: () => context.go('/admin/students'),
               ),
-              _buildCard(
-                context,
-                Icons.description,
-                'Ver treinos',
-                '$totalUsers',
-                onTap: () => context.go('/admin/exercises'),
-              ),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             children: [
+              _buildCard(
+                context,
+                Icons.notifications,
+                'Avisos',
+                '$totalNotifications',
+                onTap: () => context.go('/admin/notifications'),
+              ),
               _buildCard(
                 context,
                 Icons.class_,
