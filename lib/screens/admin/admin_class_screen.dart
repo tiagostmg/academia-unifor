@@ -202,50 +202,210 @@ class ClassesScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
-      child: ListView.separated(
-        itemCount: classes.length,
-        separatorBuilder: (_, __) => const Divider(),
-        itemBuilder: (context, index) {
-          final classItem = classes[index];
-          return ListTile(
-            leading: const Icon(Icons.class_),
-            title: Text(
-              '${classItem.name} [${classItem.studentIds.length}/${classItem.capacity}]',
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Data: ${classItem.date} - ${formatarHora(classItem.time)}',
-                ),
-                Text('Duração: ${formatarHora(classItem.duration)}'),
-              ],
-            ),
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => EditClassScreen(
-                        classItem: classItem,
-                        isEditing: true,
-                      ),
-                ),
-              );
-              if (result != null && result is Classes) {
-                await onUpdate(result);
+    return Column(
+      children: [
+        Expanded(
+          child: FutureBuilder<List<Classes>>(
+            future: ClassesService().loadClasses(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Erro ao carregar aulas'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('Nenhuma aula encontrada'));
               }
+              final classes = snapshot.data!;
+              classes.sort(
+                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+              );
+              return ListView.builder(
+                padding: const EdgeInsets.only(bottom: 16),
+                itemCount: classes.length,
+                itemBuilder: (context, index) {
+                  final classItem = classes[index];
+                  return _buildClassCard(context, classItem);
+                },
+              );
             },
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => onDelete(classItem.id),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClassCard(BuildContext context, Classes classItem) {
+    final theme = Theme.of(context);
+
+    int teacherId = classItem.teacherId;
+
+    return FutureBuilder<Users>(
+      future: UserService().getUserById(teacherId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            color: theme.colorScheme.surface,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
             ),
           );
-        },
-      ),
+        } else if (snapshot.hasError || !snapshot.hasData) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            color: theme.colorScheme.surface,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Erro ao carregar instrutor'),
+            ),
+          );
+        }
+        final instructor = snapshot.data!;
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          elevation: 2,
+          color: theme.colorScheme.primary,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              // Navegar para detalhes da aula
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Título e chip
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        classItem.name,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                      Chip(
+                        backgroundColor: theme.colorScheme.primary,
+                        avatar: Icon(
+                          Icons.person,
+                          color: theme.colorScheme.onPrimary,
+                          size: 18,
+                        ),
+                        label: Text(
+                          "${classItem.studentIds.length}/${classItem.capacity}",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Info e botão centralizado
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildClassInfoRow(
+                              context,
+                              Icons.person,
+                              instructor.name,
+                            ),
+                            const SizedBox(height: 4),
+                            _buildClassInfoRow(
+                              context,
+                              Icons.access_time,
+                              "${classItem.time} - ${_formatTimeSum(classItem.time, classItem.duration)}",
+                            ),
+                            const SizedBox(height: 4),
+                            _buildClassInfoRow(
+                              context,
+                              Icons.calendar_month_outlined,
+                              classItem.date,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => EditClassScreen(
+                                        classItem: classItem,
+                                        isEditing: true,
+                                      ),
+                                ),
+                              ).then((result) {
+                                if (result != null && result is Classes) {
+                                  onUpdate(result);
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              await onDelete(classItem.id);
+                            },
+                            icon: Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
+  }
+
+  Widget _buildClassInfoRow(BuildContext context, IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: Theme.of(context).iconTheme.color),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+        ),
+      ],
+    );
+  }
+
+  String _formatTimeSum(String time1, String time2) {
+    final parts1 = time1.split(':');
+    final parts2 = time2.split(':');
+
+    if (parts1.length != 2 || parts2.length != 2) {
+      return '00:00';
+    }
+
+    final hours1 = int.tryParse(parts1[0]) ?? 0;
+    final minutes1 = int.tryParse(parts1[1]) ?? 0;
+    final hours2 = int.tryParse(parts2[0]) ?? 0;
+    final minutes2 = int.tryParse(parts2[1]) ?? 0;
+
+    final totalMinutes = (hours1 * 60 + minutes1) + (hours2 * 60 + minutes2);
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 }
 
