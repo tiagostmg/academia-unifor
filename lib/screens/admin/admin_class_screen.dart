@@ -163,7 +163,7 @@ class _AdminClassScreenState extends State<AdminClassScreen> {
                           duration: '',
                           capacity: 0,
                           teacherId: 1,
-                          studentIds: [0],
+                          studentIds: [],
                         ),
                         isEditing: false,
                       ),

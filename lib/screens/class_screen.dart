@@ -51,6 +51,9 @@ class ClassBody extends ConsumerWidget {
                 return Center(child: Text('Nenhuma aula encontrada'));
               }
               final classes = snapshot.data!;
+              classes.sort(
+                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+              );
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 16),
                 itemCount: classes.length,
@@ -162,7 +165,13 @@ class ClassBody extends ConsumerWidget {
                             _buildClassInfoRow(
                               context,
                               Icons.access_time,
-                              "${classItem.time} - ${classItem.time + classItem.duration}",
+                              "${classItem.time} - ${_formatTimeSum(classItem.time, classItem.duration)}",
+                            ),
+                            const SizedBox(height: 4),
+                            _buildClassInfoRow(
+                              context,
+                              Icons.calendar_month_outlined,
+                              classItem.date,
                             ),
                           ],
                         ),
@@ -182,10 +191,16 @@ class ClassBody extends ConsumerWidget {
                           try {
                             if (isSubscribed) {
                               // Lógica para cancelar inscrição
-                              await ClassesService().unsubscribeUser(classItem.id, currentUser.id);
+                              await ClassesService().unsubscribeUser(
+                                classItem.id,
+                                currentUser.id,
+                              );
                             } else {
                               // Lógica para inscrever-se
-                              await ClassesService().subscribeUser(classItem.id, currentUser.id);
+                              await ClassesService().subscribeUser(
+                                classItem.id,
+                                currentUser.id,
+                              );
                             }
 
                             // Atualiza a UI
@@ -198,7 +213,7 @@ class ClassBody extends ConsumerWidget {
                                 ),
                               ),
                             );
-                            
+
                             // Força a reconstrução do widget para atualizar a lista
                             (context as Element).markNeedsBuild();
                           } catch (e) {
@@ -244,5 +259,25 @@ class ClassBody extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _formatTimeSum(String time1, String time2) {
+    final parts1 = time1.split(':');
+    final parts2 = time2.split(':');
+
+    if (parts1.length != 2 || parts2.length != 2) {
+      return '00:00';
+    }
+
+    final hours1 = int.tryParse(parts1[0]) ?? 0;
+    final minutes1 = int.tryParse(parts1[1]) ?? 0;
+    final hours2 = int.tryParse(parts2[0]) ?? 0;
+    final minutes2 = int.tryParse(parts2[1]) ?? 0;
+
+    final totalMinutes = (hours1 * 60 + minutes1) + (hours2 * 60 + minutes2);
+    final hours = totalMinutes ~/ 60;
+    final minutes = totalMinutes % 60;
+
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 }
