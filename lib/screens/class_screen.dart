@@ -29,11 +29,30 @@ class ClassScreen extends StatelessWidget {
   }
 }
 
-class ClassBody extends ConsumerWidget {
+class ClassBody extends ConsumerStatefulWidget {
   const ClassBody({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ClassBody> createState() => _ClassBodyState();
+}
+
+class _ClassBodyState extends ConsumerState<ClassBody> {
+  late Future<List<Classes>> _classesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _classesFuture = ClassesService().loadClasses();
+  }
+
+  void _refreshClasses() {
+    setState(() {
+      _classesFuture = ClassesService().loadClasses();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final currentUser = ref.watch(userProvider);
 
     return Column(
@@ -41,14 +60,14 @@ class ClassBody extends ConsumerWidget {
         const SearchAppBar(showChatIcon: false),
         Expanded(
           child: FutureBuilder<List<Classes>>(
-            future: ClassesService().loadClasses(),
+            future: _classesFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Erro ao carregar aulas'));
+                return const Center(child: Text('Erro ao carregar aulas'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('Nenhuma aula encontrada'));
+                return const Center(child: Text('Nenhuma aula encontrada'));
               }
               final classes = snapshot.data!;
               classes.sort(
@@ -75,7 +94,6 @@ class ClassBody extends ConsumerWidget {
     Users? currentUser,
   ) {
     final theme = Theme.of(context);
-
     int teacherId = classItem.teacherId;
     bool isSubscribed =
         currentUser != null && classItem.studentIds.contains(currentUser.id);
@@ -104,148 +122,137 @@ class ClassBody extends ConsumerWidget {
             ),
           );
         }
+
         final instructor = snapshot.data!;
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           elevation: 2,
           color: theme.colorScheme.primary,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () {
-              // Navegar para detalhes da aula
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Título e chip
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        classItem.name,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      classItem.name,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                    ),
+                    Chip(
+                      backgroundColor: theme.colorScheme.primary,
+                      avatar: Icon(
+                        Icons.person,
+                        color: theme.colorScheme.onPrimary,
+                        size: 18,
+                      ),
+                      label: Text(
+                        "${classItem.studentIds.length}/${classItem.capacity}",
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onPrimary,
                         ),
                       ),
-                      Chip(
-                        backgroundColor: theme.colorScheme.primary,
-                        avatar: Icon(
-                          Icons.person,
-                          color: theme.colorScheme.onPrimary,
-                          size: 18,
-                        ),
-                        label: Text(
-                          "${classItem.studentIds.length}/${classItem.capacity}",
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onPrimary,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildClassInfoRow(
+                            context,
+                            Icons.person,
+                            instructor.name,
                           ),
-                        ),
+                          const SizedBox(height: 4),
+                          _buildClassInfoRow(
+                            context,
+                            Icons.access_time,
+                            "${classItem.time} - ${_formatTimeSum(classItem.time, classItem.duration)}",
+                          ),
+                          const SizedBox(height: 4),
+                          _buildClassInfoRow(
+                            context,
+                            Icons.calendar_month_outlined,
+                            classItem.date,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+                    ),
+                    const SizedBox(width: 12),
+                    OutlinedButton(
+                      onPressed: () async {
+                        if (currentUser == null) {
+                          _showSnack(context, 'Faça login para se inscrever');
+                          return;
+                        }
 
-                  // Info e botão centralizado
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildClassInfoRow(
-                              context,
-                              Icons.person,
-                              instructor.name,
-                            ),
-                            const SizedBox(height: 4),
-                            _buildClassInfoRow(
-                              context,
-                              Icons.access_time,
-                              "${classItem.time} - ${_formatTimeSum(classItem.time, classItem.duration)}",
-                            ),
-                            const SizedBox(height: 4),
-                            _buildClassInfoRow(
-                              context,
-                              Icons.calendar_month_outlined,
-                              classItem.date,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      OutlinedButton(
-                        onPressed: () async {
-                          if (currentUser == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Faça login para se inscrever'),
-                              ),
+                        try {
+                          if (isSubscribed) {
+                            await ClassesService().unsubscribeUser(
+                              classItem.id,
+                              currentUser.id,
                             );
-                            return;
-                          }
-
-                          try {
-                            if (isSubscribed) {
-                              // Lógica para cancelar inscrição
-                              await ClassesService().unsubscribeUser(
-                                classItem.id,
-                                currentUser.id,
-                              );
-                            } else {
-                              // Lógica para inscrever-se
-                              await ClassesService().subscribeUser(
-                                classItem.id,
-                                currentUser.id,
-                              );
-                            }
-
-                            // Atualiza a UI
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  isSubscribed
-                                      ? 'Inscrição cancelada'
-                                      : 'Inscrição realizada',
-                                ),
-                              ),
-                            );
-
-                            // Força a reconstrução do widget para atualizar a lista
-                            (context as Element).markNeedsBuild();
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Erro: ${e.toString()}')),
+                          } else {
+                            await ClassesService().subscribeUser(
+                              classItem.id,
+                              currentUser.id,
                             );
                           }
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor:
-                              isSubscribed ? Colors.red : Colors.green,
-                          backgroundColor:
-                              isSubscribed
-                                  ? Colors.red.withAlpha(20)
-                                  : Colors.green.withAlpha(20),
-                          side: BorderSide(
-                            color: isSubscribed ? Colors.red : Colors.green,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+
+                          _refreshClasses();
+
+                          _showSnack(
+                            context,
+                            isSubscribed
+                                ? 'Inscrição cancelada'
+                                : 'Inscrição realizada',
+                          );
+                        } catch (e) {
+                          _showSnack(context, 'Erro: ${e.toString()}');
+                        }
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor:
+                            isSubscribed ? Colors.red : Colors.green,
+                        backgroundColor: (isSubscribed
+                                ? Colors.red
+                                : Colors.green)
+                            .withAlpha(20),
+                        side: BorderSide(
+                          color: isSubscribed ? Colors.red : Colors.green,
                         ),
-                        child: Text(isSubscribed ? "Cancelar" : "Inscrever-se"),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                      child: Text(isSubscribed ? "Cancelar" : "Inscrever-se"),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );
       },
+    );
+  }
+
+  void _showSnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(bottom: 80, left: 16, right: 16),
+      ),
     );
   }
 
@@ -265,9 +272,7 @@ class ClassBody extends ConsumerWidget {
     final parts1 = time1.split(':');
     final parts2 = time2.split(':');
 
-    if (parts1.length != 2 || parts2.length != 2) {
-      return '00:00';
-    }
+    if (parts1.length != 2 || parts2.length != 2) return '00:00';
 
     final hours1 = int.tryParse(parts1[0]) ?? 0;
     final minutes1 = int.tryParse(parts1[1]) ?? 0;
