@@ -1,8 +1,9 @@
 import 'package:academia_unifor/models/classes.dart';
+import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/classes_service.dart';
+import 'package:academia_unifor/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:academia_unifor/widgets.dart';
 
 class ClassScreen extends StatelessWidget {
@@ -65,77 +66,140 @@ class ClassBody extends ConsumerWidget {
   Widget _buildClassCard(BuildContext context, Classes classItem) {
     final theme = Theme.of(context);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 2,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          // Navegar para detalhes da aula
-          context.push('/class-details', extra: classItem);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    classItem.name,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Chip(
-                    backgroundColor: theme.colorScheme.primary.withAlpha(50),
-                    label: Text(
-                      "${classItem.studentIds.length}/${classItem.capacity}",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              // _buildClassInfoRow(context, Icons.person, classItem.instructor),
-              // const SizedBox(height: 4),
-              _buildClassInfoRow(
-                context,
-                Icons.access_time,
-                "${classItem.time} - ${classItem.time}",
-              ),
+    int teacherId = classItem.teacherId;
+    final int currentUserId = 1; // Replace with actual user id
+    bool isSubscribed = classItem.studentIds.contains(currentUserId);
 
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+    return FutureBuilder<Users>(
+      future: UserService().getUserById(teacherId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            color: theme.colorScheme.surface,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        } else if (snapshot.hasError || !snapshot.hasData) {
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 2,
+            color: theme.colorScheme.surface,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Erro ao carregar instrutor'),
+            ),
+          );
+        }
+        final instructor = snapshot.data!;
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          elevation: 2,
+          color: theme.colorScheme.primary,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              // Navegar para detalhes da aula
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      // Cancelar inscrição
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                    ),
-                    child: const Text("Cancelar"),
+                  // Título e chip
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        classItem.name,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                      Chip(
+                        backgroundColor: theme.colorScheme.primary,
+                        avatar: Icon(
+                          Icons.person,
+                          color: theme.colorScheme.onPrimary,
+                          size: 18,
+                        ),
+                        label: Text(
+                          "${classItem.studentIds.length}/${classItem.capacity}",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  // CustomButton(
-                  //   text: "Detalhes",
-                  //   onPressed: () {
-                  //     context.push('/class-details', extra: classItem);
-                  //   },
-                  //   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  // ),
+                  const SizedBox(height: 12),
+
+                  // Info e botão centralizado
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildClassInfoRow(
+                              context,
+                              Icons.person,
+                              instructor.name,
+                            ),
+                            const SizedBox(height: 4),
+                            _buildClassInfoRow(
+                              context,
+                              Icons.access_time,
+                              "${classItem.time} - ${classItem.time + classItem.duration}",
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      if (isSubscribed) ...[
+                        OutlinedButton(
+                          onPressed: () {
+                            // Cancelar inscrição
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            backgroundColor: Colors.red.withAlpha(20),
+                            side: const BorderSide(color: Colors.red),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text("Cancelar"),
+                        ),
+                      ] else ...[
+                        OutlinedButton(
+                          onPressed: () {
+                            // Cancelar inscrição
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.green,
+                            backgroundColor: Colors.green.withAlpha(20),
+                            side: const BorderSide(color: Colors.green),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text("Inscrever-se"),
+                        ),
+                      ],
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

@@ -171,7 +171,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O nome é obrigatório'
                   : 'O nome deve ter entre 3 e 50 caracteres e apenas letras';
         }
-        debugPrint('Erro: $error');
         break;
       case 'email':
         if (!ValidatorUser.validateEmail(value)) {
@@ -184,7 +183,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
             value != widget.user.email) {
           error = 'Email já cadastrado';
         }
-        debugPrint('Erro: $error');
         break;
       case 'password':
         if (!ValidatorUser.validatePassword(value)) {
@@ -193,7 +191,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'A senha é obrigatória'
                   : 'A senha deve ter entre 4 e 20 caracteres';
         }
-        debugPrint('Erro: $error');
         break;
       case 'phone':
         if (!ValidatorUser.validatePhone(value)) {
@@ -202,7 +199,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O telefone é obrigatório'
                   : 'Telefone inválido. Use (DDD) 9XXXX-XXXX ou (DDD) XXXX-XXXX';
         }
-        debugPrint('Erro: $error');
         break;
       case 'address':
         if (!ValidatorUser.validateAddress(value)) {
@@ -211,18 +207,17 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
                   ? 'O endereço é obrigatório'
                   : 'O endereço deve ter pelo menos 5 caracteres';
         }
-        debugPrint('Erro: $error');
         break;
       case 'birthDate':
         if (!ValidatorUser.validateBirthDate(value)) {
           error =
               'Data de nascimento inválida. Você deve ter entre 12 e 120 anos';
         }
-        debugPrint('Erro: $error');
         break;
       case 'avatarUrl':
         if (!ValidatorUser.validateImageUrl(value)) {
-          error = 'URL da imagem inválida (use .jpg, .jpeg, .png ou .gif)';
+          error =
+              'URL da imagem inválida (use .jpg, .jpeg, .png ou .gif)'; //nao esta sendo usado
         }
         break;
     }
@@ -237,8 +232,6 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ValidatorUser.validateEmail(_emailController.text) &&
         ValidatorUser.validatePassword(_passwordController.text) &&
         ValidatorUser.validateBirthDate(_birthDateController.text);
-
-    debugPrint('isValid: $isValid');
     ref.read(editUserFormProvider.notifier).setValid(isValid);
   }
 
