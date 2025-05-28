@@ -446,31 +446,6 @@ class _EditClassScreenState extends State<EditClassScreen> {
     'teacher': null,
   };
 
-  @override
-  void initState() {
-    super.initState();
-    _nameController = TextEditingController(text: widget.classItem.name);
-    _typeController = TextEditingController(text: widget.classItem.type);
-    _dateController = TextEditingController(text: widget.classItem.date);
-    _timeController = TextEditingController(text: widget.classItem.time);
-    _durationController = TextEditingController(
-      text: widget.classItem.duration,
-    );
-    _capacityController = TextEditingController(
-      text: widget.classItem.capacity.toString(),
-    );
-    _selectedTeacherId = widget.classItem.teacherId;
-    _selectedStudentIds = List.from(widget.classItem.studentIds);
-    _hasChanges = widget.hasUnsavedChanges;
-
-    _nameController.addListener(_checkForChanges);
-    _typeController.addListener(_checkForChanges);
-    _dateController.addListener(_checkForChanges);
-    _timeController.addListener(_checkForChanges);
-    _durationController.addListener(_checkForChanges);
-    _capacityController.addListener(_checkForChanges);
-  }
-
   void _checkForChanges() {
     final hasChanges =
         _nameController.text != widget.classItem.name ||
@@ -718,6 +693,37 @@ class _EditClassScreenState extends State<EditClassScreen> {
     }
   }
 
+  late Future<List<Users>> admins;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.classItem.name);
+    _typeController = TextEditingController(text: widget.classItem.type);
+    _dateController = TextEditingController(text: widget.classItem.date);
+    _timeController = TextEditingController(text: widget.classItem.time);
+    _durationController = TextEditingController(
+      text: widget.classItem.duration,
+    );
+    _capacityController = TextEditingController(
+      text: widget.classItem.capacity.toString(),
+    );
+    _selectedTeacherId = widget.classItem.teacherId;
+    _selectedStudentIds = List.from(widget.classItem.studentIds);
+    _hasChanges = widget.hasUnsavedChanges;
+
+    _nameController.addListener(_checkForChanges);
+    _typeController.addListener(_checkForChanges);
+    _dateController.addListener(_checkForChanges);
+    _timeController.addListener(_checkForChanges);
+    _durationController.addListener(_checkForChanges);
+    _capacityController.addListener(_checkForChanges);
+
+    admins = UserService().loadUsers().then(
+      (users) => users.where((user) => user.isAdmin).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -727,10 +733,6 @@ class _EditClassScreenState extends State<EditClassScreen> {
     final focusedBorderColor = textColor.withAlpha(76);
     final errorColor = theme.colorScheme.error;
     final cursorColor = textColor;
-
-    final admins = UserService().loadUsers().then(
-      (users) => users.where((user) => user.isAdmin).toList(),
-    );
 
     return PopScope(
       canPop: !_hasChanges,
@@ -1048,8 +1050,6 @@ class _EditClassScreenState extends State<EditClassScreen> {
                         },
                       ),
                       const SizedBox(height: 12),
-
-                      //porqque toda vez que eu altero qualquer campo, o dropdown é reconstruído? por favor tente fazer com que o dropdown não seja reconstruído toda vez que eu alterar qualquer campo
                       FutureBuilder<List<Users>>(
                         future: admins,
                         builder: (context, snapshot) {
