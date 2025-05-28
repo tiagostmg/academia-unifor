@@ -475,6 +475,8 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
     final formState = ref.watch(editUserFormProvider);
     final theme = Theme.of(context);
 
+    const protectedAdminId = 6;
+
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -524,7 +526,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
           fieldName: 'address',
         ),
         _buildDateField(context),
-        if (formState.isAdminEditing) ...[
+        if (formState.isAdminEditing && widget.user.id != protectedAdminId) ...[
           _buildAdminSwitch(),
           const SizedBox(height: 16),
         ],
