@@ -56,4 +56,28 @@ class ClassesService {
       throw Exception('Erro: $e');
     }
   }
+
+  Future<Classes> subscribeUser(int classId, int userId) async {
+    try {
+      final response = await _dio.post(
+        '/api/class/subscribe',
+        data: {'userId': userId, 'classId': classId},
+      );
+      return Classes.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Erro ao inscrever usuário na aula: $e');
+    }
+  }
+
+  Future<Classes> unsubscribeUser(int classId, int userId) async {
+    try {
+      final response = await _dio.post(
+        '/api/Class/unsubscribe',
+        data: {'userId': userId, 'classId': classId},
+      );
+      return Classes.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Erro ao cancelar inscrição do usuário na aula: $e');
+    }
+  }
 }

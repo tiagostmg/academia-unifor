@@ -182,10 +182,10 @@ class ClassBody extends ConsumerWidget {
                           try {
                             if (isSubscribed) {
                               // Lógica para cancelar inscrição
-                              // await ClassesService().unsubscribeFromClass(classItem.id, currentUser.id);
+                              await ClassesService().unsubscribeUser(classItem.id, currentUser.id);
                             } else {
                               // Lógica para inscrever-se
-                              // await ClassesService().subscribeToClass(classItem.id, currentUser.id);
+                              await ClassesService().subscribeUser(classItem.id, currentUser.id);
                             }
 
                             // Atualiza a UI
@@ -198,6 +198,9 @@ class ClassBody extends ConsumerWidget {
                                 ),
                               ),
                             );
+                            
+                            // Força a reconstrução do widget para atualizar a lista
+                            (context as Element).markNeedsBuild();
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Erro: ${e.toString()}')),
