@@ -514,16 +514,34 @@ class _EditClassScreenState extends State<EditClassScreen> {
       case 'date':
         if (value.isEmpty) {
           error = 'A data é obrigatória';
+        } else {
+          // Regex for DD/MM/YYYY
+          final dateRegExp = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+          if (!dateRegExp.hasMatch(value)) {
+            error = 'A data deve estar no formato DD/MM/AAAA';
+          }
         }
         break;
       case 'time':
         if (value.isEmpty) {
           error = 'O horário é obrigatório';
+        } else {
+          // Regex for H:MM or HH:MM (24-hour)
+          final timeRegExp = RegExp(r'^\d{1,2}:\d{2}$');
+          if (!timeRegExp.hasMatch(value)) {
+            error = 'O horário deve estar no formato HH:MM ou H:MM';
+          }
         }
         break;
       case 'duration':
         if (value.isEmpty) {
           error = 'A duração é obrigatória';
+        } else {
+          // Regex for H:MM or HH:MM
+          final durationRegExp = RegExp(r'^\d{1,2}:\d{2}$');
+          if (!durationRegExp.hasMatch(value)) {
+            error = 'A duração deve estar no formato HH:MM ou H:MM';
+          }
         }
         break;
       case 'capacity':
@@ -710,6 +728,10 @@ class _EditClassScreenState extends State<EditClassScreen> {
     final errorColor = theme.colorScheme.error;
     final cursorColor = textColor;
 
+    final admins = UserService().loadUsers().then(
+      (users) => users.where((user) => user.isAdmin).toList(),
+    );
+
     return PopScope(
       canPop: !_hasChanges,
       onPopInvokedWithResult: (didPop, result) async {
@@ -789,7 +811,7 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _typeController,
                         style: TextStyle(color: textColor),
@@ -836,13 +858,13 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _dateController,
                         style: TextStyle(color: textColor),
                         cursorColor: cursorColor,
                         decoration: InputDecoration(
-                          labelText: 'Data* (DD/MM/AAAA)',
+                          labelText: 'Data*',
                           labelStyle: TextStyle(color: textColor),
                           errorText: _fieldErrors['date'],
                           errorStyle: TextStyle(color: errorColor),
@@ -883,13 +905,13 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _timeController,
                         style: TextStyle(color: textColor),
                         cursorColor: cursorColor,
                         decoration: InputDecoration(
-                          labelText: 'Horário* (HH:MM)',
+                          labelText: 'Horário*',
                           labelStyle: TextStyle(color: textColor),
                           errorText: _fieldErrors['time'],
                           errorStyle: TextStyle(color: errorColor),
@@ -930,13 +952,13 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _durationController,
                         style: TextStyle(color: textColor),
                         cursorColor: cursorColor,
                         decoration: InputDecoration(
-                          labelText: 'Duração* (ex: 1 hora)',
+                          labelText: 'Duração*',
                           labelStyle: TextStyle(color: textColor),
                           errorText: _fieldErrors['duration'],
                           errorStyle: TextStyle(color: errorColor),
@@ -977,7 +999,7 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _capacityController,
                         style: TextStyle(color: textColor),
@@ -1025,67 +1047,109 @@ class _EditClassScreenState extends State<EditClassScreen> {
                           _checkForChanges();
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
 
-                      // DropdownButtonFormField<int>(
-                      //   value: _selectedTeacherId,
-                      //   dropdownColor: cardColor,
-                      //   style: TextStyle(color: textColor),
-                      //   decoration: InputDecoration(
-                      //     labelText: 'Professor*',
-                      //     labelStyle: TextStyle(color: textColor),
-                      //     errorText: _fieldErrors['teacher'],
-                      //     errorStyle: TextStyle(color: errorColor),
-                      //     border: OutlineInputBorder(
-                      //       borderSide: BorderSide(
-                      //         color: _fieldErrors['teacher'] != null
-                      //             ? errorColor
-                      //             : borderColor,
-                      //       ),
-                      //     ),
-                      //     enabledBorder: OutlineInputBorder(
-                      //       borderSide: BorderSide(
-                      //         color: _fieldErrors['teacher'] != null
-                      //             ? errorColor
-                      //             : borderColor,
-                      //       ),
-                      //     ),
-                      //     focusedBorder: OutlineInputBorder(
-                      //       borderSide: BorderSide(
-                      //         color: _fieldErrors['teacher'] != null
-                      //             ? errorColor
-                      //             : focusedBorderColor,
-                      //         width: 2,
-                      //       ),
-                      //     ),
-                      //     errorBorder: OutlineInputBorder(
-                      //       borderSide: BorderSide(color: errorColor, width: 2),
-                      //     ),
-                      //     focusedErrorBorder: OutlineInputBorder(
-                      //       borderSide: BorderSide(color: errorColor, width: 2),
-                      //     ),
-                      //   ),
-                      //   items: [
-                      //     const DropdownMenuItem(
-                      //       value: 0,
-                      //       child: Text('Selecione um professor'),
-                      //     ),
-                      //     ...widget.teachers.map((teacher) {
-                      //       return DropdownMenuItem(
-                      //         value: teacher.id,
-                      //         child: Text(teacher.name),
-                      //       );
-                      //     }),
-                      //   ],
-                      //   onChanged: (value) {
-                      //     setState(() {
-                      //       _selectedTeacherId = value ?? 0;
-                      //       _validateField('teacher', _selectedTeacherId.toString());
-                      //       _checkForChanges();
-                      //     });
-                      //   },
-                      // ),
-                      // const SizedBox(height: 16),
+                      //porqque toda vez que eu altero qualquer campo, o dropdown é reconstruído? por favor tente fazer com que o dropdown não seja reconstruído toda vez que eu alterar qualquer campo
+                      FutureBuilder<List<Users>>(
+                        future: admins,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              child: LinearProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              'Erro ao carregar professores',
+                              style: TextStyle(color: errorColor),
+                            );
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return Text(
+                              'Nenhum professor encontrado',
+                              style: TextStyle(color: errorColor),
+                            );
+                          }
+                          final adminList = snapshot.data!;
+                          return DropdownButtonFormField<int>(
+                            value:
+                                _selectedTeacherId != 0 &&
+                                        adminList.any(
+                                          (u) => u.id == _selectedTeacherId,
+                                        )
+                                    ? _selectedTeacherId
+                                    : null,
+                            items:
+                                adminList
+                                    .map(
+                                      (user) => DropdownMenuItem<int>(
+                                        value: user.id,
+                                        child: Text(
+                                          user.name,
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedTeacherId = value ?? 0;
+                                _validateField(
+                                  'teacher',
+                                  _selectedTeacherId.toString(),
+                                );
+                                _checkForChanges();
+                              });
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Professor*',
+                              labelStyle: TextStyle(color: textColor),
+                              errorText: _fieldErrors['teacher'],
+                              errorStyle: TextStyle(color: errorColor),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:
+                                      _fieldErrors['teacher'] != null
+                                          ? errorColor
+                                          : borderColor,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:
+                                      _fieldErrors['teacher'] != null
+                                          ? errorColor
+                                          : borderColor,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color:
+                                      _fieldErrors['teacher'] != null
+                                          ? errorColor
+                                          : focusedBorderColor,
+                                  width: 2,
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: errorColor,
+                                  width: 2,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: errorColor,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            dropdownColor: cardColor,
+                            iconEnabledColor: textColor,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
