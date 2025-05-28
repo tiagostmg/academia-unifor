@@ -1,6 +1,7 @@
 import 'package:academia_unifor/models/classes.dart';
 import 'package:academia_unifor/models/users.dart';
 import 'package:academia_unifor/services/classes_service.dart';
+import 'package:academia_unifor/services/user_provider.dart';
 import 'package:academia_unifor/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +34,8 @@ class ClassBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(userProvider);
+
     return Column(
       children: [
         const SearchAppBar(showChatIcon: false),
@@ -53,7 +56,7 @@ class ClassBody extends ConsumerWidget {
                 itemCount: classes.length,
                 itemBuilder: (context, index) {
                   final classItem = classes[index];
-                  return _buildClassCard(context, classItem);
+                  return _buildClassCard(context, classItem, currentUser);
                 },
               );
             },
@@ -63,12 +66,16 @@ class ClassBody extends ConsumerWidget {
     );
   }
 
-  Widget _buildClassCard(BuildContext context, Classes classItem) {
+  Widget _buildClassCard(
+    BuildContext context,
+    Classes classItem,
+    Users? currentUser,
+  ) {
     final theme = Theme.of(context);
 
     int teacherId = classItem.teacherId;
-    final int currentUserId = 1; // Replace with actual user id
-    bool isSubscribed = classItem.studentIds.contains(currentUserId);
+    bool isSubscribed =
+        currentUser != null && classItem.studentIds.contains(currentUser.id);
 
     return FutureBuilder<Users>(
       future: UserService().getUserById(teacherId),
@@ -161,37 +168,58 @@ class ClassBody extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      if (isSubscribed) ...[
-                        OutlinedButton(
-                          onPressed: () {
-                            // Cancelar inscrição
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            backgroundColor: Colors.red.withAlpha(20),
-                            side: const BorderSide(color: Colors.red),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                      OutlinedButton(
+                        onPressed: () async {
+                          if (currentUser == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Faça login para se inscrever'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          try {
+                            if (isSubscribed) {
+                              // Lógica para cancelar inscrição
+                              // await ClassesService().unsubscribeFromClass(classItem.id, currentUser.id);
+                            } else {
+                              // Lógica para inscrever-se
+                              // await ClassesService().subscribeToClass(classItem.id, currentUser.id);
+                            }
+
+                            // Atualiza a UI
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  isSubscribed
+                                      ? 'Inscrição cancelada'
+                                      : 'Inscrição realizada',
+                                ),
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Erro: ${e.toString()}')),
+                            );
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor:
+                              isSubscribed ? Colors.red : Colors.green,
+                          backgroundColor:
+                              isSubscribed
+                                  ? Colors.red.withAlpha(20)
+                                  : Colors.green.withAlpha(20),
+                          side: BorderSide(
+                            color: isSubscribed ? Colors.red : Colors.green,
                           ),
-                          child: const Text("Cancelar"),
-                        ),
-                      ] else ...[
-                        OutlinedButton(
-                          onPressed: () {
-                            // Cancelar inscrição
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.green,
-                            backgroundColor: Colors.green.withAlpha(20),
-                            side: const BorderSide(color: Colors.green),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text("Inscrever-se"),
                         ),
-                      ],
+                        child: Text(isSubscribed ? "Cancelar" : "Inscrever-se"),
+                      ),
                     ],
                   ),
                 ],
