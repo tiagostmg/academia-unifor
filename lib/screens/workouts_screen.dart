@@ -66,7 +66,7 @@ class WorkoutsBody extends ConsumerWidget {
                           (context, index) => const SizedBox(height: 16),
                       itemBuilder: (context, index) {
                         final workout = workouts[index];
-                        return WorkoutCard(workout: workout);
+                        return ExpandableWorkoutCard(workout: workout);
                       },
                     ),
           ),
@@ -76,17 +76,26 @@ class WorkoutsBody extends ConsumerWidget {
   }
 }
 
-class WorkoutCard extends StatelessWidget {
+class ExpandableWorkoutCard extends ConsumerStatefulWidget {
   final Workout workout;
 
-  const WorkoutCard({required this.workout, super.key});
+  const ExpandableWorkoutCard({required this.workout, super.key});
+
+  @override
+  ConsumerState<ExpandableWorkoutCard> createState() =>
+      _ExpandableWorkoutCardState();
+}
+
+class _ExpandableWorkoutCardState extends ConsumerState<ExpandableWorkoutCard> {
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -104,11 +113,14 @@ class WorkoutCard extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () {
-              // Adicione ação ao clicar no card se necessário
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Cabeçalho do treino (sempre visível)
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -128,17 +140,17 @@ class WorkoutCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              workout.name,
+                              widget.workout.name,
                               style: theme.textTheme.titleLarge!.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: colorScheme.onPrimary,
                               ),
                             ),
-                            if (workout.description.isNotEmpty)
+                            if (widget.workout.description.isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Text(
-                                  workout.description,
+                                  widget.workout.description,
                                   style: theme.textTheme.bodyMedium!.copyWith(
                                     color: colorScheme.onPrimary.withAlpha(230),
                                   ),
@@ -148,24 +160,34 @@ class WorkoutCard extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        Icons.fitness_center,
+                        _isExpanded ? Icons.expand_less : Icons.expand_more,
                         color: colorScheme.onPrimary,
                         size: 32,
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      ...workout.exercises.map(
-                        (exercise) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: ExerciseTile(exercise: exercise),
+
+                // Conteúdo expandível (exercícios)
+                AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState:
+                      _isExpanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                  firstChild: const SizedBox.shrink(),
+                  secondChild: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        ...widget.workout.exercises.map(
+                          (exercise) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: ExerciseTile(exercise: exercise),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
