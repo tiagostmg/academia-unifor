@@ -45,7 +45,8 @@ class WorkoutsBody extends ConsumerWidget {
       );
     }
 
-    final List<Workout> workouts = user.workouts;
+    final List<Workout> workouts = List.from(user.workouts)
+      ..sort((a, b) => a.name.compareTo(b.name));
 
     return Column(
       children: [

@@ -162,7 +162,7 @@ class _AdminClassScreenState extends State<AdminClassScreen> {
                           time: '',
                           duration: '',
                           capacity: 0,
-                          teacherId: 1,
+                          teacherId: 6, // Default to admin ID
                           studentIds: [],
                         ),
                         isEditing: false,
@@ -220,7 +220,7 @@ class ClassesScreenBody extends StatelessWidget {
                 (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
               );
               return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding: const EdgeInsets.only(bottom: 80),
                 itemCount: classes.length,
                 itemBuilder: (context, index) {
                   final classItem = classes[index];
