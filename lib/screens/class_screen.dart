@@ -61,7 +61,9 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
   }
 
   Future<List<Classes>> _loadAndSetClasses() async {
-    final classes = await ClassesService().loadClasses();
+    final classes =
+        await ClassesService()
+            .loadClasses(); // TODO: alterar a funcao quando pronta
     setState(() {
       _allClasses = classes;
       _filteredClasses = classes;
@@ -79,9 +81,15 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
     setState(() {
       _searchQuery = query;
       _filteredClasses =
-          _allClasses
-              .where((c) => c.name.toLowerCase().contains(query.toLowerCase()))
-              .toList();
+          _allClasses.where((c) {
+            final nameMatch = c.name.toLowerCase().contains(
+              query.toLowerCase(),
+            );
+            final dateMatch = c.date.toLowerCase().contains(
+              query.toLowerCase(),
+            );
+            return nameMatch || dateMatch;
+          }).toList();
     });
   }
 

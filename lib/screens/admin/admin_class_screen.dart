@@ -49,9 +49,13 @@ class _AdminClassScreenState extends State<AdminClassScreen> {
   void _filterClasses(String query) {
     setState(() {
       filteredClasses =
-          allClasses
-              .where((c) => c.name.toLowerCase().contains(query.toLowerCase()))
-              .toList();
+          allClasses.where((c) {
+            final nameMatch = c.name.toLowerCase().contains(
+              query.toLowerCase(),
+            );
+            final dateMatch = c.date.contains(query);
+            return nameMatch || dateMatch;
+          }).toList();
     });
   }
 
