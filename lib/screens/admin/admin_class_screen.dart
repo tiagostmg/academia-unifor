@@ -21,8 +21,23 @@ class _AdminClassScreenState extends State<AdminClassScreen> {
       final classes = await _classService.loadClasses();
 
       setState(() {
-        allClasses = classes;
-        filteredClasses = classes;
+        allClasses =
+            classes..sort((a, b) {
+              DateTime parseDate(String dateStr) {
+                final parts = dateStr.split('/');
+                if (parts.length != 3) return DateTime(1900);
+                final day = int.tryParse(parts[0]) ?? 1;
+                final month = int.tryParse(parts[1]) ?? 1;
+                final year = int.tryParse(parts[2]) ?? 1900;
+                return DateTime(year, month, day);
+              }
+
+              final dateA = parseDate(a.date);
+              final dateB = parseDate(b.date);
+
+              return dateB.compareTo(dateA);
+            });
+        filteredClasses = List.from(allClasses);
       });
     } catch (e) {
       ScaffoldMessenger.of(
