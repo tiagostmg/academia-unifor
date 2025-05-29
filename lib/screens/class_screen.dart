@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:academia_unifor/widgets.dart';
 
+// ...existing code...
+
 class ClassScreen extends StatelessWidget {
   const ClassScreen({super.key});
 
@@ -16,18 +18,28 @@ class ClassScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.primary,
+      appBar: SearchAppBar(
+        showChatIcon: false,
+        onSearchChanged: (query) {
+          // Passa o termo de busca para o ClassBody via chave global
+          _classBodyKey.currentState?.filterClasses(query);
+        },
+      ),
       body: SafeArea(
         child: CustomConvexBottomBar(
           currentIndex: 2,
           child: Scaffold(
             backgroundColor: theme.scaffoldBackgroundColor,
-            body: const ClassBody(),
+            body: ClassBody(key: _classBodyKey),
           ),
         ),
       ),
     );
   }
 }
+
+// Adicione uma GlobalKey para acessar o estado do ClassBody
+final GlobalKey<_ClassBodyState> _classBodyKey = GlobalKey<_ClassBodyState>();
 
 class ClassBody extends ConsumerStatefulWidget {
   const ClassBody({super.key});
@@ -38,16 +50,38 @@ class ClassBody extends ConsumerStatefulWidget {
 
 class _ClassBodyState extends ConsumerState<ClassBody> {
   late Future<List<Classes>> _classesFuture;
+  List<Classes> _allClasses = [];
+  List<Classes> _filteredClasses = [];
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _classesFuture = ClassesService().loadClasses();
+    _classesFuture = _loadAndSetClasses();
+  }
+
+  Future<List<Classes>> _loadAndSetClasses() async {
+    final classes = await ClassesService().loadClasses();
+    setState(() {
+      _allClasses = classes;
+      _filteredClasses = classes;
+    });
+    return classes;
   }
 
   void _refreshClasses() {
     setState(() {
-      _classesFuture = ClassesService().loadClasses();
+      _classesFuture = _loadAndSetClasses();
+    });
+  }
+
+  void filterClasses(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredClasses =
+          _allClasses
+              .where((c) => c.name.toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 
@@ -57,7 +91,6 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
 
     return Column(
       children: [
-        const SearchAppBar(showChatIcon: false),
         Expanded(
           child: FutureBuilder<List<Classes>>(
             future: _classesFuture,
@@ -69,7 +102,12 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('Nenhuma aula encontrada'));
               }
-              final classes = snapshot.data!;
+              // Use a lista filtrada
+              final classes =
+                  _searchQuery.isEmpty ? _allClasses : _filteredClasses;
+              if (classes.isEmpty) {
+                return const Center(child: Text('Nenhuma aula encontrada'));
+              }
               classes.sort(
                 (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
               );
@@ -87,6 +125,8 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
       ],
     );
   }
+
+  // ...existing code...
 
   Widget _buildClassCard(
     BuildContext context,
@@ -191,11 +231,24 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
                     OutlinedButton(
                       onPressed: () async {
                         if (currentUser == null) {
-                          _showSnack(context, 'Faça login para se inscrever');
+                          if (mounted) {
+                            _showSnack(context, 'Faça login para se inscrever');
+                          }
                           return;
                         }
 
                         try {
+                          if (classItem.studentIds.length >=
+                                  classItem.capacity &&
+                              !isSubscribed) {
+                            if (mounted) {
+                              _showSnack(
+                                context,
+                                'Aula cheia, não é possível se inscrever',
+                              );
+                            }
+                            return;
+                          }
                           if (isSubscribed) {
                             await ClassesService().unsubscribeUser(
                               classItem.id,
@@ -208,33 +261,60 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
                             );
                           }
 
-                          _refreshClasses();
+                          if (mounted) {
+                            _refreshClasses();
 
-                          _showSnack(
-                            context,
-                            isSubscribed
-                                ? 'Inscrição cancelada'
-                                : 'Inscrição realizada',
-                          );
+                            _showSnack(
+                              context,
+                              isSubscribed
+                                  ? 'Inscrição cancelada'
+                                  : 'Inscrição realizada',
+                            );
+                          }
                         } catch (e) {
-                          _showSnack(context, 'Erro: ${e.toString()}');
+                          if (mounted) {
+                            _showSnack(context, 'Erro: ${e.toString()}');
+                          }
                         }
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor:
-                            isSubscribed ? Colors.red : Colors.green,
-                        backgroundColor: (isSubscribed
+                            classItem.studentIds.length >= classItem.capacity &&
+                                    !isSubscribed
+                                ? Colors.grey
+                                : isSubscribed
+                                ? Colors.red
+                                : Colors.green,
+                        backgroundColor: (classItem.studentIds.length >=
+                                        classItem.capacity &&
+                                    !isSubscribed
+                                ? Colors.grey
+                                : isSubscribed
                                 ? Colors.red
                                 : Colors.green)
                             .withAlpha(20),
                         side: BorderSide(
-                          color: isSubscribed ? Colors.red : Colors.green,
+                          color:
+                              classItem.studentIds.length >=
+                                          classItem.capacity &&
+                                      !isSubscribed
+                                  ? Colors.grey
+                                  : isSubscribed
+                                  ? Colors.red
+                                  : Colors.green,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Text(isSubscribed ? "Cancelar" : "Inscrever-se"),
+                      child: Text(
+                        classItem.studentIds.length >= classItem.capacity &&
+                                !isSubscribed
+                            ? "Aula cheia"
+                            : isSubscribed
+                            ? "Cancelar"
+                            : "Inscrever-se",
+                      ),
                     ),
                   ],
                 ),
