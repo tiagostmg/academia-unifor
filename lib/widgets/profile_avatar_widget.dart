@@ -71,10 +71,18 @@ class ProfileAvatar extends ConsumerWidget {
             ),
             actions: [
               TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cancelar'),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
                 onPressed: () {
                   if (controller.text.trim().isNotEmpty) {
                     Navigator.pop(context, controller.text.trim());
