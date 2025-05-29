@@ -388,6 +388,7 @@ class _EditUserFormState extends ConsumerState<EditUserForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Aluno atualizado com sucesso!")),
         );
+        ref.read(userProvider.notifier).state = savedUser;
         Navigator.pop(context, savedUser);
       }
     } catch (e) {

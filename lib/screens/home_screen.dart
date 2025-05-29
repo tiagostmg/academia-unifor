@@ -62,7 +62,7 @@ class HomeBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final hasMissingFields = _hasMissingFields(user);
+    bool hasMissingFields = _hasMissingFields(user);
 
     return SingleChildScrollView(
       child: Column(
