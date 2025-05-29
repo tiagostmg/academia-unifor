@@ -205,30 +205,17 @@ class ClassesScreenBody extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: FutureBuilder<List<Classes>>(
-            future: ClassesService().loadClasses(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Erro ao carregar aulas'));
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('Nenhuma aula encontrada'));
-              }
-              final classes = snapshot.data!;
-              classes.sort(
-                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-              );
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
-                itemCount: classes.length,
-                itemBuilder: (context, index) {
-                  final classItem = classes[index];
-                  return _buildClassCard(context, classItem);
-                },
-              );
-            },
-          ),
+          child:
+              classes.isEmpty
+                  ? const Center(child: Text('Nenhuma aula encontrada'))
+                  : ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 80),
+                    itemCount: classes.length,
+                    itemBuilder: (context, index) {
+                      final classItem = classes[index];
+                      return _buildClassCard(context, classItem);
+                    },
+                  ),
         ),
       ],
     );
