@@ -25,6 +25,20 @@ class ClassesService {
     }
   }
 
+  Future<List<Classes>> loadClassesIncomplete() async {
+    try {
+      final response = await _dio.get('/api/class/incomplete');
+      if (response.statusCode == 200) {
+        List data = response.data;
+        return data.map((json) => Classes.fromJson(json)).toList();
+      } else {
+        throw Exception('Erro ao buscar dados: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Erro: $e');
+    }
+  }
+
   Future<Classes> postClass(Classes classes) async {
     try {
       final response = await _dio.post('/api/class', data: classes.toJson());

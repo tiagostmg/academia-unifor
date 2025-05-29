@@ -61,9 +61,7 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
   }
 
   Future<List<Classes>> _loadAndSetClasses() async {
-    final classes =
-        await ClassesService()
-            .loadClasses(); // TODO: alterar a funcao quando pronta
+    final classes = await ClassesService().loadClassesIncomplete();
     setState(() {
       _allClasses = classes;
       _filteredClasses = classes;

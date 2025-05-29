@@ -102,15 +102,15 @@ class ProfileBody extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                ListTile(
-                  leading: Icon(
-                    Icons.settings,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  title: const Text("Configurações"),
-                  trailing: Icon(Icons.arrow_forward_ios, size: 18),
-                  onTap: () {},
-                ),
+                // ListTile(
+                //   leading: Icon(
+                //     Icons.settings,
+                //     color: Theme.of(context).iconTheme.color,
+                //   ),
+                //   title: const Text("Configurações"),
+                //   trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                //   onTap: () {},
+                // ),
                 ListTile(
                   leading: Icon(
                     Icons.share,
