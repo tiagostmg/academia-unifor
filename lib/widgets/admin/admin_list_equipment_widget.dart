@@ -285,6 +285,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: nameController,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: customInputDecoration(
                                     context: context,
                                     labelText: 'Nome',
@@ -296,6 +298,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: brandController,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: customInputDecoration(
                                     context: context,
                                     labelText: 'Marca',
@@ -307,6 +311,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: modelController,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: customInputDecoration(
                                     context: context,
                                     labelText: 'Modelo',
@@ -318,6 +324,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: quantityController,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: customInputDecoration(
                                     context: context,
                                     labelText: 'Quantidade',
@@ -331,6 +339,8 @@ class SelectedCategoryList extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: imageController,
+                                  cursorColor:
+                                      Theme.of(context).colorScheme.onPrimary,
                                   decoration: customInputDecoration(
                                     context: context,
                                     labelText: 'URL da Imagem',

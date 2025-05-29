@@ -294,6 +294,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: nameController,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: customInputDecoration(
                           context: context,
                           labelText: 'Nome*',
@@ -304,6 +305,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: brandController,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: customInputDecoration(
                           context: context,
                           labelText: 'Marca*',
@@ -314,6 +316,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: modelController,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: customInputDecoration(
                           context: context,
                           labelText: 'Modelo*',
@@ -324,6 +327,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: quantityController,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: customInputDecoration(
                           context: context,
                           labelText: 'Quantidade*',
@@ -335,6 +339,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
                       const SizedBox(height: 16),
                       TextField(
                         controller: imageController,
+                        cursorColor: Theme.of(context).colorScheme.onPrimary,
                         decoration: customInputDecoration(
                           context: context,
                           labelText: 'URL da Imagem',
