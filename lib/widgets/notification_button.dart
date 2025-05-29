@@ -29,7 +29,10 @@ class NotificationButton extends StatelessWidget {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               contentPadding: const EdgeInsets.all(0),
               title: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Text(
                   'Notificações',
                   style: Theme.of(context).textTheme.titleLarge,
@@ -80,16 +83,45 @@ class NotificationButton extends StatelessWidget {
                       itemCount: notifications.length,
                       itemBuilder: (context, index) {
                         final notification = notifications[index];
-                        return ListTile(
-                          title: Text(notification.title),
-                          subtitle: Text(notification.description),
-                          trailing: Text(
-                            _formatDate(notification.createdAt),
-                            style: const TextStyle(fontSize: 12),
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 16,
                           ),
-                          onTap: () {
-                            // Ação ao clicar em uma notificação
-                          },
+                          child: Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.primary.withAlpha(180),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _formatDate(notification.createdAt),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(
+                                    notification.title,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    notification.description,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 6),
+                                ],
+                              ),
+                            ),
+                          ),
                         );
                       },
                     ),
