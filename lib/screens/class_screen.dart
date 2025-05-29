@@ -102,15 +102,26 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('Nenhuma aula encontrada'));
               }
-              // Use a lista filtrada
               final classes =
                   _searchQuery.isEmpty ? _allClasses : _filteredClasses;
               if (classes.isEmpty) {
                 return const Center(child: Text('Nenhuma aula encontrada'));
               }
-              classes.sort(
-                (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-              );
+              classes.sort((a, b) {
+                DateTime parseDate(String date) {
+                  final parts = date.split('/');
+                  if (parts.length != 3) return DateTime(1900);
+                  return DateTime(
+                    int.parse(parts[2]),
+                    int.parse(parts[1]),
+                    int.parse(parts[0]),
+                  );
+                }
+
+                final dateA = parseDate(a.date);
+                final dateB = parseDate(b.date);
+                return dateA.compareTo(dateB);
+              });
               return ListView.builder(
                 padding: const EdgeInsets.only(bottom: 16),
                 itemCount: classes.length,
