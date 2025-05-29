@@ -476,7 +476,9 @@ class SelectedCategoryList extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child:
-                              item.image.isNotEmpty
+                              item.image.isNotEmpty &&
+                                      item.image != 'null' &&
+                                      item.image.startsWith('http')
                                   ? Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -492,6 +494,13 @@ class SelectedCategoryList extends StatelessWidget {
                                         height: double.infinity,
                                         width: double.infinity,
                                         fit: BoxFit.cover,
+                                        errorBuilder: (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) {
+                                          return fallbackImage();
+                                        },
                                       ),
                                     ),
                                   )

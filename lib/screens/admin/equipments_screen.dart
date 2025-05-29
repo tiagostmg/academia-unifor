@@ -42,9 +42,7 @@ class _EquipmentsBodyState extends State<EquipmentsBody> {
       final items =
           await _equipmentService.loadEquipment()
             ..sort((a, b) => a.name.compareTo(b.name));
-      final counts = {
-        for (var c in categories) c.category: c.items.length,
-      }; // Mudei para aparecer a quantidade de itens por categoria
+      final counts = {for (var c in categories) c.category: c.items.length};
 
       setState(() {
         allItems = items;
