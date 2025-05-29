@@ -238,6 +238,17 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
                         }
 
                         try {
+                          if (classItem.studentIds.length >=
+                                  classItem.capacity &&
+                              !isSubscribed) {
+                            if (mounted) {
+                              _showSnack(
+                                context,
+                                'Aula cheia, não é possível se inscrever',
+                              );
+                            }
+                            return;
+                          }
                           if (isSubscribed) {
                             await ClassesService().unsubscribeUser(
                               classItem.id,
@@ -268,19 +279,42 @@ class _ClassBodyState extends ConsumerState<ClassBody> {
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor:
-                            isSubscribed ? Colors.red : Colors.green,
-                        backgroundColor: (isSubscribed
+                            classItem.studentIds.length >= classItem.capacity &&
+                                    !isSubscribed
+                                ? Colors.grey
+                                : isSubscribed
+                                ? Colors.red
+                                : Colors.green,
+                        backgroundColor: (classItem.studentIds.length >=
+                                        classItem.capacity &&
+                                    !isSubscribed
+                                ? Colors.grey
+                                : isSubscribed
                                 ? Colors.red
                                 : Colors.green)
                             .withAlpha(20),
                         side: BorderSide(
-                          color: isSubscribed ? Colors.red : Colors.green,
+                          color:
+                              classItem.studentIds.length >=
+                                          classItem.capacity &&
+                                      !isSubscribed
+                                  ? Colors.grey
+                                  : isSubscribed
+                                  ? Colors.red
+                                  : Colors.green,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Text(isSubscribed ? "Cancelar" : "Inscrever-se"),
+                      child: Text(
+                        classItem.studentIds.length >= classItem.capacity &&
+                                !isSubscribed
+                            ? "Aula cheia"
+                            : isSubscribed
+                            ? "Cancelar"
+                            : "Inscrever-se",
+                      ),
                     ),
                   ],
                 ),
